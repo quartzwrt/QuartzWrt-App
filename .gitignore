@@ -1,0 +1,23 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/
+
+# Android
+android/.gradle/
+android/key.properties
+*.jks
+*.keystore
+
+# iOS（后置平台，先占位）
+ios/Pods/
+ios/.symlinks/
+
+# 通用
+.DS_Store
+*.log
