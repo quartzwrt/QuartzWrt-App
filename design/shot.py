@@ -25,6 +25,7 @@ CASES = {
     "degraded-dark": 9,        # ⑨ 降级态
     "extended-overview": 10,   # ⑩ 扩展示例
     "service-detail": 11,      # ⑪ 应用详情
+    "package-log-dark": 12,    # ⑫ 操作记录
 }
 
 

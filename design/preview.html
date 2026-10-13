@@ -178,7 +178,7 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 <body>
 
 <div class="pagetop">
-  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.4</span><span class="tag">应用页细化·评审</span></h1>
+  <h1>QuartzWrt App · UI 预览 <span class="tag">v1.0 定案</span><span class="tag">十二屏</span></h1>
   <div class="sub">
     依据 <b>docs/UI-DESIGN.md</b>（v0.3 定案 IA + 本次应用页细化）。**应用 tab = 应用控制 + 软件包管理**两个子段：
     「应用」列出已安装且可控制的应用（状态 · 启动/停止/重启 → 详情）；「软件包」管安装面（已安装/可升级/版本/卸载）。
@@ -443,7 +443,7 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
-      <div class="appbar"><h3>应用</h3><span class="r">335 个</span></div>
+      <div class="appbar"><h3>应用</h3><span class="r">记录</span></div>
       <div class="content">
         <div class="seg" style="margin: 0 2px 12px"><span>应用</span><span class="on">软件包</span></div>
 
@@ -461,7 +461,7 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
         </div>
 
         <div class="card">
-          <h4>已安装</h4>
+          <h4>已安装 · 335</h4>
           <div class="row"><span class="k">quartz-daemon</span><span class="v mono" style="font-size:12.5px">0.1.0-r1 · 7.1 MB</span></div>
           <div class="row"><span class="k">luci-theme-quartz</span><span class="v mono" style="font-size:12.5px">26.285 · 412 KB</span></div>
           <div class="row"><span class="k">luci-app-openclash</span><span class="v mono" style="font-size:12.5px">0.46.050 · 1.2 MB</span></div>
@@ -727,6 +727,37 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
     </div></div>
     <figcaption><b>⑪ 应用详情（控制面 + 安装面汇合点）</b>
       <span class="hint">应用列表行 → 详情页；状态来自快照 services 开放映射，控制来自能力注册表（WP-5 动作面），包信息与卸载来自软件包读/写面——新旧两面在同一页汇合，新增插件/动作不改页面结构。</span>
+    </figcaption>
+  </figure>
+  <!-- ⑫ 操作记录 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3 style="display:flex;align-items:center;gap:4px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M15 5l-7 7 7 7"/></svg>应用</h3><span class="r">记录</span></div>
+      <div class="content">
+        <div class="appbar" style="padding: 0 2px 10px"><h3 style="font-size:20px">操作记录</h3></div>
+        <div class="card">
+          <div class="row"><span class="k" style="color:var(--text); font-weight:600">全部升级（3）· 成功</span><span class="v sub">今天 09:41</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k" style="font-size:12.5px"><span class="dot ok"></span>quartz-daemon → 0.1.1 ｜ luci-theme-quartz → 26.287 ｜ luci-app-dashboard → 26.287</span></div>
+        </div>
+        <div class="card">
+          <div class="row"><span class="k" style="color:var(--text); font-weight:600">卸载 dnsmasq · 失败</span><span class="v sub">昨天 21:03</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k" style="font-size:12.5px; color:var(--err)">依赖冲突：luci-app-dashboard 依赖 dnsmasq——未执行</span></div>
+        </div>
+        <div class="card">
+          <div class="row"><span class="k" style="color:var(--text); font-weight:600">刷新软件源 · 成功</span><span class="v sub">昨天 20:58</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k" style="font-size:12.5px"><span class="dot ok"></span>索引已更新 · 3 个可升级</span></div>
+        </div>
+        <div class="card">
+          <div class="row"><span class="k" style="color:var(--text); font-weight:600">升级 openclash · 部分失败</span><span class="v sub">上周 18:22</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k" style="font-size:12.5px; color:var(--warn)">1/2 成功：依赖 libcurl 被保留旧版</span></div>
+        </div>
+        <p class="sub" style="margin: 2px 4px 0">仅保留最近 30 条；点条目查看逐包结果。</p>
+      </div>
+    </div></div>
+    <figcaption><b>⑫ 操作记录（软件包子段右上「记录」入口）</b>
+      <span class="hint">升级/卸载/刷新的执行结果（含失败原因），由 WP-5 服务端结构化保存近 N 条（审计流的小读面；对应 §5 登记项）。</span>
     </figcaption>
   </figure>
 
