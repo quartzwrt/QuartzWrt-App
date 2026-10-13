@@ -66,7 +66,14 @@ Future<void> main(List<String> args) async {
   check('packages upgradable readable (ok=${up.ok}, total=${up.ok ? PackagesPage.fromPayload(up.data).total : '-'})', up.ok);
 
   final hist = await c.packages(accessToken: tok, scope: 'history');
-  check('packages history readable (ok=${hist.ok}, items=${hist.ok ? PackagesPage.fromPayload(hist.data).ops.length : '-'})', hist.ok);
+  final histOps = hist.ok ? PackagesPage.fromPayload(hist.data).ops : const <PackageOp>[];
+  check('packages history readable (ok=${hist.ok}, items=${histOps.length})', hist.ok);
+  // 形态断言（旧固件统一包条目/新固件显式字段两种形态都必须解析出 action 与 ts）
+  if (histOps.isNotEmpty) {
+    final o = histOps.first;
+    check('history item shape parses (action=${o.action.isNotEmpty}, op=${o.op}, ts>0=${o.ts > 0})',
+        o.action.isNotEmpty && o.op.isNotEmpty && o.ts > 0);
+  }
 
   final srch = await c.packages(accessToken: tok, scope: 'available', query: 'tail', perPage: 100);
   final names = srch.ok ? PackagesPage.fromPayload(srch.data).items.map((p) => p.name).toList() : const <String>[];

@@ -42,6 +42,25 @@ String hexOf(Uint8List bytes) {
   return sb.toString();
 }
 
+/// Dio 异常 → 归一化错误码（纯函数，单测覆盖）。
+///
+/// 关键：严格 pin 模式下 badCertificateCallback 返回 false → TLS 握手抛
+/// [HandshakeException]，Dio 未必归类为 [DioExceptionType.badCertificate]
+/// （VM 实测落入兜底变 'transport'）——据底层异常类型判定，保证
+/// 「指纹不符 / 重刷固件换证书」能被上层识别为需重新配对（DESIGN §3.4 阻断语义）。
+String classifyDioError(DioException e) {
+  if (e.error is HandshakeException) return 'bad_certificate';
+  return switch (e.type) {
+    DioExceptionType.connectionTimeout ||
+    DioExceptionType.receiveTimeout ||
+    DioExceptionType.sendTimeout =>
+      'timeout',
+    DioExceptionType.badCertificate => 'bad_certificate',
+    DioExceptionType.connectionError => 'connection_refused',
+    _ => 'transport',
+  };
+}
+
 HttpClient createPinnedHttpClient(PinPolicy policy, {String? proxyAddr}) {
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
   if (proxyAddr != null && proxyAddr.isNotEmpty) {
@@ -103,16 +122,7 @@ class QuartzApiClient implements ApiTransport {
       }
       return parseUbusResponse(body);
     } on DioException catch (e) {
-      final code = switch (e.type) {
-        DioExceptionType.connectionTimeout ||
-        DioExceptionType.receiveTimeout ||
-        DioExceptionType.sendTimeout =>
-          'timeout',
-        DioExceptionType.badCertificate => 'bad_certificate',
-        DioExceptionType.connectionError => 'connection_refused',
-        _ => 'transport',
-      };
-      return ApiResult.fail(0, ApiError(code, e.message ?? 'network error'));
+      return ApiResult.fail(0, ApiError(classifyDioError(e), e.message ?? 'network error'));
     }
   }
 

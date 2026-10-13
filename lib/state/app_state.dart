@@ -249,7 +249,8 @@ class SnapshotController extends Notifier<SnapshotState> {
       }
       final code = r.error?.code ?? 'transport';
       final kind = switch (code) {
-        'device_revoked' || 'token_invalid' => SnapKind.needRepair,
+        // 指纹不符（重刷固件换证书）与设备吊销/令牌失效同义：阻断 + 引导重新配对
+        'device_revoked' || 'token_invalid' || 'bad_certificate' => SnapKind.needRepair,
         'data_unavailable' => SnapKind.unavailable,
         _ => state.data == null ? SnapKind.unavailable : SnapKind.degraded,
       };

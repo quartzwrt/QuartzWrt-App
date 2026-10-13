@@ -11,8 +11,11 @@
 - 数据层 `lib/api/packages.dart`（契约容忍解析：错类型/缺字段降级不抛）；危险动作（卸载、
   全部升级）走底部确认层；分页「加载更多」。
 - 旧固件（quartz-app-api < v1.1，无 packages 方法）→ 软件包面降级说明卡（行为保持）。
-- 测试 68 项（新增 11：模型容忍/分页累积/四态渲染/动作链路）；`tool/e2e_vm.dart` 增软件包
-  四 scope 链路；对真固件 ALL PASS。
+- 测试 71 项（新增 14：模型容忍/分页累积/四态渲染/动作链路/错误分类）；`tool/e2e_vm.dart` 增软件包
+  四 scope 链路与 history 形态断言；对真固件 ALL PASS。
+- **走查修复**：重刷固件换证书后，严格 pin 的握手失败被 Dio 归为通用传输错误（'transport'）
+  → 只弹「连接中断」自动重试、不提示重配对。现按底层 `HandshakeException` 判定为
+  `bad_certificate` 并映射 needRepair（「配对已失效，请重新配对」横幅）——DESIGN §3.4 阻断语义补齐。
 
 ## 0.2.0 — 2026-10-13
 

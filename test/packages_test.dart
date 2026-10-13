@@ -1,4 +1,7 @@
 // WP-6 软件包管理面：模型解析（契约容忍）+ 软件包子段/操作记录页 widget 测。
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +20,8 @@ import 'package:quartzwrt_app/storage/store.dart';
 // ---- 模型解析 ----
 
 void main() {
+  _dioClassifyTests();
+
   group('PackageItem 解析（契约容忍）', () {
     test('完整字段', () {
       final it = PackageItem.fromJson({
@@ -299,4 +304,25 @@ Widget _host(Widget child, ApiTransport transport) {
       home: Scaffold(body: child),
     ),
   );
+}
+
+// ---- 错误分类（重刷固件换证书 → 需重新配对；VM 实测：Dio 未必给 badCertificate 类型）----
+
+void _dioClassifyTests() {
+  test('classifyDioError：底层 HandshakeException → bad_certificate', () {
+    final e = DioException(
+      requestOptions: RequestOptions(path: '/ubus'),
+      type: DioExceptionType.unknown,
+      error: const HandshakeException('CERTIFICATE_VERIFY_FAILED'),
+    );
+    expect(classifyDioError(e), 'bad_certificate');
+  });
+
+  test('classifyDioError：超时/拒连/未知的归一化', () {
+    DioException mk(DioExceptionType t) => DioException(requestOptions: RequestOptions(path: '/ubus'), type: t);
+    expect(classifyDioError(mk(DioExceptionType.receiveTimeout)), 'timeout');
+    expect(classifyDioError(mk(DioExceptionType.connectionError)), 'connection_refused');
+    expect(classifyDioError(mk(DioExceptionType.badCertificate)), 'bad_certificate');
+    expect(classifyDioError(mk(DioExceptionType.unknown)), 'transport');
+  });
 }
