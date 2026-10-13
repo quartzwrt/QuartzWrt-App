@@ -4,7 +4,6 @@
 // logout 清理。仅依赖纯 Dart 层（api/pairing；不触 Flutter）。
 import 'dart:io';
 
-import 'package:quartzwrt_app/api/client.dart';
 import 'package:quartzwrt_app/auth/pairing.dart';
 
 Future<void> main(List<String> args) async {
