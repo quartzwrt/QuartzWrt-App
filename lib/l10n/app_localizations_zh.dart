@@ -145,7 +145,10 @@ class AppL10nZh extends AppL10n {
   String get overviewTitle => '概览';
 
   @override
-  String get connectedDirect => '已连接 · 直连';
+  String get connectedLan => '已连接 · 局域网';
+
+  @override
+  String get connectedRemote => '已连接 · 远程';
 
   @override
   String runFor(int d, int h, String m) {
@@ -429,7 +432,10 @@ class AppL10nZh extends AppL10n {
   String get appSettingsGroup => '应用设置 · 本机';
 
   @override
-  String get pairedBadge => '已配对 · 直连';
+  String get pairedLan => '已配对 · 局域网';
+
+  @override
+  String get pairedRemote => '已配对 · 远程';
 
   @override
   String get fingerprintLabel => '证书指纹';
@@ -516,4 +522,104 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get collectorErrors => '采集器消息';
+
+  @override
+  String get remoteEntry => '远程访问';
+
+  @override
+  String get remotePageTitle => '远程访问';
+
+  @override
+  String get remoteRouterStatusTitle => '路由器端 · Tailscale';
+
+  @override
+  String get remoteTsIpLabel => 'Tailscale 地址';
+
+  @override
+  String get remoteUseThisAddr => '使用此地址添加远程连接';
+
+  @override
+  String get remoteNotDetected => '未检测到 Tailscale——可在路由器「应用」中安装并启用。';
+
+  @override
+  String get remoteStepsTitle => '使用步骤';
+
+  @override
+  String get remoteStep1 => '在路由器「应用 → Tailscale」中安装并启用。';
+
+  @override
+  String get remoteStep2 => '在路由器 Tailscale 页面登录 tailnet。';
+
+  @override
+  String get remoteStep3 => '手机安装 Tailscale 客户端并登录同一 tailnet。';
+
+  @override
+  String get remoteStep4 =>
+      '在此页添加 tailnet 地址（100.x.y.z 或 MagicDNS 域名）；证书指纹与局域网配对相同，自动复用。';
+
+  @override
+  String get remoteAddrTitle => '远程地址';
+
+  @override
+  String get remoteAddrNone => '未设置——在家经局域网直连；外出后在本页添加 tailnet 地址即可远程管理。';
+
+  @override
+  String get remoteAddBtn => '添加远程地址…';
+
+  @override
+  String get remoteEditBtn => '修改';
+
+  @override
+  String get remoteTestBtn => '测试';
+
+  @override
+  String get remoteInUse => '使用中';
+
+  @override
+  String get remoteHostLabel => '地址（100.x.y.z 或域名）';
+
+  @override
+  String get remoteTestSave => '测试并保存';
+
+  @override
+  String get remoteTesting => '测试中…';
+
+  @override
+  String get remoteTestOk => '远程连接可用，已保存。';
+
+  @override
+  String remoteTestFail(String detail) {
+    return '连接失败：$detail';
+  }
+
+  @override
+  String get remoteHostRequired => '请填写地址。';
+
+  @override
+  String get remoteRemoveBtn => '移除远程地址';
+
+  @override
+  String get remoteRemoveShort => '移除';
+
+  @override
+  String get remoteRemoveTitle => '移除远程地址？';
+
+  @override
+  String get remoteRemoveBody => '之后仅通过局域网连接路由器；不影响配对与令牌。';
+
+  @override
+  String get remoteRemoved => '已移除远程地址。';
+
+  @override
+  String get remoteAutoTitle => '自动切换';
+
+  @override
+  String get remoteAutoBody => '同网时优先局域网直连；连接失败自动改用远程地址；回到局域网后自动切回。';
+
+  @override
+  String get remoteSecurityTitle => '安全说明';
+
+  @override
+  String get remoteSecurityBody =>
+      '远程与局域网同样经证书指纹校验（防中间人）。远程执行重启/断网类操作可能暂时失联，路由器会自行恢复。移除远程地址不影响局域网配对。';
 }

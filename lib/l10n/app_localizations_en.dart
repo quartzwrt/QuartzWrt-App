@@ -149,7 +149,10 @@ class AppL10nEn extends AppL10n {
   String get overviewTitle => 'Overview';
 
   @override
-  String get connectedDirect => 'Connected · LAN';
+  String get connectedLan => 'Connected · LAN';
+
+  @override
+  String get connectedRemote => 'Connected · Remote';
 
   @override
   String runFor(int d, int h, String m) {
@@ -438,7 +441,10 @@ class AppL10nEn extends AppL10n {
   String get appSettingsGroup => 'App settings · This phone';
 
   @override
-  String get pairedBadge => 'Paired · LAN';
+  String get pairedLan => 'Paired · LAN';
+
+  @override
+  String get pairedRemote => 'Paired · Remote';
 
   @override
   String get fingerprintLabel => 'Certificate fingerprint';
@@ -527,4 +533,111 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get collectorErrors => 'Collector messages';
+
+  @override
+  String get remoteEntry => 'Remote access';
+
+  @override
+  String get remotePageTitle => 'Remote access';
+
+  @override
+  String get remoteRouterStatusTitle => 'Router · Tailscale';
+
+  @override
+  String get remoteTsIpLabel => 'Tailscale address';
+
+  @override
+  String get remoteUseThisAddr => 'Add remote access with this address';
+
+  @override
+  String get remoteNotDetected =>
+      'Tailscale not detected — install and enable it from the router\'s Apps page.';
+
+  @override
+  String get remoteStepsTitle => 'Setup steps';
+
+  @override
+  String get remoteStep1 =>
+      'Install and enable Tailscale on the router (Apps → Tailscale).';
+
+  @override
+  String get remoteStep2 =>
+      'Sign in to your tailnet on the router\'s Tailscale page.';
+
+  @override
+  String get remoteStep3 =>
+      'Install the Tailscale client on your phone and sign in to the same tailnet.';
+
+  @override
+  String get remoteStep4 =>
+      'Add the tailnet address here (100.x.y.z or a MagicDNS name); the certificate pin is reused from the LAN pairing.';
+
+  @override
+  String get remoteAddrTitle => 'Remote address';
+
+  @override
+  String get remoteAddrNone =>
+      'Not set — direct LAN connection at home; add a tailnet address here to manage the router from anywhere.';
+
+  @override
+  String get remoteAddBtn => 'Add remote address…';
+
+  @override
+  String get remoteEditBtn => 'Edit';
+
+  @override
+  String get remoteTestBtn => 'Test';
+
+  @override
+  String get remoteInUse => 'In use';
+
+  @override
+  String get remoteHostLabel => 'Address (100.x.y.z or hostname)';
+
+  @override
+  String get remoteTestSave => 'Test & save';
+
+  @override
+  String get remoteTesting => 'Testing…';
+
+  @override
+  String get remoteTestOk => 'Remote connection works — saved.';
+
+  @override
+  String remoteTestFail(String detail) {
+    return 'Connection failed: $detail';
+  }
+
+  @override
+  String get remoteHostRequired => 'Please enter an address.';
+
+  @override
+  String get remoteRemoveBtn => 'Remove remote address';
+
+  @override
+  String get remoteRemoveShort => 'Remove';
+
+  @override
+  String get remoteRemoveTitle => 'Remove remote address?';
+
+  @override
+  String get remoteRemoveBody =>
+      'The app will connect over LAN only; pairing and tokens are unaffected.';
+
+  @override
+  String get remoteRemoved => 'Remote address removed.';
+
+  @override
+  String get remoteAutoTitle => 'Automatic switching';
+
+  @override
+  String get remoteAutoBody =>
+      'LAN is preferred on the same network; on failure the app falls back to the remote address and switches back once LAN is reachable again.';
+
+  @override
+  String get remoteSecurityTitle => 'Security';
+
+  @override
+  String get remoteSecurityBody =>
+      'Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing.';
 }

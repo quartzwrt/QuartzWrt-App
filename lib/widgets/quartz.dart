@@ -68,7 +68,7 @@ class StatusDot extends StatelessWidget {
       DotKind.ok => QuartzColors.ok,
       DotKind.warn => QuartzColors.warn,
       DotKind.err => QuartzColors.err,
-      DotKind.off => Theme.of(context).colorScheme.onSurface.withValues(alpha: .35),
+      DotKind.off => Theme.of(context).colorScheme.onSurface.withValues(alpha: .45),
     };
     return Padding(
       padding: margin,
@@ -263,7 +263,7 @@ class SectionLabel extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .35),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .45),
           fontWeight: FontWeight.w600,
           letterSpacing: .35,
         ),

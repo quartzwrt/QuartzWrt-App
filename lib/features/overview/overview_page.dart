@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../api/endpoint.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
@@ -65,6 +66,7 @@ class OverviewPage extends ConsumerWidget {
               snapshot: snap,
               fallbackName: router?.name ?? '',
               stale: st.kind == SnapKind.degraded,
+              remote: ref.watch(endpointProvider)?.kind == EndpointKind.remote,
             ),
             if (st.kind == SnapKind.needRepair)
               Padding(

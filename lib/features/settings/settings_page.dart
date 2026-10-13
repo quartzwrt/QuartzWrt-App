@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../api/endpoint.dart';
 import '../../core/theme.dart';
+import '../../core/version.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
@@ -20,6 +22,7 @@ class SettingsPage extends ConsumerWidget {
     final snap = ref.watch(snapshotProvider).data;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final remoteActive = ref.watch(endpointProvider)?.kind == EndpointKind.remote;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
@@ -55,11 +58,20 @@ class SettingsPage extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    subtitle: Text(l10n.pairedBadge),
+                    subtitle: Text(remoteActive ? l10n.pairedRemote : l10n.pairedLan),
                     trailing: Text(
                       _shortFp(router.fingerprint),
                       style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
                     ),
+                  ),
+                  const Divider(height: 1, indent: 14, endIndent: 14),
+                  ListTile(
+                    title: Text(l10n.remoteEntry),
+                    subtitle: router.hasRemote
+                        ? Text('${router.remoteHost}:${router.remotePort ?? 443}')
+                        : null,
+                    trailing: const Icon(Icons.chevron_right, size: 18),
+                    onTap: () => context.push('/settings/remote'),
                   ),
                   const Divider(height: 1, indent: 14, endIndent: 14),
                   ListTile(
@@ -99,7 +111,7 @@ class SettingsPage extends ConsumerWidget {
                               style: const TextStyle(color: QuartzColors.err, fontWeight: FontWeight.w600),
                             ),
                           ),
-                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .35))),
+                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .45))),
                         ],
                       ),
                     ),
@@ -111,7 +123,7 @@ class SettingsPage extends ConsumerWidget {
                       child: Row(
                         children: [
                           Expanded(child: Text(l10n.restartService)),
-                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .35))),
+                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .45))),
                         ],
                       ),
                     ),
@@ -138,7 +150,8 @@ class SettingsPage extends ConsumerWidget {
             title: l10n.languageTitle,
             child: SegmentBar<String>(
               values: const ['zh', 'en'],
-              selected: (locale?.languageCode == 'en') ? 'en' : 'zh',
+              // 未显式选择（跟随系统）时，按生效语言回显（走查抓到的显示不一致）
+              selected: (locale?.languageCode ?? Localizations.localeOf(context).languageCode) == 'en' ? 'en' : 'zh',
               labelOf: (v) => v == 'zh' ? '中文' : 'English',
               onChanged: (v) => ref.read(localeProvider.notifier).set(Locale(v)),
             ),
@@ -148,7 +161,7 @@ class SettingsPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                KvRow(l10n.appVersionLabel, '0.1.0 (1)', first: true),
+                KvRow(l10n.appVersionLabel, '$kAppVersion ($kAppBuild)', first: true),
                 KvRow(l10n.apiLabel, 'quartz-app-api v1'),
               ],
             ),

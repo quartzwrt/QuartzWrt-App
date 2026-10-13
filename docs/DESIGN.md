@@ -126,9 +126,11 @@ app/                      # Flutter 工程（或仓库根，W6.1 定）
 
 ## 7. 远程链路（Tailscale / ZeroTier）
 
-- **路由器侧（引导）**：安装/启用 tailscale（或 zerotier + luci-app-zerotier）；把 tailnet 接口并入防火墙策略（WP-5 §6 文档路径）；应用内「远程访问」帮助页承载步骤。
-- **App 侧 v1**：手动添加 tailnet 地址（100.x / MagicDNS 名）——同一 API、同一 pin（证书不变，pin 复用）。
-- **后置**：tailscale 状态/登录 URL 经 WP-5 `action` 表接入（`tailscale.status` 等），实现应用内一键引导。
+**✅ W6.5 已实现并真环境验证（2026-10-13；VM `quartzwrt-vm` 真 tailnet 100.118.170.8 + 模拟器走查，证据 `design/shots/emu-w65/`）**：
+
+- **数据面（远程识别）**：`PairedRouter` 带两个端点——局域网（配对地址）+ 远程（手动添加的 tailnet 地址）。`FailoverTransport`：当前端点**传输级**失败（超时/拒连/证书不匹配）→ 换另一端点重试一次并固化；应用级错误不切换；远程在用且回前台时探测局域网、通即切回（`info` 未认证探测，无需令牌）。**远程识别徽标**：概览 hero 与设置配对卡显示 `已连接/已配对 · 局域网｜远程`（远程带云标与强调色）。
+- **App 侧（v1）**：设置 →「远程访问」引导页承载：①**真数据状态卡**——路由器端 Tailscale 状态与 tailnet 地址直读快照 `services.tailscale`（daemon 内置探针，WP-4/WP-10 真数据，不装/未启/未登录三态都有明确呈现）与「使用此地址添加远程连接」一键带出；②四步引导（路由器装启用 → 登录 tailnet → 手机装 Tailscale 客户端 → 在本页添加地址）；③远程地址管理（添加/修改/测试/移除）——添加时以**已配对证书指纹严格 pin** 调 `info` 实测连通（同一台路由器同一张证书，pin 复用），失败即时报因（含 `bad_certificate`=可能不是你的路由器）。
+- **后置**：tailscale 登录 URL / 一键配置经 WP-5 `action` 表接入；**「App 内封 tailscale」（进程内 tsnet 节点，免装移动端 App）已 spike 验证可行**——见 `dev/spike/tailscale/RESULTS.md`（推荐 tsnet userspace + 本地 CONNECT 代理，无 VPN 权限；定位 v1.5+）。
 
 ## 8. UI 与视觉
 
@@ -160,7 +162,7 @@ app/                      # Flutter 工程（或仓库根，W6.1 定）
 | D5 | 配对信任 | **mDNS + TOFU(密码) + pin 记录**（WP-5 D4 对齐）；配对码 v1.1 | 直接要求配对码：UX 成本先于威胁验证 |
 | D6 | 数据节奏 | 前台 5s / 后台停 / 断网退避 | 更快轮询：无收益（快照 2s 粒度已够） |
 | D7 | 控制面范围 | 与 WP-5 §5 对齐（UI 三组） | — |
-| D8 | 远程接入 | **手动 tailnet 地址 + 应用内引导**；深度集成后置 | 集成 tailscale SDK：No-Go（依赖其移动端登录体系） |
+| D8 | 远程接入 | **手动 tailnet 地址 + 应用内引导**（W6.5 ✅，含远程徽标与端点故障切换）；深度集成后置 | 集成 tailscale SDK：原判 No-Go（依赖其移动端登录体系）——**2026-10-13 spike 推翻该理由**：tsnet userspace 路线交互式登录 URL 即可、免 VPN 权限免移动端 App，转 v1.5+ 候选（`dev/spike/tailscale/RESULTS.md`） |
 | D9 | 推送 | **v1 不做**（TDD §8 待决） | — |
 | D10 | 开发环境与发布 | WSL CLI 构建（对齐 CI）+ Windows 调试；Releases 发 APK | 纯 Windows：与 CI 环境差异大 |
 
@@ -169,13 +171,13 @@ app/                      # Flutter 工程（或仓库根，W6.1 定）
 | 序号 | 内容 | 依赖 |
 | :--- | :--- | :--- |
 | W6.0 | 设计定案 + 本地仓库骨架（本稿已在本地草稿，远端创建待批准） | 用户拍板 |
-| W6.1 | 工程骨架 + CI（analyze/test/apk）+ 主题/i18n 基座 | W6.0 |
-| W6.2 | discovery + transport + auth（配对/令牌/单飞刷新） | W6.1、WP-5 可用 |
-| W6.3 | 数据面 UI（概览五卡 + 四态降级 + series） | W6.2 |
-| W6.4 | 应用页（控制面 + 软件包管理面 + 操作记录）+ 网络页控制 + 控制面动作 | W6.3 |
-| W6.5 | 设置页（多路由器/吊销/双模/语言）+ 远程引导 | W6.4 |
-| W6.6 | 打磨（动效/性能/无障碍）+ 文案定稿 | W6.5 |
-| W6.7 | 真机验收（VM 全链 + R4S 真机：发现→认证→数据展示→控制 ） | W6.5、WP-5 完成 |
+| W6.1 | ✅ 工程骨架 + CI（analyze/test/apk）+ 主题/i18n 基座 | W6.0 |
+| W6.2 | ✅ discovery + transport + auth（配对/令牌/单飞刷新） | W6.1、WP-5 可用 |
+| W6.3 | ✅ 数据面 UI（概览五卡 + 四态降级 + series） | W6.2 |
+| W6.4 | ✅ 应用页（控制面；软件包面降级待 WP-5 `packages` 扩展）+ 网络页控制 + 控制面动作 | W6.3 |
+| W6.5 | ✅ 设置页（多路由器/吊销/双模/语言）+ **远程链路**（引导页/远程地址/识别徽标/端点切换） | W6.4 |
+| W6.6 | ✅ 打磨（图标/启动屏/过渡/tab 状态保留/对比度/文案） | W6.5 |
+| W6.7 | 真机验收（VM 全链 + R4S 真机：发现→认证→数据展示→控制） | W6.6、WP-5 完成 |
 
 ## 12. 同步项与跨 WP 登记
 
@@ -191,3 +193,4 @@ app/                      # Flutter 工程（或仓库根，W6.1 定）
 
 *v0.1 2026-10-12 —— 首稿（讨论稿）：范围（§0）、前提事实（§1）、技术栈/分层（§2）、发现与配对（§3）、认证令牌（§4）、数据面（§5）、控制面（§6）、远程链路（§7）、UI 视觉（§8）、工程与 CI（§9）、待拍板十项（§10）、W6.x 分解（§11）、同步项（§12）。*
 *v1.0 2026-10-12 —— 用户拍板「就先按这个方案来」：§10 十项按推荐案定案（D1 仓库名 `QuartzWrt-App` 公开〔**远端创建待明确指令**〕/ D2 Android 优先 / D3 Riverpod+go_router / D4 dio+secure_storage+multicast_dns / D5 TOFU+pin / D6 5s 轮询 / D7 动作三组 / D8 手动 tailnet 地址 / D9 推送不做 / D10 WSL 构建 + Releases 发 APK）。*
+*v1.1 2026-10-13 —— W6.5/W6.6 定案落地 + 内嵌 tailscale spike：§7 重写（远程链路实现：引导页真数据/远程地址严格 pin 测试/远程识别徽标/端点传输级故障切换与回前台切回；证据 `design/shots/emu-w65/`）；D8 更新（tsnet spike 推翻 No-Go 理由，转 v1.5+ 候选 `dev/spike/tailscale/RESULTS.md`）；§11 状态标注 W6.1–W6.6 ✅；新增 CHANGELOG.md 与 lib/core/version.dart 版本单一来源。*

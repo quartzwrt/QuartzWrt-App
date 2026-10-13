@@ -10,8 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/client.dart';
+import '../api/endpoint.dart';
 import '../api/models.dart';
-import '../auth/pairing.dart';
 import '../auth/token_manager.dart';
 import '../discovery/mdns.dart';
 import '../storage/store.dart';
@@ -47,18 +47,80 @@ class ActiveRouterNotifier extends Notifier<PairedRouter?> {
 final activeRouterProvider =
     NotifierProvider<ActiveRouterNotifier, PairedRouter?>(ActiveRouterNotifier.new);
 
-/// 活动路由器的 API 客户端（严格 pin）。
-final apiClientProvider = Provider<QuartzApiClient?>((ref) {
+/// 路由器可用端点（局域网 + 可选远程；W6.5 远程链路，DESIGN §7）。
+final routerEndpointsProvider = Provider<List<Endpoint>>((ref) {
   final r = ref.watch(activeRouterProvider);
-  return r == null ? null : clientFor(r);
+  return r == null ? const [] : endpointsOf(r);
 });
 
-/// 令牌管理（单飞刷新；每次 active 路由器变化重建）。
+/// 当前端点（单一事实源：手动切换 / 传输失败自动切换都收敛到这里）。
+class EndpointController extends Notifier<Endpoint?> {
+  @override
+  Endpoint? build() {
+    ref.listen(appVisibleProvider, (_, visible) {
+      if (visible) _preferLocalProbe();
+    });
+    final eps = ref.watch(routerEndpointsProvider);
+    return eps.isEmpty ? null : eps.first;
+  }
+
+  /// 切到指定端点（须在当前候选内——如远程地址刚添加/移除后）。
+  void switchTo(Endpoint e) {
+    if (ref.read(routerEndpointsProvider).contains(e)) state = e;
+  }
+
+  /// 远程在用且回到前台：探测局域网端点，通即切回（低延迟、省流量）。
+  Future<void> _preferLocalProbe() async {
+    final cur = state;
+    if (cur == null || cur.kind == EndpointKind.local) return;
+    final r = ref.read(activeRouterProvider);
+    if (r == null) return;
+    Endpoint? local;
+    for (final e in ref.read(routerEndpointsProvider)) {
+      if (e.kind == EndpointKind.local) {
+        local = e;
+        break;
+      }
+    }
+    if (local == null) return;
+    try {
+      final client = QuartzApiClient.withPolicy(local.baseUrl, PinPolicy(expectedHex: r.fingerprint));
+      final res = await client.info();
+      if (res.ok && state?.kind == EndpointKind.remote) state = local;
+    } on Exception {
+      // 探测失败：保持远程，不起任何提示。
+    }
+  }
+}
+
+final endpointProvider = NotifierProvider<EndpointController, Endpoint?>(EndpointController.new);
+
+/// 活动路由器的 API 传输（端点失败切换；严格 pin 在端点工厂内保证）。
+///
+/// 注意：本 provider 只 watch 路由器与端点**列表**——端点切换不重建传输，
+/// 从而 TokenManager 不重建、内存 access 不丢、刷新不竞态。
+final apiClientProvider = Provider<ApiTransport?>((ref) {
+  final r = ref.watch(activeRouterProvider);
+  if (r == null) return null;
+  final eps = ref.watch(routerEndpointsProvider);
+  if (eps.isEmpty) return null;
+  return FailoverTransport(
+    endpoints: eps,
+    fingerprint: r.fingerprint,
+    current: () => ref.read(endpointProvider),
+    onSwitch: (e) => ref.read(endpointProvider.notifier).switchTo(e),
+  );
+});
+
+/// 令牌管理（单飞刷新；每路由器一个实例——端点切换不重建，避免刷新竞态）。
 final tokenManagerProvider = Provider<TokenManager?>((ref) {
   final r = ref.watch(activeRouterProvider);
-  final c = ref.watch(apiClientProvider);
-  if (r == null || c == null) return null;
-  return TokenManager(c, ref.watch(tokenStoreProvider), routerId: r.id);
+  if (r == null) return null;
+  return TokenManager(
+    () => ref.read(apiClientProvider),
+    ref.watch(tokenStoreProvider),
+    routerId: r.id,
+  );
 });
 
 /// 应用前后台可见性（驱动轮询启停）。

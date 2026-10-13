@@ -38,6 +38,7 @@ ThemeData buildQuartzTheme(Brightness brightness) {
     useMaterial3: true,
     colorScheme: scheme,
     scaffoldBackgroundColor: dark ? QuartzColors.darkBgBase : QuartzColors.lightBgBase,
+    snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
     appBarTheme: AppBarTheme(
       backgroundColor: dark ? QuartzColors.darkBgBase : QuartzColors.lightBgBase,
       surfaceTintColor: Colors.transparent,

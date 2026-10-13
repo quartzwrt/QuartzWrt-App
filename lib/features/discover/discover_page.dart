@@ -7,6 +7,7 @@ import '../../auth/pairing.dart';
 import '../../core/theme.dart';
 import '../../discovery/mdns.dart';
 import '../../l10n/app_localizations.dart';
+import '../../l10n/error_text.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
 
@@ -129,7 +130,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
             } on PairException catch (e) {
               setSheet(() {
                 busy = false;
-                error = _mapPairError(l10n, e);
+                error = pairErrorText(l10n, e);
               });
             } catch (_) {
               // 兜底：任何未预期异常都必须解除 Pairing… 卡态（曾因注册表写入
@@ -225,16 +226,6 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     return 'Quartz App';
   }
 
-  String _mapPairError(AppL10n l10n, PairException e) => switch (e.code) {
-        'invalid_credentials' => l10n.errInvalidCredentials,
-        'rate_limited' => l10n.errRateLimited(300),
-        'password_not_set' => l10n.errPasswordNotSet,
-        'fingerprint_mismatch' => l10n.errFingerprintMismatch,
-        'bad_certificate' => l10n.errBadCert,
-        'timeout' => l10n.errTimeout,
-        _ => l10n.errConnect,
-      };
-
   String _shortFp(String fp) =>
       fp.length >= 12 ? '${fp.substring(0, 8)} … ${fp.substring(fp.length - 4)}' : fp;
 
@@ -253,6 +244,7 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
             if (canBack)
               IconButton(
                 icon: const Icon(Icons.chevron_left),
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 onPressed: () => context.go('/overview'),
               )
             else

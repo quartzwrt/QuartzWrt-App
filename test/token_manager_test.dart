@@ -41,7 +41,7 @@ void main() {
     final store = MemoryTokenStore();
     await store.writeRefresh('dev1', 'r0');
 
-    final tm = TokenManager(t, store, routerId: 'dev1');
+    final tm = TokenManager(() => t, store, routerId: 'dev1');
     final results = await Future.wait([tm.ensureAccess(), tm.ensureAccess(), tm.ensureAccess()]);
 
     expect(results, ['a1', 'a1', 'a1']);
@@ -56,7 +56,7 @@ void main() {
     await store.writeRefresh('dev1', 'r0');
     var nowSec = 1000;
     final tm = TokenManager(
-      t,
+      () => t,
       store,
       routerId: 'dev1',
       now: () => DateTime.fromMillisecondsSinceEpoch(nowSec * 1000),
@@ -81,7 +81,7 @@ void main() {
     final t = FakeTransport();
     final store = MemoryTokenStore();
     await store.writeRefresh('dev1', 'r0');
-    final tm = TokenManager(t, store, routerId: 'dev1');
+    final tm = TokenManager(() => t, store, routerId: 'dev1');
     t.enqueue('refresh', ok(tokensPayload(access: 'a1')));
     t.enqueue('status', fail('token_expired'));
     t.enqueue('refresh', ok(tokensPayload(access: 'a2', refresh: 'r2')));
@@ -97,7 +97,7 @@ void main() {
     final t = FakeTransport();
     final store = MemoryTokenStore();
     await store.writeRefresh('dev1', 'r0');
-    final tm = TokenManager(t, store, routerId: 'dev1');
+    final tm = TokenManager(() => t, store, routerId: 'dev1');
     t.enqueue('refresh', fail('device_revoked'));
 
     await expectLater(tm.ensureAccess(), throwsA(isA<ApiAuthException>()));
@@ -108,7 +108,7 @@ void main() {
     final t = FakeTransport();
     final store = MemoryTokenStore();
     await store.writeRefresh('dev1', 'r0');
-    final tm = TokenManager(t, store, routerId: 'dev1');
+    final tm = TokenManager(() => t, store, routerId: 'dev1');
     t.enqueue('refresh', fail('timeout'));
 
     await expectLater(tm.ensureAccess(), throwsA(isA<ApiException>()));
@@ -119,7 +119,7 @@ void main() {
     final t = FakeTransport();
     final store = MemoryTokenStore();
     await store.writeRefresh('dev1', 'r0');
-    final tm = TokenManager(t, store, routerId: 'dev1');
+    final tm = TokenManager(() => t, store, routerId: 'dev1');
     t.enqueue('refresh', ok(tokensPayload()));
     await tm.ensureAccess();
 

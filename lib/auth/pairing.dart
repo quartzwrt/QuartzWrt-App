@@ -92,3 +92,23 @@ QuartzApiClient clientFor(PairedRouter r, {PinPolicy? policy}) {
   pin.expectedHex ??= r.fingerprint;
   return QuartzApiClient.withPolicy(r.baseUrl, pin);
 }
+
+/// 探测一个候选端点是否就是本路由器（W6.5 远程地址「测试并保存」）。
+///
+/// 严格 pin：证书指纹须与已配对记录一致（同一台路由器同一张证书）；
+/// 只调未认证的 `info`，不产生登录/令牌副作用。
+Future<RouterInfo> probeEndpoint(
+  PairedRouter r, {
+  required String host,
+  required int port,
+}) async {
+  final client = QuartzApiClient.withPolicy(
+    'https://$host:$port',
+    PinPolicy(expectedHex: r.fingerprint),
+  );
+  final infoR = await client.info();
+  if (!infoR.ok) {
+    throw PairException(infoR.error!.code, infoR.error!.message);
+  }
+  return RouterInfo.fromPayload(infoR.data);
+}

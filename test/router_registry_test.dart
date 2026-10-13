@@ -54,4 +54,43 @@ void main() {
     await reg.upsert(_r('x'));
     expect(reg.list().single.id, 'x');
   });
+
+  test('setRemote/clearRemote persist and preserve other fields', () async {
+    SharedPreferences.setMockInitialValues({});
+    final reg = RouterRegistry(await SharedPreferences.getInstance());
+    await reg.upsert(_r('dev1'));
+    await reg.setRemote('dev1', '100.1.2.3', 443);
+    final r = reg.byId('dev1')!;
+    expect(r.remoteHost, '100.1.2.3');
+    expect(r.remotePort, 443);
+    expect(r.host, '127.0.0.1'); // 局域网端点不受影响
+    expect(r.fingerprint, 'ab' * 32);
+    expect(r.deviceId, 'dev1');
+
+    await reg.clearRemote('dev1');
+    expect(reg.byId('dev1')!.hasRemote, isFalse);
+  });
+
+  test('setRemote on unknown id is a no-op', () async {
+    SharedPreferences.setMockInitialValues({});
+    final reg = RouterRegistry(await SharedPreferences.getInstance());
+    await reg.setRemote('nope', '100.1.2.3', 443);
+    expect(reg.list(), isEmpty);
+  });
+
+  test('PairedRouter json roundtrip with and without remote (backward compat)', () {
+    final withRemote = _r('dev1').copyWith(remoteHost: '100.1.2.3', remotePort: 8443);
+    final back = PairedRouter.fromJson(withRemote.toJson())!;
+    expect(back.remoteHost, '100.1.2.3');
+    expect(back.remotePort, 8443);
+
+    // 旧记录（无 remote_* 键）→ 空远程
+    final legacy = PairedRouter.fromJson(_r('old').toJson())!;
+    expect(legacy.hasRemote, isFalse);
+    expect(legacy.remotePort, 443);
+
+    // 空串/空白不算远程
+    final blank = PairedRouter.fromJson({..._r('b').toJson(), 'remote_host': '  '})!;
+    expect(blank.hasRemote, isFalse);
+  });
 }

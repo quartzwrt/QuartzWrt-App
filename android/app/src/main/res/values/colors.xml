@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- QuartzWrt 品牌色（W6.6 启动图标/启动屏）。与 lib/core/theme.dart token 同源。 -->
+    <color name="ic_launcher_background">#007AFF</color>
+    <color name="qz_splash_bg">#ECECF0</color>
+</resources>

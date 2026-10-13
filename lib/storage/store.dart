@@ -63,6 +63,20 @@ class RouterRegistry {
     }
   }
 
+  /// 设置/更新远程端点（W6.5；tailnet 100.x 或 MagicDNS 域名）。
+  Future<void> setRemote(String id, String host, int port) async {
+    final r = byId(id);
+    if (r == null) return;
+    await upsert(r.copyWith(remoteHost: host, remotePort: port));
+  }
+
+  /// 移除远程端点（不影响局域网配对与令牌）。
+  Future<void> clearRemote(String id) async {
+    final r = byId(id);
+    if (r == null) return;
+    await upsert(r.copyWith(clearRemote: true));
+  }
+
   Future<void> setActive(String? id) async {
     if (id == null) {
       await _prefs.remove(_kActive);

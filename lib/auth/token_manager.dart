@@ -23,16 +23,25 @@ class ApiAuthException implements Exception {
 
 class TokenManager {
   TokenManager(
-    this._t,
+    ApiTransport? Function() transportOf,
     this._store, {
     required this.routerId,
     DateTime Function()? now,
-  }) : _now = now ?? DateTime.now;
+  })  : _transportOf = transportOf,
+        _now = now ?? DateTime.now;
 
-  final ApiTransport _t;
+  /// 传输以闭包按调用取（端点失败切换会换传输实例；本管理器实例保持稳定，
+  /// 从而 `_inflight` 单飞与内存 access 在端点切换前后连续）。
+  final ApiTransport? Function() _transportOf;
   final TokenStore _store;
   final String routerId;
   final DateTime Function() _now;
+
+  ApiTransport get _t {
+    final t = _transportOf();
+    if (t == null) throw ApiException(const ApiError('transport', 'no endpoint'));
+    return t;
+  }
 
   String? _access;
   int _accessExp = 0; // epoch 秒

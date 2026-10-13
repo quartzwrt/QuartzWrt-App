@@ -61,6 +61,10 @@ class Tokens {
 }
 
 /// 已配对路由器（元数据持久在 shared_preferences；refresh 令牌另存安全存储）。
+///
+/// 地址面（DESIGN §7）：[host]/[port] 为配对时的局域网端点；[remoteHost]/
+/// [remotePort] 为手动添加的远程端点（tailnet 100.x / MagicDNS 域名）。
+/// 证书指纹两者共用（同一台路由器、同一张证书）。
 class PairedRouter {
   const PairedRouter({
     required this.id,
@@ -71,6 +75,8 @@ class PairedRouter {
     required this.fingerprint,
     required this.deviceId,
     required this.addedAt,
+    this.remoteHost,
+    this.remotePort,
   });
 
   final String id; // = deviceId（唯一）
@@ -81,8 +87,25 @@ class PairedRouter {
   final String fingerprint; // sha256(DER) hex，小写
   final String deviceId;
   final int addedAt;
+  final String? remoteHost;
+  final int? remotePort;
 
   String get baseUrl => 'https://$host:$port';
+
+  bool get hasRemote => (remoteHost ?? '').isNotEmpty;
+
+  PairedRouter copyWith({String? remoteHost, int? remotePort, bool clearRemote = false}) => PairedRouter(
+        id: id,
+        name: name,
+        model: model,
+        host: host,
+        port: port,
+        fingerprint: fingerprint,
+        deviceId: deviceId,
+        addedAt: addedAt,
+        remoteHost: clearRemote ? null : (remoteHost ?? this.remoteHost),
+        remotePort: clearRemote ? null : (remotePort ?? this.remotePort),
+      );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -93,12 +116,15 @@ class PairedRouter {
         'fingerprint': fingerprint,
         'device_id': deviceId,
         'added_at': addedAt,
+        if (hasRemote) 'remote_host': remoteHost,
+        if (hasRemote) 'remote_port': remotePort ?? 443,
       };
 
   static PairedRouter? fromJson(Map<String, dynamic> j) {
     final id = j['id'] as String?;
     final host = j['host'] as String?;
     if (id == null || host == null || host.isEmpty) return null;
+    final remoteHost = (j['remote_host'] as String?)?.trim();
     return PairedRouter(
       id: id,
       name: (j['name'] as String?) ?? host,
@@ -108,6 +134,8 @@ class PairedRouter {
       fingerprint: (j['fingerprint'] as String?) ?? '',
       deviceId: (j['device_id'] as String?) ?? id,
       addedAt: (j['added_at'] as int?) ?? 0,
+      remoteHost: (remoteHost == null || remoteHost.isEmpty) ? null : remoteHost,
+      remotePort: (j['remote_port'] as int?) ?? 443,
     );
   }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 暗色模式启动屏底色（暗色为 Quartz 参考稿原生）。 -->
+    <color name="qz_splash_bg">#1C1C1E</color>
+</resources>

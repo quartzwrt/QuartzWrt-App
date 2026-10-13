@@ -64,7 +64,8 @@
   "errBadCert": "Certificate check failed.",
   "errTimeout": "Connection timed out.",
   "overviewTitle": "Overview",
-  "connectedDirect": "Connected · LAN",
+  "connectedLan": "Connected · LAN",
+  "connectedRemote": "Connected · Remote",
   "runFor": "Up {d} days {h}:{m}",
   "@runFor": {
     "placeholders": {
@@ -262,7 +263,8 @@
   "settingsTitle": "Settings",
   "sysSettingsGroup": "System settings · Router",
   "appSettingsGroup": "App settings · This phone",
-  "pairedBadge": "Paired · LAN",
+  "pairedLan": "Paired · LAN",
+  "pairedRemote": "Paired · Remote",
   "fingerprintLabel": "Certificate fingerprint",
   "pairedDevicesEntry": "Paired devices",
   "addRouterEntry": "Add a router",
@@ -297,5 +299,44 @@
   "removeRouterBtn": "Remove",
   "kernelLabel": "kernel",
   "rePair": "Re-pair",
-  "collectorErrors": "Collector messages"
+  "collectorErrors": "Collector messages",
+  "remoteEntry": "Remote access",
+  "remotePageTitle": "Remote access",
+  "remoteRouterStatusTitle": "Router · Tailscale",
+  "remoteTsIpLabel": "Tailscale address",
+  "remoteUseThisAddr": "Add remote access with this address",
+  "remoteNotDetected": "Tailscale not detected — install and enable it from the router's Apps page.",
+  "remoteStepsTitle": "Setup steps",
+  "remoteStep1": "Install and enable Tailscale on the router (Apps → Tailscale).",
+  "remoteStep2": "Sign in to your tailnet on the router's Tailscale page.",
+  "remoteStep3": "Install the Tailscale client on your phone and sign in to the same tailnet.",
+  "remoteStep4": "Add the tailnet address here (100.x.y.z or a MagicDNS name); the certificate pin is reused from the LAN pairing.",
+  "remoteAddrTitle": "Remote address",
+  "remoteAddrNone": "Not set — direct LAN connection at home; add a tailnet address here to manage the router from anywhere.",
+  "remoteAddBtn": "Add remote address…",
+  "remoteEditBtn": "Edit",
+  "remoteTestBtn": "Test",
+  "remoteInUse": "In use",
+  "remoteHostLabel": "Address (100.x.y.z or hostname)",
+  "remoteTestSave": "Test & save",
+  "remoteTesting": "Testing…",
+  "remoteTestOk": "Remote connection works — saved.",
+  "remoteTestFail": "Connection failed: {detail}",
+  "@remoteTestFail": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "remoteHostRequired": "Please enter an address.",
+  "remoteRemoveBtn": "Remove remote address",
+  "remoteRemoveShort": "Remove",
+  "remoteRemoveTitle": "Remove remote address?",
+  "remoteRemoveBody": "The app will connect over LAN only; pairing and tokens are unaffected.",
+  "remoteRemoved": "Remote address removed.",
+  "remoteAutoTitle": "Automatic switching",
+  "remoteAutoBody": "LAN is preferred on the same network; on failure the app falls back to the remote address and switches back once LAN is reachable again.",
+  "remoteSecurityTitle": "Security",
+  "remoteSecurityBody": "Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing."
 }

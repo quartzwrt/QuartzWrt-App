@@ -355,11 +355,17 @@ abstract class AppL10n {
   /// **'Overview'**
   String get overviewTitle;
 
-  /// No description provided for @connectedDirect.
+  /// No description provided for @connectedLan.
   ///
   /// In en, this message translates to:
   /// **'Connected · LAN'**
-  String get connectedDirect;
+  String get connectedLan;
+
+  /// No description provided for @connectedRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected · Remote'**
+  String get connectedRemote;
 
   /// No description provided for @runFor.
   ///
@@ -859,11 +865,17 @@ abstract class AppL10n {
   /// **'App settings · This phone'**
   String get appSettingsGroup;
 
-  /// No description provided for @pairedBadge.
+  /// No description provided for @pairedLan.
   ///
   /// In en, this message translates to:
   /// **'Paired · LAN'**
-  String get pairedBadge;
+  String get pairedLan;
+
+  /// No description provided for @pairedRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Paired · Remote'**
+  String get pairedRemote;
 
   /// No description provided for @fingerprintLabel.
   ///
@@ -1032,6 +1044,198 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Collector messages'**
   String get collectorErrors;
+
+  /// No description provided for @remoteEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote access'**
+  String get remoteEntry;
+
+  /// No description provided for @remotePageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote access'**
+  String get remotePageTitle;
+
+  /// No description provided for @remoteRouterStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Router · Tailscale'**
+  String get remoteRouterStatusTitle;
+
+  /// No description provided for @remoteTsIpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailscale address'**
+  String get remoteTsIpLabel;
+
+  /// No description provided for @remoteUseThisAddr.
+  ///
+  /// In en, this message translates to:
+  /// **'Add remote access with this address'**
+  String get remoteUseThisAddr;
+
+  /// No description provided for @remoteNotDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Tailscale not detected — install and enable it from the router\'s Apps page.'**
+  String get remoteNotDetected;
+
+  /// No description provided for @remoteStepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup steps'**
+  String get remoteStepsTitle;
+
+  /// No description provided for @remoteStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Install and enable Tailscale on the router (Apps → Tailscale).'**
+  String get remoteStep1;
+
+  /// No description provided for @remoteStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to your tailnet on the router\'s Tailscale page.'**
+  String get remoteStep2;
+
+  /// No description provided for @remoteStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Install the Tailscale client on your phone and sign in to the same tailnet.'**
+  String get remoteStep3;
+
+  /// No description provided for @remoteStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the tailnet address here (100.x.y.z or a MagicDNS name); the certificate pin is reused from the LAN pairing.'**
+  String get remoteStep4;
+
+  /// No description provided for @remoteAddrTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote address'**
+  String get remoteAddrTitle;
+
+  /// No description provided for @remoteAddrNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set — direct LAN connection at home; add a tailnet address here to manage the router from anywhere.'**
+  String get remoteAddrNone;
+
+  /// No description provided for @remoteAddBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Add remote address…'**
+  String get remoteAddBtn;
+
+  /// No description provided for @remoteEditBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get remoteEditBtn;
+
+  /// No description provided for @remoteTestBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Test'**
+  String get remoteTestBtn;
+
+  /// No description provided for @remoteInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get remoteInUse;
+
+  /// No description provided for @remoteHostLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (100.x.y.z or hostname)'**
+  String get remoteHostLabel;
+
+  /// No description provided for @remoteTestSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Test & save'**
+  String get remoteTestSave;
+
+  /// No description provided for @remoteTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing…'**
+  String get remoteTesting;
+
+  /// No description provided for @remoteTestOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote connection works — saved.'**
+  String get remoteTestOk;
+
+  /// No description provided for @remoteTestFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed: {detail}'**
+  String remoteTestFail(String detail);
+
+  /// No description provided for @remoteHostRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an address.'**
+  String get remoteHostRequired;
+
+  /// No description provided for @remoteRemoveBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove remote address'**
+  String get remoteRemoveBtn;
+
+  /// No description provided for @remoteRemoveShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remoteRemoveShort;
+
+  /// No description provided for @remoteRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove remote address?'**
+  String get remoteRemoveTitle;
+
+  /// No description provided for @remoteRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The app will connect over LAN only; pairing and tokens are unaffected.'**
+  String get remoteRemoveBody;
+
+  /// No description provided for @remoteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote address removed.'**
+  String get remoteRemoved;
+
+  /// No description provided for @remoteAutoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic switching'**
+  String get remoteAutoTitle;
+
+  /// No description provided for @remoteAutoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'LAN is preferred on the same network; on failure the app falls back to the remote address and switches back once LAN is reachable again.'**
+  String get remoteAutoBody;
+
+  /// No description provided for @remoteSecurityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get remoteSecurityTitle;
+
+  /// No description provided for @remoteSecurityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing.'**
+  String get remoteSecurityBody;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

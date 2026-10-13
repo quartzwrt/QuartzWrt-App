@@ -110,17 +110,20 @@ class _AppsPageState extends ConsumerState<AppsPage> {
             ],
           ),
         ),
-      const SizedBox(height: 12),
-      QuartzCard(
-        title: l10n.appsNotInstalledTitle,
-        child: Text(
-          l10n.appsNotInstalledBody,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: .55),
-            height: 1.5,
+      // 空态才展示「未安装」说明卡（有应用在列时探针机制已自证，避免文案自相矛盾）
+      if (entries.isEmpty) ...[
+        const SizedBox(height: 12),
+        QuartzCard(
+          title: l10n.appsNotInstalledTitle,
+          child: Text(
+            l10n.appsNotInstalledBody,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: .55),
+              height: 1.5,
+            ),
           ),
         ),
-      ),
+      ],
     ];
   }
 

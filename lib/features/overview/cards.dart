@@ -9,11 +9,20 @@ import '../../widgets/quartz.dart';
 import '../../widgets/sparkline.dart';
 
 class HeroCard extends StatelessWidget {
-  const HeroCard({super.key, required this.snapshot, required this.fallbackName, this.stale = false});
+  const HeroCard({
+    super.key,
+    required this.snapshot,
+    required this.fallbackName,
+    this.stale = false,
+    this.remote = false,
+  });
 
   final Snapshot? snapshot;
   final String fallbackName;
   final bool stale;
+
+  /// 当前经远程端点（tailnet）连接（W6.5 远程识别徽标）。
+  final bool remote;
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +91,16 @@ class HeroCard extends StatelessWidget {
                 child: Row(
                   children: [
                     StatusDot(stale ? DotKind.warn : DotKind.ok),
+                    if (remote) ...[
+                      const Icon(Icons.cloud_outlined, size: 13, color: QuartzColors.accent),
+                      const SizedBox(width: 4),
+                    ],
                     Text(
-                      l10n.connectedDirect,
+                      remote ? l10n.connectedRemote : l10n.connectedLan,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: stale ? QuartzColors.warn : QuartzColors.ok,
+                        color: stale ? QuartzColors.warn : (remote ? QuartzColors.accent : QuartzColors.ok),
                       ),
                     ),
                   ],

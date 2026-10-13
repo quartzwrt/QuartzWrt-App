@@ -1,4 +1,7 @@
 // 应用入口与路由（go_router；DESIGN §2.2 / UI-DESIGN 定案 IA）。
+//
+// 四 tab 用 StatefulShellRoute.indexedStack：切 tab 保留各页滚动位置与状态
+// （W6.6 性能/体验打磨）；详情页走轻量上滑淡入过渡。
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,10 +16,34 @@ import 'features/network/clients_page.dart';
 import 'features/network/network_page.dart';
 import 'features/overview/overview_page.dart';
 import 'features/settings/devices_page.dart';
+import 'features/settings/remote_page.dart';
 import 'features/settings/settings_page.dart';
 import 'features/shell/shell.dart';
 import 'l10n/app_localizations.dart';
 import 'state/app_state.dart';
+
+/// 详情页过渡：轻量上滑 + 淡入（tab 切换保持瞬时，避免拖沓）。
+CustomTransitionPage<void> _fadeUpPage(GoRouterState state, Widget child) =>
+    CustomTransitionPage<void>(
+      key: state.pageKey,
+      transitionDuration: const Duration(milliseconds: 220),
+      reverseTransitionDuration: const Duration(milliseconds: 160),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween(begin: const Offset(0, .025), end: Offset.zero).animate(curved),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
 
 final routerProvider = Provider<GoRouter>((ref) {
   final registry = ref.watch(registryProvider);
@@ -31,23 +58,31 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/discover', builder: (_, _) => const DiscoverPage()),
-      ShellRoute(
-        builder: (context, state, child) =>
-            ShellScaffold(location: state.uri.path, child: child),
-        routes: [
-          GoRoute(path: '/overview', builder: (_, _) => const OverviewPage()),
-          GoRoute(path: '/network', builder: (_, _) => const NetworkPage()),
-          GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
-          GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => ShellScaffold(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/overview', builder: (_, _) => const OverviewPage()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/network', builder: (_, _) => const NetworkPage()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
+          ]),
         ],
       ),
-      GoRoute(path: '/network/clients', builder: (_, _) => const ClientsPage()),
+      GoRoute(path: '/network/clients', pageBuilder: (_, s) => _fadeUpPage(s, const ClientsPage())),
       GoRoute(
         path: '/apps/detail/:id',
-        builder: (_, state) => AppDetailPage(appId: state.pathParameters['id']!),
+        pageBuilder: (_, s) => _fadeUpPage(s, AppDetailPage(appId: s.pathParameters['id']!)),
       ),
-      GoRoute(path: '/apps/log', builder: (_, _) => const PackageLogPage()),
-      GoRoute(path: '/settings/devices', builder: (_, _) => const DevicesPage()),
+      GoRoute(path: '/apps/log', pageBuilder: (_, s) => _fadeUpPage(s, const PackageLogPage())),
+      GoRoute(path: '/settings/devices', pageBuilder: (_, s) => _fadeUpPage(s, const DevicesPage())),
+      GoRoute(path: '/settings/remote', pageBuilder: (_, s) => _fadeUpPage(s, const RemotePage())),
     ],
   );
 });
