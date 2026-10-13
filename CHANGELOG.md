@@ -2,6 +2,15 @@
 
 版本与 `pubspec.yaml` `version`、`lib/core/version.dart` 同步维护（DESIGN §9）。
 
+## 0.2.0 — 2026-10-13
+
+- **内嵌直连（实验）**：App 进程内嵌 tailnet 节点（tsnet userspace）+ 本地 CONNECT 代理——
+  手机无需安装 Tailscale 客户端即可经 tailnet 远程管理路由器；设置→远程访问新增开关与登录引导；
+  远程端点连接顺序 = 内嵌代理 → 直连 → 局域网回退。发布只带 arm64-v8a；`native/tailnet/`
+  引擎（c-shared，Dart FFI）+ `scripts/build-native.sh`；`config.json` 为本地联调钩子。
+- 远程访问页新增「内嵌直连」卡（可用性/状态/本机 tailnet 地址/登录按钮/复制链接）。
+- 版本 0.2.0（构建 2）；新增 `THIRD_PARTY_NOTICES.md`（BSD-3-Clause 等的分发声明）。
+
 ## 0.1.0 — 2026-10-13
 
 首个开发版（W6.1–W6.6；W6.7 真机验收待做）：

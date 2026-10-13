@@ -5,15 +5,19 @@
 // 动作面：添加/测试/移除远程端点（probeEndpoint 严格 pin 校验，只调 info），
 // 保存后即切换当前端点；FailoverTransport 之后负责自动切换。
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/endpoint.dart';
 import '../../api/models.dart';
+import '../../native/tailnet.dart';
 import '../../auth/pairing.dart';
 import '../../core/theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/error_text.dart';
 import '../../state/app_state.dart';
+import '../../state/tailnet_state.dart';
 import '../../widgets/quartz.dart';
 
 class RemotePage extends ConsumerWidget {
@@ -154,6 +158,7 @@ class RemotePage extends ConsumerWidget {
                     ),
               ),
             ),
+            const _EmbeddedCard(),
             QuartzCard(
               title: l10n.remoteSecurityTitle,
               child: Text(
@@ -232,7 +237,8 @@ class RemotePage extends ConsumerWidget {
               error = null;
             });
             try {
-              await probeEndpoint(router, host: host, port: port);
+              await probeEndpoint(router,
+                  host: host, port: port, proxyAddr: proxyOf(ref.read(tailnetProvider)));
               final registry = ref.read(registryProvider);
               await registry.setRemote(router.id, host, port);
               ref.read(activeRouterProvider.notifier).reload();
@@ -334,7 +340,8 @@ class RemotePage extends ConsumerWidget {
     final l10n = AppL10n.of(context);
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await probeEndpoint(router, host: router.remoteHost!, port: router.remotePort ?? 443);
+      await probeEndpoint(router,
+          host: router.remoteHost!, port: router.remotePort ?? 443, proxyAddr: proxyOf(ref.read(tailnetProvider)));
       messenger.showSnackBar(SnackBar(content: Text(l10n.remoteTestOk)));
     } on PairException catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.remoteTestFail(pairErrorText(l10n, e)))));
@@ -358,5 +365,126 @@ class RemotePage extends ConsumerWidget {
     ref.read(activeRouterProvider.notifier).reload();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.remoteRemoved)));
+  }
+}
+
+/// 内嵌直连（tsnet）卡片：开关 / 状态 / 登录引导（实验特性，DESIGN §7）。
+class _EmbeddedCard extends ConsumerWidget {
+  const _EmbeddedCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
+    final theme = Theme.of(context);
+    final st = ref.watch(tailnetProvider);
+    final ctl = ref.read(tailnetProvider.notifier);
+
+    final bodyStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurface.withValues(alpha: .65),
+      height: 1.5,
+    );
+
+    if (st.phase == TailnetPhase.unavailable) {
+      return QuartzCard(
+        title: l10n.embedTitle,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.embedBody, style: bodyStyle),
+            const SizedBox(height: 10),
+            Text(l10n.embedUnavailable, style: const TextStyle(color: QuartzColors.warn, fontSize: 12.5)),
+          ],
+        ),
+      );
+    }
+
+    final phaseText = switch (st.phase) {
+      TailnetPhase.starting => l10n.embedPhaseStarting,
+      TailnetPhase.needsLogin => l10n.embedPhaseNeedsLogin,
+      TailnetPhase.running => l10n.embedPhaseRunning,
+      TailnetPhase.error => l10n.embedPhaseError,
+      TailnetPhase.stopped => l10n.embedPhaseStopped,
+      TailnetPhase.unavailable => l10n.embedPhaseStopped,
+    };
+    final phaseColor = switch (st.phase) {
+      TailnetPhase.running => QuartzColors.ok,
+      TailnetPhase.needsLogin => QuartzColors.warn,
+      TailnetPhase.error => QuartzColors.err,
+      _ => null,
+    };
+
+    return QuartzCard(
+      title: l10n.embedTitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.embedBody, style: bodyStyle),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(child: Text(l10n.embedEnable, style: theme.textTheme.bodyMedium)),
+              Switch(
+                value: st.enabled,
+                onChanged: (v) => v ? ctl.enable() : ctl.disable(),
+              ),
+            ],
+          ),
+          if (st.enabled) ...[
+            KvRow(l10n.embedStateLabel, phaseText, first: true, valueMono: false, valueColor: phaseColor),
+            if (st.selfIp.isNotEmpty) KvRow(l10n.embedSelfIpLabel, st.selfIp),
+            if (st.phase == TailnetPhase.error && st.message.isNotEmpty)
+              KvRow(l10n.embedErrorDetail, st.message, valueMono: false, valueColor: QuartzColors.err),
+          ],
+          if (st.enabled && st.logs.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              st.logs.split('\n').where((l) => l.trim().isNotEmpty).toList().reversed.take(6).toList().reversed.join('\n'),
+              style: TextStyle(
+                fontSize: 10.5,
+                height: 1.35,
+                fontFamily: 'monospace',
+                color: theme.colorScheme.onSurface.withValues(alpha: .55),
+              ),
+            ),
+          ],
+          if (st.phase == TailnetPhase.needsLogin) ...[
+            const SizedBox(height: 6),
+            Text(l10n.embedLoginHint, style: bodyStyle),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => _openLogin(context, st.loginUrl),
+                    child: Text(l10n.embedLoginBtn),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton(
+                  onPressed: () async {
+                    await Clipboard.setData(ClipboardData(text: st.loginUrl));
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(l10n.embedCopied)));
+                  },
+                  child: Text(l10n.embedCopyBtn),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static Future<void> _openLogin(BuildContext context, String url) async {
+    if (url.isEmpty) return;
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (_) {
+      if (!context.mounted) return;
+      final l10n = AppL10n.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errConnect)));
+    }
   }
 }

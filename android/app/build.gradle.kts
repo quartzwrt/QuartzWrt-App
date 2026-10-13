@@ -34,6 +34,10 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            // 内嵌 tailnet 引擎（libtailnet.so）发布只带 arm64；x86_64 仅调试/模拟器用
+            ndk {
+                abiFilters += listOf("arm64-v8a")
+            }
         }
     }
 }

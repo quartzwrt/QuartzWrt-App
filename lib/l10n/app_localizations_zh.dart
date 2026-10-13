@@ -622,4 +622,53 @@ class AppL10nZh extends AppL10n {
   @override
   String get remoteSecurityBody =>
       '远程与局域网同样经证书指纹校验（防中间人）。远程执行重启/断网类操作可能暂时失联，路由器会自行恢复。移除远程地址不影响局域网配对。';
+
+  @override
+  String get embedTitle => '内嵌直连（实验）';
+
+  @override
+  String get embedBody =>
+      '在本机内嵌一个 tailnet 节点：手机无需安装 Tailscale 客户端，也能经 tailnet 远程访问路由器。开启后会为本机在 tailnet 中创建一台设备（需登录授权）；关闭即回退为普通直连方式。';
+
+  @override
+  String get embedUnavailable => '此构建未包含内嵌引擎（发布包默认包含）。';
+
+  @override
+  String get embedEnable => '开启内嵌直连';
+
+  @override
+  String get embedStateLabel => '状态';
+
+  @override
+  String get embedPhaseStarting => '启动中…';
+
+  @override
+  String get embedPhaseNeedsLogin => '等待登录';
+
+  @override
+  String get embedPhaseRunning => '已连接';
+
+  @override
+  String get embedPhaseStopped => '未启用';
+
+  @override
+  String get embedPhaseError => '错误';
+
+  @override
+  String get embedSelfIpLabel => '本机 tailnet 地址';
+
+  @override
+  String get embedLoginBtn => '登录 Tailscale';
+
+  @override
+  String get embedLoginHint => '登录后本机即成为 tailnet 设备，远程地址将自动优先经内嵌节点连接。';
+
+  @override
+  String get embedCopyBtn => '复制链接';
+
+  @override
+  String get embedCopied => '已复制';
+
+  @override
+  String get embedErrorDetail => '错误信息';
 }

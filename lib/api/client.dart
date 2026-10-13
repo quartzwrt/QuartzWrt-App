@@ -42,8 +42,13 @@ String hexOf(Uint8List bytes) {
   return sb.toString();
 }
 
-HttpClient createPinnedHttpClient(PinPolicy policy) {
+HttpClient createPinnedHttpClient(PinPolicy policy, {String? proxyAddr}) {
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
+  if (proxyAddr != null && proxyAddr.isNotEmpty) {
+    // 内嵌直连：经 App 进程内的 tsnet CONNECT 代理出站（TLS/pin 仍在本层端到端校验）。
+    final proxy = proxyAddr;
+    client.findProxy = (uri) => 'PROXY $proxy';
+  }
   client.badCertificateCallback = (X509Certificate cert, String host, int port) {
     // 与路由器侧 `sha256sum /etc/uhttpd.crt`（DER 字节）一致。
     final hex = hexOf(Uint8List.fromList(sha256.convert(cert.der).bytes));
@@ -62,17 +67,18 @@ abstract interface class ApiTransport {
 }
 
 class QuartzApiClient implements ApiTransport {
-  QuartzApiClient(String baseUrl, {PinPolicy? pin})
-      : this.withPolicy(baseUrl, pin ?? PinPolicy());
+  QuartzApiClient(String baseUrl, {PinPolicy? pin, String? proxyAddr})
+      : this.withPolicy(baseUrl, pin ?? PinPolicy(), proxyAddr: proxyAddr);
 
-  QuartzApiClient.withPolicy(String baseUrl, this.pin)
+  QuartzApiClient.withPolicy(String baseUrl, this.pin, {String? proxyAddr})
       : _dio = Dio(BaseOptions(
           baseUrl: baseUrl,
           connectTimeout: const Duration(seconds: 5),
           receiveTimeout: const Duration(seconds: 10),
         )) {
-    _dio.httpClientAdapter =
-        IOHttpClientAdapter(createHttpClient: () => createPinnedHttpClient(pin));
+    _dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () => createPinnedHttpClient(pin, proxyAddr: proxyAddr),
+    );
   }
 
   final Dio _dio;

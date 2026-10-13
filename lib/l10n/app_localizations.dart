@@ -1236,6 +1236,102 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing.'**
   String get remoteSecurityBody;
+
+  /// No description provided for @embedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Embedded direct (experimental)'**
+  String get embedTitle;
+
+  /// No description provided for @embedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs a tailnet node inside the app: reach the router over your tailnet without installing the Tailscale client on this phone. Enabling creates a device in your tailnet (login required); disabling falls back to the regular direct connection.'**
+  String get embedBody;
+
+  /// No description provided for @embedUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This build does not include the embedded engine (release builds do).'**
+  String get embedUnavailable;
+
+  /// No description provided for @embedEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable embedded direct'**
+  String get embedEnable;
+
+  /// No description provided for @embedStateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get embedStateLabel;
+
+  /// No description provided for @embedPhaseStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting…'**
+  String get embedPhaseStarting;
+
+  /// No description provided for @embedPhaseNeedsLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for login'**
+  String get embedPhaseNeedsLogin;
+
+  /// No description provided for @embedPhaseRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get embedPhaseRunning;
+
+  /// No description provided for @embedPhaseStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get embedPhaseStopped;
+
+  /// No description provided for @embedPhaseError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get embedPhaseError;
+
+  /// No description provided for @embedSelfIpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'This device tailnet address'**
+  String get embedSelfIpLabel;
+
+  /// No description provided for @embedLoginBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to Tailscale'**
+  String get embedLoginBtn;
+
+  /// No description provided for @embedLoginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After signing in, this device joins your tailnet and remote addresses prefer the embedded node automatically.'**
+  String get embedLoginHint;
+
+  /// No description provided for @embedCopyBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get embedCopyBtn;
+
+  /// No description provided for @embedCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get embedCopied;
+
+  /// No description provided for @embedErrorDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Error detail'**
+  String get embedErrorDetail;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

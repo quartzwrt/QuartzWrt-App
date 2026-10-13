@@ -640,4 +640,55 @@ class AppL10nEn extends AppL10n {
   @override
   String get remoteSecurityBody =>
       'Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing.';
+
+  @override
+  String get embedTitle => 'Embedded direct (experimental)';
+
+  @override
+  String get embedBody =>
+      'Runs a tailnet node inside the app: reach the router over your tailnet without installing the Tailscale client on this phone. Enabling creates a device in your tailnet (login required); disabling falls back to the regular direct connection.';
+
+  @override
+  String get embedUnavailable =>
+      'This build does not include the embedded engine (release builds do).';
+
+  @override
+  String get embedEnable => 'Enable embedded direct';
+
+  @override
+  String get embedStateLabel => 'Status';
+
+  @override
+  String get embedPhaseStarting => 'Starting…';
+
+  @override
+  String get embedPhaseNeedsLogin => 'Waiting for login';
+
+  @override
+  String get embedPhaseRunning => 'Connected';
+
+  @override
+  String get embedPhaseStopped => 'Off';
+
+  @override
+  String get embedPhaseError => 'Error';
+
+  @override
+  String get embedSelfIpLabel => 'This device tailnet address';
+
+  @override
+  String get embedLoginBtn => 'Sign in to Tailscale';
+
+  @override
+  String get embedLoginHint =>
+      'After signing in, this device joins your tailnet and remote addresses prefer the embedded node automatically.';
+
+  @override
+  String get embedCopyBtn => 'Copy link';
+
+  @override
+  String get embedCopied => 'Copied';
+
+  @override
+  String get embedErrorDetail => 'Error detail';
 }

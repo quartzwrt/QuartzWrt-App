@@ -7,9 +7,54 @@ import 'package:quartzwrt_app/api/models.dart';
 import 'package:quartzwrt_app/features/overview/cards.dart';
 import 'package:quartzwrt_app/features/settings/remote_page.dart';
 import 'package:quartzwrt_app/l10n/app_localizations.dart';
+import 'package:quartzwrt_app/native/tailnet.dart';
 import 'package:quartzwrt_app/state/app_state.dart';
+import 'package:quartzwrt_app/state/tailnet_state.dart';
 import 'package:quartzwrt_app/storage/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakeEngine implements TailnetEngineApi {
+  bool started = false;
+  String? ifaces;
+  String backend = 'NeedsLogin';
+  String login = 'https://login.example/a/42';
+
+  @override
+  bool setInterfaces(String json) {
+    ifaces = json;
+    return true;
+  }
+
+  @override
+  bool start(String stateDir, String hostname) {
+    started = true;
+    return true;
+  }
+
+  @override
+  void stop() => started = false;
+
+  @override
+  String proxyAddr() => started && backend == 'Running' ? '127.0.0.1:4567' : '';
+
+  @override
+  String loginUrl() => started ? login : '';
+
+  @override
+  String state() => started ? backend : 'Stopped';
+
+  @override
+  String selfIp() => started && backend == 'Running' ? '100.9.9.9' : '';
+
+  @override
+  String lastError() => '';
+
+  @override
+  String logs() => '';
+
+  @override
+  String version() => 'fake';
+}
 
 class _FixedSnap extends SnapshotController {
   _FixedSnap(this.fixed);
@@ -33,10 +78,20 @@ PairedRouter _router({String? remoteHost}) => PairedRouter(
       remotePort: remoteHost == null ? null : 443,
     );
 
-Widget _host(Widget child, {required SharedPreferences prefs, SnapshotState? snap}) => ProviderScope(
+Widget _host(
+  Widget child, {
+  required SharedPreferences prefs,
+  SnapshotState? snap,
+  TailnetEngineApi? engine,
+}) =>
+    ProviderScope(
       overrides: [
         prefsProvider.overrideWithValue(prefs),
         if (snap != null) snapshotProvider.overrideWith(() => _FixedSnap(snap)),
+        tailnetEngineProvider.overrideWithValue(engine),
+        tailnetDirProvider.overrideWithValue(() async => '/tmp/qt-test-tailnet'),
+        tailnetInterfacesProvider.overrideWithValue(
+            () async => '[{"name":"wlan0","index":2,"addrs":["192.168.1.5"]}]'),
       ],
       child: MaterialApp(
         locale: const Locale('zh'),
@@ -50,6 +105,7 @@ Widget _host(Widget child, {required SharedPreferences prefs, SnapshotState? sna
         home: child,
       ),
     );
+
 
 Snapshot _snapWithTailscale() => Snapshot({
       'v': 1,
@@ -143,6 +199,57 @@ void main() {
 
     expect(find.text('100.118.170.8'), findsWidgets); // 页内 + 表单预填
     expect(find.text('测试并保存'), findsOneWidget);
+  });
+
+  testWidgets('embedded card: unavailable build shows explicit fallback text', (tester) async {
+    tester.view.physicalSize = const Size(1200, 3600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final reg = RouterRegistry(prefs);
+    await reg.upsert(_router());
+    await reg.setActive('dev1');
+
+    await tester.pumpWidget(_host(
+      const RemotePage(),
+      prefs: prefs,
+      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+      engine: null,
+    ));
+    await tester.pump();
+
+    expect(find.text('内嵌直连（实验）'), findsOneWidget);
+    expect(find.textContaining('此构建未包含内嵌引擎'), findsOneWidget);
+  });
+
+  testWidgets('embedded card: enable → needsLogin with login button', (tester) async {
+    tester.view.physicalSize = const Size(1200, 3600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final reg = RouterRegistry(prefs);
+    await reg.upsert(_router());
+    await reg.setActive('dev1');
+    final engine = _FakeEngine();
+
+    await tester.pumpWidget(_host(
+      const RemotePage(),
+      prefs: prefs,
+      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+      engine: engine,
+    ));
+    await tester.pump();
+    expect(find.text('开启内嵌直连'), findsOneWidget);
+
+    await tester.tap(find.byType(Switch));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(engine.started, isTrue);
+    expect(find.text('等待登录'), findsOneWidget);
+    expect(find.text('登录 Tailscale'), findsOneWidget);
+    expect(find.text('复制链接'), findsOneWidget);
   });
 
   testWidgets('remote page shows saved remote address with in-use badge when active', (tester) async {

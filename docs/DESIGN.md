@@ -132,6 +132,14 @@ app/                      # Flutter 工程（或仓库根，W6.1 定）
 - **App 侧（v1）**：设置 →「远程访问」引导页承载：①**真数据状态卡**——路由器端 Tailscale 状态与 tailnet 地址直读快照 `services.tailscale`（daemon 内置探针，WP-4/WP-10 真数据，不装/未启/未登录三态都有明确呈现）与「使用此地址添加远程连接」一键带出；②四步引导（路由器装启用 → 登录 tailnet → 手机装 Tailscale 客户端 → 在本页添加地址）；③远程地址管理（添加/修改/测试/移除）——添加时以**已配对证书指纹严格 pin** 调 `info` 实测连通（同一台路由器同一张证书，pin 复用），失败即时报因（含 `bad_certificate`=可能不是你的路由器）。
 - **后置**：tailscale 登录 URL / 一键配置经 WP-5 `action` 表接入；**「App 内封 tailscale」（进程内 tsnet 节点，免装移动端 App）已 spike 验证可行**——见 `dev/spike/tailscale/RESULTS.md`（推荐 tsnet userspace + 本地 CONNECT 代理，无 VPN 权限；定位 v1.5+）。
 
+### 7.1 内嵌直连（tsnet，2026-10-13 用户拍板走此路线 → 已实现，实验特性）
+
+- **路线**：`tsnet` userspace 节点 + **127.0.0.1 CONNECT 代理**（`native/tailnet/`，c-shared `libtailnet.so`，Dart FFI）。**无 VpnService/整机 VPN、无 root、不接管系统流量**；TLS 与证书 pin 仍在 Dart 侧端到端完成。
+- **开关语义**：设置→远程访问→「内嵌直连（实验）」开关（持久化，默认关）。开启后远程端点连接顺序 = **代理 → 直连 → 另一端点（局域网）**（`FailoverTransport.attempts()`；仅远程端点可走代理——结构性约束）。
+- **登录**：交互式 URL（应用内打开浏览器/复制链接）；节点身份存 App 私有目录（卸载即清）。`config.json` 为本地联调/排障钩子（control_url/auth_key/hostname），App UI 不写。
+- **发布面**：release APK 只带 arm64-v8a（`abiFilters`）；x86_64 供模拟器。构建 `scripts/build-native.sh`（CI release 任务已接入 Go+NDK）。合规：tailscale.com BSD-3-Clause，见 `THIRD_PARTY_NOTICES.md`；界面措辞「基于 Tailscale」，不暗示背书。
+- **验证（2026-10-13 全通过）**：宿主 `e2e/client` 对**真 tailnet**（官方控制面 + auth key）+ mock 路由器（真 API 子集）——登录→代理→拨 peer→HTTPS→重启免登录持久化全 PASS；模拟器实机（Android 16/x86_64）——内嵌节点 Running（自有 tailnet IP，无 VpnService）、远程地址经内嵌代理探测/保存/「使用中」、徽标「已连接 · 远程」+ 真数据、关闭开关自动回退局域网。工具：`native/tailnet/e2e/`；证据 `design/shots/emu-embed/`。**Android 平台适配三件套**（netlink 禁 → 接口注入 / 无 /tmp → TMPDIR / SELinux sysfs → best-effort）见 `native/tailnet/README.md`。
+
 ## 8. UI 与视觉
 
 **UI 设计（已定案）见 [`UI-DESIGN.md`](UI-DESIGN.md)**：预览页 `design/preview.html`（十一屏，评审图 `design/shots/`）。要点：

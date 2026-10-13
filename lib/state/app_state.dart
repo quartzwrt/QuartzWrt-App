@@ -15,6 +15,7 @@ import '../api/models.dart';
 import '../auth/token_manager.dart';
 import '../discovery/mdns.dart';
 import '../storage/store.dart';
+import 'tailnet_state.dart';
 
 /// 启动时由 main 覆盖。
 final prefsProvider = Provider<SharedPreferences>(
@@ -109,6 +110,8 @@ final apiClientProvider = Provider<ApiTransport?>((ref) {
     fingerprint: r.fingerprint,
     current: () => ref.read(endpointProvider),
     onSwitch: (e) => ref.read(endpointProvider.notifier).switchTo(e),
+    // 远程端点：内嵌直连（tsnet 本地代理）可用时优先经它出站（仅远程端点生效）。
+    proxyFor: (e) => tailnetProxyFor(ref),
   );
 });
 

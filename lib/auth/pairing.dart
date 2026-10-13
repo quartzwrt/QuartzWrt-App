@@ -97,14 +97,17 @@ QuartzApiClient clientFor(PairedRouter r, {PinPolicy? policy}) {
 ///
 /// 严格 pin：证书指纹须与已配对记录一致（同一台路由器同一张证书）；
 /// 只调未认证的 `info`，不产生登录/令牌副作用。
+/// [proxyAddr] 非空时经本地 CONNECT 代理出站（内嵌直连：远程地址只能经 tailnet 到达）。
 Future<RouterInfo> probeEndpoint(
   PairedRouter r, {
   required String host,
   required int port,
+  String? proxyAddr,
 }) async {
   final client = QuartzApiClient.withPolicy(
     'https://$host:$port',
     PinPolicy(expectedHex: r.fingerprint),
+    proxyAddr: (proxyAddr == null || proxyAddr.isEmpty) ? null : proxyAddr,
   );
   final infoR = await client.info();
   if (!infoR.ok) {

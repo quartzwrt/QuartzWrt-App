@@ -53,6 +53,19 @@ Flutter App 进程
 - **构建链**：需要 Go（≥ 本 spike 的 1.25.4）+ NDK（本机 28.2）。现 CI 只有 Flutter → 建议仅在 tag/release 任务加装工具链；日常调试用预编译 `.so` 缓存。
 - **备选（省自研）**：pub.dev **`tailscale` 0.9.0**（MIT；FFI + 原生构建钩子内嵌上游 tsnet；Android 12+ 支持持久节点；构建要求 Go ≥ 1.26）。取舍：省自研封装与维护 vs 引入 pre-1.0 三方依赖 + 构建链约束（Go 版本将被迫升级）；本 spike 的 c-shared 路线则完全自控。
 
+## Android 实测补记（2026-10-13 落地实现时；上游 spike 未覆盖的平台层）
+
+内嵌节点在模拟器（Android 16, x86_64）实跑暴露三处平台问题，生产实现（`native/tailnet/`）已全部内建修复：
+
+1. `tsnet.Up: route ip+net: netlinkrib: permission denied` —— Android 禁应用 netlink（tailscale#2293/#8126）。
+   修复：Dart(getifaddrs) → `TailnetSetInterfaces` → `netmon.RegisterInterfaceGetter`（与官方 Android 客户端同路）。
+2. `panic: no safe place found to store log state`（logpolicy 无 /tmp 可写 → abort）。修复：`TMPDIR`/`XDG_CACHE_HOME` 指向状态目录。
+3. SELinux 禁 `/proc/net/*`、`/sys/class/net`（avc denied）→ 前缀/MTU/MAC 推导 best-effort。
+
+端到端验证（真 tailnet + mock 路由器 + 模拟器）：内嵌节点 Running（自有 tailnet IP，无 VpnService）→ 远程地址 100.x:443
+经内嵌代理探测/保存/「使用中」→ 徽标「已连接 · 远程」+ 真数据 → 关闭开关自动回退局域网。
+工具与复跑：`native/tailnet/e2e/`（mockrouter + client + run-local-e2e.sh）；证据 `design/shots/emu-embed/`。
+
 ## 复现步骤
 
 ```sh

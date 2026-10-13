@@ -50,3 +50,6 @@ app.*.map.json
 # 项目补充
 .vscode/
 *.log
+
+# 内嵌引擎构建产物（scripts/build-native.sh 生成）
+android/app/src/main/jniLibs/

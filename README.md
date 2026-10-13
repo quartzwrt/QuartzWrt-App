@@ -2,10 +2,10 @@
 
 QuartzWrt 专属移动端（Flutter）：局域网 mDNS 自动发现、安全配对、状态展示与白名单设备控制，经 Tailscale/ZeroTier 远程管理。
 
-**当前状态**: **W6.1–W6.6 完成**（发现/配对/令牌 · 四 tab 全量界面 · 运行控制 · 远程链路 · 打磨）；W6.7 真机验收待做。设计规范 [`docs/DESIGN.md`](docs/DESIGN.md) v1.1（含 W6.5 远程链路）/ UI 设计 [`docs/UI-DESIGN.md`](docs/UI-DESIGN.md) v1.0（⑬ 远程访问）。
+**当前状态**: **W6.1–W6.6 完成 + 内嵌直连（tsnet）落地**（发现/配对/令牌 · 四 tab 全量界面 · 运行控制 · 远程链路 · 打磨 · 内嵌直连）；W6.7 真机验收待做。设计规范 [`docs/DESIGN.md`](docs/DESIGN.md) v1.1（含 W6.5 远程链路）/ UI 设计 [`docs/UI-DESIGN.md`](docs/UI-DESIGN.md) v1.0（⑬ 远程访问）。
 
 - **远程链路（W6.5）**：路由器端 Tailscale 状态/tailnet 地址直读快照真数据（设置 →「远程访问」引导页）；手动添加 tailnet 地址（严格 pin 实测连通才保存）；概览/设置显示「局域网｜远程」识别徽标；连接传输级失败自动切换端点、回前台探测切回。
-- **内嵌 tailscale spike**：`dev/spike/tailscale/`（结论：可行，推荐 tsnet userspace + 本地代理，无 VPN 权限；定位 v1.5+）。
+- **内嵌直连（实验）**：`native/tailnet/` 引擎（tsnet userspace + 本地 CONNECT 代理，c-shared `libtailnet.so`，Dart FFI）——手机不装 Tailscale 客户端也能经 tailnet 远程访问路由器；无 VPN 权限/不改系统网络。开关在设置→远程访问。本地构建：`scripts/build-native.sh`（Go + NDK，产物入 `android/app/src/main/jniLibs/`）；spike 依据与选型见 `dev/spike/tailscale/RESULTS.md`，许可声明见 `THIRD_PARTY_NOTICES.md`。
 
 ## 依赖与边界
 
@@ -24,6 +24,7 @@ flutter build apk --release        # 需要本机 Android SDK/JDK；CI 亦有此
 
 - 真机/模拟器调试：Windows 侧 Android Studio 或真机安装 `build/app/outputs/flutter-apk/` 产物（WSL 内 AVD 走查记录见 `design/shots/emu-w65/`）。
 - VM 联调：`QuartzWrt-Builder/scripts/test-in-vm.sh --detach`（宿主 8443→VM:443 即 API）。
+- 内嵌引擎构建：`ANDROID_NDK_HOME=<ndk> scripts/build-native.sh`（缺省 arm64-v8a + x86_64）；本地 E2E 工具见 `native/tailnet/e2e/`（headscale + mock 路由器）。
 
 ## 目录
 

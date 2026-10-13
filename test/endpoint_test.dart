@@ -35,6 +35,10 @@ class _FakeTransport implements ApiTransport {
   }
 }
 
+/// 按 (baseUrl, proxy) 取假传输；未登记的组合抛错（测试即断言不该被尝试）。
+_FakeTransport _fake(Map<String, _FakeTransport> m, String key) =>
+    m[key] ?? (throw StateError('unexpected attempt: $key'));
+
 void main() {
   group('endpointsOf', () {
     test('local only', () {
@@ -73,6 +77,9 @@ void main() {
     late Map<String, _FakeTransport> fakes;
     Endpoint? currentState;
     var switches = <Endpoint>[];
+    String? Function(Endpoint)? proxyFor;
+
+    String key(Endpoint e, String? proxy) => '${e.baseUrl}|${proxy ?? ''}';
 
     FailoverTransport build() => FailoverTransport(
           endpoints: eps,
@@ -82,17 +89,19 @@ void main() {
             currentState = e;
             switches.add(e);
           },
-          clientFactory: (e, fp) => fakes[e.baseUrl]!,
+          clientFactory: (e, fp, proxy) => _fake(fakes, key(e, proxy)),
+          proxyFor: proxyFor,
         );
 
     setUp(() {
       eps = endpointsOf(_router(remoteHost: '100.1.2.3'));
       fakes = {
-        eps[0].baseUrl: _FakeTransport(_okResult),
-        eps[1].baseUrl: _FakeTransport(_okResult),
+        key(eps[0], null): _FakeTransport(_okResult),
+        key(eps[1], null): _FakeTransport(_okResult),
       };
       currentState = eps[0];
       switches = [];
+      proxyFor = null;
     });
 
     test('no endpoints → transport error', () async {
@@ -107,28 +116,28 @@ void main() {
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isTrue);
-      expect(fakes[eps[0].baseUrl]!.calls, 1);
-      expect(fakes[eps[1].baseUrl]!.calls, 0);
+      expect(fakes[key(eps[0], null)]!.calls, 1);
+      expect(fakes[key(eps[1], null)]!.calls, 0);
       expect(switches, isEmpty);
     });
 
     test('local transport-fail → remote retried once; success sticks', () async {
-      fakes[eps[0].baseUrl] = _FakeTransport(_refused);
+      fakes[key(eps[0], null)] = _FakeTransport(_refused);
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isTrue);
-      expect(fakes[eps[0].baseUrl]!.calls, 1);
-      expect(fakes[eps[1].baseUrl]!.calls, 1);
+      expect(fakes[key(eps[0], null)]!.calls, 1);
+      expect(fakes[key(eps[1], null)]!.calls, 1);
       expect(switches.single.kind, EndpointKind.remote);
 
       // 固化后下一次调用直接走远程
       await t.call('status');
-      expect(fakes[eps[1].baseUrl]!.calls, 2);
+      expect(fakes[key(eps[1], null)]!.calls, 2);
     });
 
     test('remote in use, fails → falls back to local', () async {
       currentState = eps[1];
-      fakes[eps[1].baseUrl] = _FakeTransport(_refused);
+      fakes[key(eps[1], null)] = _FakeTransport(_refused);
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isTrue);
@@ -136,18 +145,18 @@ void main() {
     });
 
     test('app-level error does NOT rotate', () async {
-      fakes[eps[0].baseUrl] = _FakeTransport(_denied);
+      fakes[key(eps[0], null)] = _FakeTransport(_denied);
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isFalse);
       expect(r.error?.code, 'access_denied');
-      expect(fakes[eps[1].baseUrl]!.calls, 0);
+      expect(fakes[key(eps[1], null)]!.calls, 0);
       expect(switches, isEmpty);
     });
 
     test('both fail → returns alt failure, no switch', () async {
-      fakes[eps[0].baseUrl] = _FakeTransport(_refused);
-      fakes[eps[1].baseUrl] = _FakeTransport(const ApiResult.fail(0, ApiError('timeout', '')));
+      fakes[key(eps[0], null)] = _FakeTransport(_refused);
+      fakes[key(eps[1], null)] = _FakeTransport(const ApiResult.fail(0, ApiError('timeout', '')));
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isFalse);
@@ -157,11 +166,54 @@ void main() {
 
     test('single endpoint transport-fail → no rotation attempt', () async {
       eps = [eps[0]];
-      fakes[eps[0].baseUrl] = _FakeTransport(_refused);
+      fakes[key(eps[0], null)] = _FakeTransport(_refused);
       final t = build();
       final r = await t.call('status');
       expect(r.error?.code, 'connection_refused');
       expect(switches, isEmpty);
+    });
+
+    test('remote via proxy: proxy first, sticks, no extra direct attempt', () async {
+      proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
+      fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_okResult);
+      currentState = eps[1];
+      final t = build();
+      expect(t.attempts(), [(eps[1], '127.0.0.1:9'), (eps[1], null), (eps[0], null)]);
+      final r = await t.call('status');
+      expect(r.ok, isTrue);
+      expect(fakes[key(eps[1], '127.0.0.1:9')]!.calls, 1);
+      expect(fakes[key(eps[1], null)]!.calls, 0); // 未走直连
+      expect(switches, isEmpty);
+    });
+
+    test('proxy fails → direct retry succeeds (same endpoint, no switch)', () async {
+      proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
+      fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_refused);
+      fakes[key(eps[1], null)] = _FakeTransport(_okResult);
+      currentState = eps[1];
+      final t = build();
+      final r = await t.call('status');
+      expect(r.ok, isTrue);
+      expect(fakes[key(eps[1], null)]!.calls, 1);
+      expect(switches, isEmpty);
+    });
+
+    test('proxy and direct fail → falls back to local endpoint', () async {
+      proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
+      fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_refused);
+      fakes[key(eps[1], null)] = _FakeTransport(_refused);
+      currentState = eps[1];
+      final t = build();
+      final r = await t.call('status');
+      expect(r.ok, isTrue);
+      expect(switches.single.kind, EndpointKind.local);
+    });
+
+    test('local endpoint never uses proxy', () async {
+      proxyFor = (e) => '127.0.0.1:9'; // 即便对所有端点都给代理
+      currentState = eps[0];
+      final t = build();
+      expect(t.attempts().first, (eps[0], null));
     });
 
     test('stale current (not in list) → uses first', () async {
@@ -169,7 +221,7 @@ void main() {
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isTrue);
-      expect(fakes[eps[0].baseUrl]!.calls, 1);
+      expect(fakes[key(eps[0], null)]!.calls, 1);
     });
   });
 }

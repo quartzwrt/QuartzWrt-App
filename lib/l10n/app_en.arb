@@ -338,5 +338,21 @@
   "remoteAutoTitle": "Automatic switching",
   "remoteAutoBody": "LAN is preferred on the same network; on failure the app falls back to the remote address and switches back once LAN is reachable again.",
   "remoteSecurityTitle": "Security",
-  "remoteSecurityBody": "Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing."
+  "remoteSecurityBody": "Remote connections use the same certificate pinning as LAN (MITM-resistant). Rebooting or disconnecting the router remotely may briefly drop the connection; the router recovers on its own. Removing the remote address never affects the LAN pairing.",
+  "embedTitle": "Embedded direct (experimental)",
+  "embedBody": "Runs a tailnet node inside the app: reach the router over your tailnet without installing the Tailscale client on this phone. Enabling creates a device in your tailnet (login required); disabling falls back to the regular direct connection.",
+  "embedUnavailable": "This build does not include the embedded engine (release builds do).",
+  "embedEnable": "Enable embedded direct",
+  "embedStateLabel": "Status",
+  "embedPhaseStarting": "Starting…",
+  "embedPhaseNeedsLogin": "Waiting for login",
+  "embedPhaseRunning": "Connected",
+  "embedPhaseStopped": "Off",
+  "embedPhaseError": "Error",
+  "embedSelfIpLabel": "This device tailnet address",
+  "embedLoginBtn": "Sign in to Tailscale",
+  "embedLoginHint": "After signing in, this device joins your tailnet and remote addresses prefer the embedded node automatically.",
+  "embedCopyBtn": "Copy link",
+  "embedCopied": "Copied",
+  "embedErrorDetail": "Error detail"
 }
