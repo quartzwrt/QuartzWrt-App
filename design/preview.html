@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuartzWrt App · UI 预览 v0.1（讨论稿）</title>
+<style>
+/* ============ 设计 token（与 WP-2 luci-theme-quartz 同源；深色为参考稿原生） ============ */
+.phone {
+  --accent: #007aff; --ok: #34c759; --warn: #ff9500; --err: #ff3b30;
+  --radius: 12px; --radius-sm: 8px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+.phone[data-mode="dark"] {
+  --bg: #1c1c1e; --panel: #2c2c2e; --well: #1c1c1e; --raised: #3a3a3c;
+  --border: rgba(255,255,255,.09); --border-strong: rgba(255,255,255,.14);
+  --text: rgba(255,255,255,.85); --muted: rgba(255,255,255,.55); --faint: rgba(255,255,255,.35);
+  --chrome: rgba(28,28,30,.80); --hover: rgba(255,255,255,.06);
+}
+.phone[data-mode="light"] {
+  --bg: #ececf0; --panel: #ffffff; --well: #f2f2f7; --raised: #ffffff;
+  --border: rgba(0,0,0,.08); --border-strong: rgba(0,0,0,.12);
+  --text: rgba(0,0,0,.85); --muted: rgba(0,0,0,.55); --faint: rgba(0,0,0,.35);
+  --chrome: rgba(242,242,247,.80); --hover: rgba(0,0,0,.05);
+}
+
+/* ============ 评审页外壳 ============ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0f0f11; color: #e8e8ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+               "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  padding: 40px 32px 72px;
+}
+.pagetop { max-width: 1380px; margin: 0 auto 28px; }
+.pagetop h1 { font-size: 24px; font-weight: 650; letter-spacing: .2px; }
+.pagetop .sub { margin-top: 8px; color: #9a9aa2; font-size: 13.5px; line-height: 1.7; max-width: 900px; }
+.pagetop .tag { display:inline-block; margin-right:8px; padding:2px 8px; border:1px solid #3a3a40;
+  border-radius: 999px; font-size: 11.5px; color:#b9b9c0; }
+
+.tokens { max-width: 1380px; margin: 0 auto 36px; display:flex; gap:26px; flex-wrap:wrap;
+  border:1px solid #26262b; border-radius: 14px; padding: 18px 22px; background:#141417; }
+.tokens h2 { font-size:12.5px; color:#8f8f97; font-weight:600; letter-spacing:.4px; margin-bottom:10px; }
+.swatches { display:flex; gap:14px; flex-wrap:wrap; }
+.sw { display:flex; align-items:center; gap:8px; font-size:12px; color:#c6c6cc; }
+.sw i { width:22px; height:22px; border-radius:6px; border:1px solid rgba(255,255,255,.14); display:block; }
+.tokens .note { font-size:12px; color:#8a8a92; line-height:1.8; max-width:520px; }
+.tokens .note b { color:#c9c9cf; font-weight:600; }
+
+.gallery { max-width: 1380px; margin: 0 auto; display:flex; flex-wrap:wrap; gap: 44px 40px; }
+figure.case { width: 390px; }
+figcaption { margin-top: 14px; font-size: 13px; color:#b5b5bc; }
+figcaption b { color:#e8e8ea; font-weight:600; }
+figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3px; line-height:1.65; }
+
+/* ============ 手机框 ============ */
+.phone {
+  width: 390px; height: 844px; border-radius: 48px; padding: 13px;
+  background: #0a0a0c; border: 1px solid #2a2a2f;
+  box-shadow: 0 24px 60px rgba(0,0,0,.55), inset 0 0 0 2px rgba(255,255,255,.04);
+}
+.screen { position: relative; width: 100%; height: 100%; border-radius: 36px; overflow: hidden;
+  background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px;
+  display: flex; flex-direction: column; }
+.statusbar { height: 44px; flex: none; display:flex; align-items:flex-end; justify-content:space-between;
+  padding: 0 26px 6px; font-size: 13px; font-weight: 600; color: var(--text); }
+.statusbar .icons { display:flex; gap:5px; align-items:center; }
+.statusbar .icons i { display:block; width:14px; height:9px; border-radius:2px; background: var(--text); opacity:.9; }
+.statusbar .icons i.w2 { width: 20px; }
+
+.appbar { flex:none; padding: 6px 18px 10px; display:flex; align-items:center; justify-content:space-between; }
+.appbar h3 { font-size: 22px; font-weight: 700; letter-spacing:.1px; }
+.appbar .r { color: var(--accent); font-size: 14px; font-weight: 600; }
+
+.content { flex:1; overflow:hidden; padding: 2px 16px 0; }
+.tabbar { flex:none; height: 78px; display:flex; align-items:flex-start; padding-top: 9px;
+  background: var(--chrome); border-top: 1px solid var(--border); }
+.tabbar .tab { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+  color: var(--faint); font-size: 10.5px; font-weight:600; }
+.tabbar .tab.on { color: var(--accent); }
+.tabbar svg { width: 23px; height: 23px; }
+
+/* 通用组件 */
+.card { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius);
+  padding: 13px 15px; margin-bottom: 12px; }
+.card h4 { font-size: 12.5px; font-weight: 650; color: var(--muted); letter-spacing:.35px;
+  margin-bottom: 10px; text-transform: none; }
+.row { display:flex; align-items:center; justify-content:space-between; padding: 6px 0; }
+.row .k { color: var(--muted); font-size: 13.5px; }
+.row .v { font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.row + .row { border-top: 1px solid var(--border); }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:7px; }
+.dot.ok { background: var(--ok); } .dot.err { background: var(--err); } .dot.warn { background: var(--warn); }
+.dot.off { background: var(--faint); }
+.bar { height:6px; border-radius:3px; background: var(--well); overflow:hidden; }
+.phone[data-mode="light"] .bar { background: #e4e4e9; }
+.bar > i { display:block; height:100%; border-radius:3px; background: var(--accent); }
+.bar > i.ok { background: var(--ok); } .bar > i.warn { background: var(--warn); }
+.sub { color: var(--muted); font-size: 12.5px; line-height:1.6; }
+.faint { color: var(--faint); }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* 概览 hero */
+.hero { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 16px 14px; margin-bottom: 12px; }
+.hero .top { display:flex; align-items:center; gap:12px; }
+.logo { width:44px; height:44px; border-radius: 11px; background:
+  linear-gradient(160deg,#7fb2ff 0%, #007aff 42%, #3d5afe 100%); position:relative; flex:none; }
+.logo:after { content:""; position:absolute; inset:0; border-radius:11px;
+  background: linear-gradient(200deg, rgba(255,255,255,.55), rgba(255,255,255,0) 42%); }
+.hero h4 { font-size: 17px; font-weight: 700; color: var(--text); margin: 0; }
+.hero .meta { color: var(--muted); font-size: 12.3px; margin-top: 3px; line-height:1.5; }
+.hero .state { margin-top: 10px; display:flex; align-items:center; justify-content:space-between; }
+.pill { display:inline-flex; align-items:center; gap:6px; padding: 3px 10px; border-radius:999px;
+  font-size: 12px; font-weight:600; border:1px solid var(--border-strong); color: var(--muted); }
+.pill.ok { color: var(--ok); border-color: rgba(52,199,89,.35); background: rgba(52,199,89,.10); }
+
+/* sparkline */
+.spark { width: 100%; height: 54px; display:block; }
+
+/* 列表（设备） */
+.devs { border:1px solid var(--border); border-radius: var(--radius); background: var(--panel); overflow:hidden; }
+.dev { display:flex; align-items:center; gap:12px; padding: 11px 14px; }
+.dev + .dev { border-top: 1px solid var(--border); }
+.dev .ico { width: 34px; height:34px; border-radius: 9px; background: var(--well); flex:none;
+  display:flex; align-items:center; justify-content:center; color: var(--muted); }
+.phone[data-mode="light"] .dev .ico { background: var(--well); }
+.dev .nm { font-weight:600; font-size: 14px; }
+.dev .ip { color: var(--muted); font-size: 12px; margin-top:2px; }
+.dev .right { margin-left:auto; text-align:right; color: var(--faint); font-size: 11.5px; line-height:1.5; }
+.dev .right .iface { color: var(--muted); }
+
+/* 设置 */
+.seg { display:flex; background: var(--well); border-radius: 9px; padding: 2px; gap:2px; }
+.phone[data-mode="light"] .seg { background: #e6e6eb; }
+.seg span { flex:1; text-align:center; padding: 6px 0; border-radius: 7px; font-size: 12.5px; color: var(--muted); }
+.seg span.on { background: var(--raised); color: var(--text); font-weight:600;
+  box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+
+/* sheet（配对 / 危险确认） */
+.scrim { position:absolute; inset:0; background: rgba(0,0,0,.45); }
+.sheet { position:absolute; left:0; right:0; bottom:0; border-radius: 20px 20px 36px 36px;
+  background: var(--raised); border-top: 1px solid var(--border-strong); padding: 10px 18px 30px; }
+.sheet .handle { width: 40px; height: 4.5px; border-radius: 3px; background: var(--faint); margin: 0 auto 14px; }
+.sheet h4 { font-size: 17px; font-weight: 700; text-align:center; margin-bottom: 12px; }
+.field { border:1px solid var(--border-strong); background: var(--panel); border-radius: 10px;
+  padding: 11px 12px; color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+.btnrow { display:flex; gap:10px; margin-top: 14px; }
+.btn { flex:1; text-align:center; padding: 12px 0; border-radius: 11px; font-size: 15px; font-weight: 650; }
+.btn.primary { background: var(--accent); color:#fff; }
+.btn.plain { background: var(--well); color: var(--text); border:1px solid var(--border-strong); }
+.btn.danger { background: rgba(255,59,48,.14); color: var(--err); border:1px solid rgba(255,59,48,.35); }
+.kvmini { display:flex; justify-content:space-between; font-size:12.5px; padding: 4px 0; color: var(--muted); }
+.kvmini b { color: var(--text); font-weight:600; }
+
+/* 横幅 */
+.banner { display:flex; gap:10px; align-items:flex-start; border:1px solid rgba(255,149,0,.35);
+  background: rgba(255,149,0,.10); border-radius: var(--radius); padding: 11px 13px; margin-bottom: 12px; }
+.banner .t { font-size: 13px; color: var(--text); font-weight:600; }
+.banner .s { font-size: 12px; color: var(--muted); margin-top: 2px; line-height:1.55; }
+
+/* 发现页 */
+.find { display:flex; align-items:center; gap:13px; padding: 13px 14px; }
+.find + .find { border-top: 1px solid var(--border); }
+.badge { display:inline-flex; align-items:center; gap:4px; font-size: 11px; font-weight:650;
+  color: var(--ok); margin-top: 3px; }
+.badge.unv { color: var(--warn); }
+.scanline { margin: 14px 2px 8px; color: var(--faint); font-size: 12.5px; display:flex; align-items:center; gap:8px; }
+.pulse { width:9px; height:9px; border-radius:50%; background: var(--accent); opacity:.8;
+  animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform: scale(.7); opacity:.35 } 50% { transform: scale(1); opacity:.9 } }
+</style>
+</head>
+<body>
+
+<div class="pagetop">
+  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.1 讨论稿</span><span class="tag">评审用</span></h1>
+  <div class="sub">
+    对应 <b>docs/DESIGN.md §8</b>（信息架构）与 <b>docs/UI-DESIGN.md v0.1</b>。数据取自冻结契约 AGGREGATE-API v1
+    样例与 WP-5 接口面（真实字段与数值量级），非最终文案。深色为参考稿原生（WP-2 同源 token），浅色按同一语义派生；
+    统一 1px 描边分层、圆角 ≤12px、仅颜色过渡（无渐变/发光）。图标为占位线稿，拟随 WP-2 Logo 家族统一。
+  </div>
+</div>
+
+<div class="tokens">
+  <div>
+    <h2>色板（语义）</h2>
+    <div class="swatches">
+      <span class="sw"><i style="background:#007aff"></i>强调 #007AFF</span>
+      <span class="sw"><i style="background:#34c759"></i>正常 #34C759</span>
+      <span class="sw"><i style="background:#ff9500"></i>注意 #FF9500</span>
+      <span class="sw"><i style="background:#ff3b30"></i>危险 #FF3B30</span>
+      <span class="sw"><i style="background:#2c2c2e"></i>暗·面板 #2C2C2E</span>
+      <span class="sw"><i style="background:#1c1c1e"></i>暗·底 #1C1C1E</span>
+      <span class="sw"><i style="background:#ffffff"></i>浅·面板 #FFFFFF</span>
+      <span class="sw"><i style="background:#ececf0"></i>浅·底 #ECECF0</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>版式</b>：系统字体栈（零 webfont）· 卡片圆角 12 / 控件 8 · 间距 8 栅格 ·
+    数字全部 tabular-nums（速率/百分比不跳动）。<br>
+    <b>状态语义</b>：绿点=运行/在线，橙=注意（如 core 有更新），红=危险/离线，灰点=未安装/停用。
+  </div>
+</div>
+
+<main class="gallery">
+
+  <!-- ① 发现 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>连接路由器</h3><span class="r">帮助</span></div>
+      <div class="content">
+        <div class="scanline"><span class="pulse"></span>正在扫描局域网（mDNS）…</div>
+        <div class="devs">
+          <div class="find">
+            <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6.5 18h.01M10.5 18h.01"/><path d="M12 14V8"/><path d="M8 8a5.5 5.5 0 0 1 8 0"/><path d="M5.5 5.5a9.5 9.5 0 0 1 13 0"/></svg></div>
+            <div>
+              <div class="nm">QuartzWrt-R4S</div>
+              <div class="ip">FriendlyElec NanoPi R4S · QuartzWrt 0.1.0</div>
+              <span class="badge">✓ 指纹可验证</span>
+            </div>
+            <div class="right"><span class="iface">192.168.1.1</span><br>:443</div>
+          </div>
+          <div class="find">
+            <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M12 14V8"/><path d="M8 8a5.5 5.5 0 0 1 8 0"/></svg></div>
+            <div>
+              <div class="nm">QuartzWrt-Office</div>
+              <div class="ip">x86_64 · QuartzWrt 0.1.0</div>
+              <span class="badge unv">⚠ 未验证指纹</span>
+            </div>
+            <div class="right"><span class="iface">192.168.1.8</span><br>:443</div>
+          </div>
+        </div>
+        <p class="scanline" style="margin-top:12px">未发现其他设备——确认手机与路由器在同一网络。</p>
+      </div>
+      <div style="padding: 0 16px 14px"><div class="btn plain">按地址添加…</div></div>
+      <div class="tabbar" style="justify-content:center; color:var(--faint); font-size:11px; padding-top:14px">配对后进入主界面</div>
+    </div></div>
+    <figcaption><b>① 首启 · 发现与配对入口</b>
+      <span class="hint">mDNS 广播发现（umdns `_quartz-app._tcp`）；TXT 带证书指纹的设备标「可验证」，无指纹标「未验证」（TOFU）。跨网段/远程走手动地址。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ② 配对 sheet -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>连接路由器</h3><span class="r">帮助</span></div>
+      <div class="content">
+        <div class="devs"><div class="find">
+          <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M12 14V8"/><path d="M8 8a5.5 5.5 0 0 1 8 0"/></svg></div>
+          <div><div class="nm">QuartzWrt-R4S</div><div class="ip">FriendlyElec NanoPi R4S</div></div>
+          <div class="right"><span class="iface">192.168.1.1</span></div>
+        </div></div>
+      </div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="handle"></div>
+        <h4>连接到 QuartzWrt-R4S</h4>
+        <div class="kvmini"><span>证书指纹（SHA-256）</span><b class="mono">9d79 d120 … 19 30a8</b></div>
+        <div class="kvmini"><span>固件</span><b>QuartzWrt 0.1.0</b></div>
+        <div style="height:12px"></div>
+        <div class="field">路由器管理密码</div>
+        <p class="sub" style="text-align:center">使用路由器 root 管理密码；配对后手机以独立令牌免密登录，可在路由器上随时吊销。</p>
+        <div class="btnrow"><div class="btn plain">取消</div><div class="btn primary">配对</div></div>
+      </div>
+    </div></div>
+    <figcaption><b>② 配对（信任建立）</b>
+      <span class="hint">密码只在配对时输入一次；指纹随 mDNS 带外核对（TOFU），此后连接严格 pin 校验，指纹变化（如重刷固件）将阻断并要求重新配对。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ③ 概览 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>概览</h3><span class="r">编辑</span></div>
+      <div class="content">
+        <div class="hero">
+          <div class="top">
+            <div class="logo"></div>
+            <div>
+              <h4>QuartzWrt-R4S</h4>
+              <div class="meta">FriendlyElec NanoPi R4S · QuartzWrt 0.1.0<br>ImmortalWrt 25.12 · 内核 6.12.112</div>
+            </div>
+          </div>
+          <div class="state">
+            <span class="pill ok"><span class="dot ok"></span>已连接 · 直连</span>
+            <span class="sub">运行 3 天 13:24</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4>系统</h4>
+          <div class="row"><span class="k">CPU</span><span class="v">7.8%</span></div>
+          <div class="bar"><i style="width:7.8%"></i></div>
+          <div class="row"><span class="k">内存</span><span class="v">1.28 / 4.00 GB</span></div>
+          <div class="bar"><i style="width:32%"></i></div>
+          <div class="row"><span class="k">存储</span><span class="v">385 MB / 1.00 GB</span></div>
+          <div class="bar"><i class="ok" style="width:37.5%"></i></div>
+          <div class="row"><span class="k">温度</span><span class="v">46.5 °C</span></div>
+          <div class="row"><span class="k">负载</span><span class="v mono">0.42 / 0.31 / 0.25</span></div>
+        </div>
+
+        <div class="card">
+          <h4>网络 · WAN</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>eth0 · DHCP</span><span class="v mono">100.64.7.23</span></div>
+          <div class="row" style="padding-top:2px"><span class="k">↓ 1.31 MB/s</span><span class="k">↑ 343 KB/s</span></div>
+          <svg class="spark" viewBox="0 0 320 54" preserveAspectRatio="none">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#007aff" stop-opacity=".28"/><stop offset="1" stop-color="#007aff" stop-opacity="0"/>
+            </linearGradient></defs>
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12 L320,54 L0,54 Z" fill="url(#g1)"/>
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12" fill="none" stroke="#007aff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div class="card">
+          <h4>在线设备 · 12</h4>
+          <div class="row"><span class="k">NAS</span><span class="v mono">192.168.1.10</span></div>
+          <div class="row"><span class="k">iPhone-15</span><span class="v mono">192.168.1.23</span></div>
+          <div class="row"><span class="k">MacBook-Pro</span><span class="v mono">192.168.1.31</span></div>
+        </div>
+
+        <div class="card">
+          <h4>服务</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
+          <p class="sub" style="margin-top:6px">Docker 未安装（出厂不含）—— 安装后自动出现在此。</p>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>③ 概览（主界面）</b>
+      <span class="hint">hero + 四卡；数值与 Dashboard 同源同口径（契约 v1）。Docker 未装时不显示整卡（出厂常态）。下拉刷新；5s 前台轮询。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ④ 设备 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>设备</h3><span class="r">12 在线</span></div>
+      <div class="content">
+        <div class="devs">
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/></svg></div>
+            <div><div class="nm">NAS</div><div class="ip mono">192.168.1.10 · 00:11:32:7d:55:60</div></div>
+            <div class="right">刚刚<br><span class="iface">br-lan</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+            <div><div class="nm">iPhone-15</div><div class="ip mono">192.168.1.23 · 3c:22:fb:9a:1e:07</div></div>
+            <div class="right">刚刚<br><span class="iface">5G 无线</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M2 9h20"/></svg></div>
+            <div><div class="nm">MacBook-Pro</div><div class="ip mono">192.168.1.31 · a4:83:e7:0c:44:12</div></div>
+            <div class="right">1 分钟前<br><span class="iface">5G 无线</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="10" rx="2"/></svg></div>
+            <div><div class="nm">LivingRoom-TV</div><div class="ip mono">192.168.1.42 · 8c:79:f5:1b:2c:90</div></div>
+            <div class="right">2 分钟前<br><span class="iface">br-lan</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 15h16"/></svg></div>
+            <div><div class="nm">iPad-Air</div><div class="ip mono">192.168.1.35 · d0:81:7a:33:9f:b1</div></div>
+            <div class="right">3 分钟前<br><span class="iface">2.4G 无线</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+            <div><div class="nm">Pixel-8</div><div class="ip mono">192.168.1.47 · 7c:9a:54:2e:81:66</div></div>
+            <div class="right">4 分钟前<br><span class="iface">5G 无线</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M2 9h20"/></svg></div>
+            <div><div class="nm">work-laptop</div><div class="ip mono">192.168.1.52 · 34:13:e8:77:01:aa</div></div>
+            <div class="right">6 分钟前<br><span class="iface">br-lan</span></div></div>
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+            <div><div class="nm">Xiaomi-14</div><div class="ip mono">192.168.1.61 · 58:2a:f7:1d:93:4e</div></div>
+            <div class="right">9 分钟前<br><span class="iface">5G 无线</span></div></div>
+        </div>
+        <p class="sub" style="margin:10px 2px 0">显示前 8 台（共 12 在线，按最后在线排序）。「最后在线」= 最近一次确认在线的时刻（契约语义）。</p>
+      </div>
+      <div class="tabbar">
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>④ 设备页</b>
+      <span class="hint">在线表（host/IP/MAC/接口/最后在线）；契约 32 条上限内全量，超出按「共 N 在线」提示。后续限速/管控动作经 WP-5 动作面接入（后置）。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑤ 系统 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>系统</h3><span class="r"></span></div>
+      <div class="content">
+        <div class="card">
+          <h4>资源</h4>
+          <div class="row"><span class="k">负载（1/5/15 分钟）</span><span class="v mono">0.42 / 0.31 / 0.25</span></div>
+          <div class="row"><span class="k">CPU</span><span class="v">7.8%</span></div>
+          <div class="row"><span class="k">内存</span><span class="v">1.28 / 4.00 GB（32%）</span></div>
+          <div class="row"><span class="k">交换</span><span class="v">未启用</span></div>
+          <div class="row"><span class="k">存储</span><span class="v">385 MB / 1.00 GB（37.5%）</span></div>
+          <div class="row"><span class="k">温度</span><span class="v">46.5 °C</span></div>
+          <div class="row"><span class="k">运行时长</span><span class="v mono">3 天 13:24</span></div>
+        </div>
+        <div class="card">
+          <h4>维护动作</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>OpenClash · 运行中</span><span class="v" style="color:var(--accent)">重启 ›</span></div>
+          <div class="row"><span class="k"><span class="dot off"></span>Docker · 未安装</span><span class="v faint">—</span></div>
+          <div class="row"><span class="k"><span class="dot ok"></span>DNS 服务（dnsmasq）</span><span class="v" style="color:var(--accent)">重启 ›</span></div>
+        </div>
+        <div class="card">
+          <h4>路由器</h4>
+          <div class="row"><span class="k" style="color:var(--err); font-weight:600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px"><path d="M12 3v9"/><path d="M6.2 7.2a8 8 0 1 0 11.6 0"/></svg> 重启路由器</span><span class="v faint">›</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑤ 系统页 · 资源与控制</b>
+      <span class="hint">动作集 = WP-5 白名单（服务启停/重启、重启路由器、Docker 容器操作）；入口按快照能力显示（未安装即灰）。执行后 ≤2s 快照自动反映新状态。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑥ 设置 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>设置</h3><span class="r"></span></div>
+      <div class="content">
+        <div class="card">
+          <h4>路由器</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>QuartzWrt-R4S</span><span class="v sub">已配对 · 直连</span></div>
+          <div class="row"><span class="k">证书指纹</span><span class="v mono" style="font-size:12px">9d79 d120 … 30a8 ✓</span></div>
+          <div class="row"><span class="k">已配对设备</span><span class="v" style="color:var(--accent)">2 台 ›</span></div>
+          <div class="row"><span class="k">添加路由器</span><span class="v faint">›</span></div>
+        </div>
+        <div class="card">
+          <h4>外观</h4>
+          <div class="seg"><span>跟随系统</span><span class="on">深色</span><span>浅色</span></div>
+        </div>
+        <div class="card">
+          <h4>语言</h4>
+          <div class="seg"><span class="on">中文</span><span>English</span></div>
+        </div>
+        <div class="card">
+          <h4>关于</h4>
+          <div class="row"><span class="k">应用版本</span><span class="v mono">0.1.0 (1)</span></div>
+          <div class="row"><span class="k">API</span><span class="v mono">quartz-app-api v1</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑥ 设置</b>
+      <span class="hint">多路由器管理 + 设备吊销（`devices`/`revoke`）；外观三态；语言 zh/en。指纹行常显——用户可随时核对 pin。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑦ 危险确认 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>系统</h3><span class="r"></span></div>
+      <div class="content">
+        <div class="card"><h4>路由器</h4>
+          <div class="row"><span class="k" style="color:var(--err); font-weight:600">重启路由器</span><span class="v faint">›</span></div>
+        </div>
+      </div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="handle"></div>
+        <h4>重启路由器？</h4>
+        <p class="sub" style="text-align:center">QuartzWrt-R4S 将立即重启，网络中断约 1–2 分钟，期间手机与本应用会断开连接（恢复后自动重连）。</p>
+        <div class="btnrow"><div class="btn plain">取消</div><div class="btn danger">重启</div></div>
+      </div>
+    </div></div>
+    <figcaption><b>⑦ 危险操作确认</b>
+      <span class="hint">破坏性动作一律底部确认层 + 影响说明（断开连接/时长）；按钮红字弱底，不做全红实心（避免误触主按钮区域）。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑧ 浅色 · 概览 -->
+  <figure class="case">
+    <div class="phone" data-mode="light"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>概览</h3><span class="r">编辑</span></div>
+      <div class="content">
+        <div class="hero">
+          <div class="top">
+            <div class="logo"></div>
+            <div>
+              <h4>QuartzWrt-R4S</h4>
+              <div class="meta">FriendlyElec NanoPi R4S · QuartzWrt 0.1.0<br>ImmortalWrt 25.12 · 内核 6.12.112</div>
+            </div>
+          </div>
+          <div class="state">
+            <span class="pill ok"><span class="dot ok"></span>已连接 · 直连</span>
+            <span class="sub">运行 3 天 13:24</span>
+          </div>
+        </div>
+        <div class="card">
+          <h4>系统</h4>
+          <div class="row"><span class="k">CPU</span><span class="v">7.8%</span></div>
+          <div class="bar"><i style="width:7.8%"></i></div>
+          <div class="row"><span class="k">内存</span><span class="v">1.28 / 4.00 GB</span></div>
+          <div class="bar"><i style="width:32%"></i></div>
+          <div class="row"><span class="k">温度</span><span class="v">46.5 °C</span></div>
+        </div>
+        <div class="card">
+          <h4>网络 · WAN</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>eth0 · DHCP</span><span class="v mono">100.64.7.23</span></div>
+          <div class="row" style="padding-top:2px"><span class="k">↓ 1.31 MB/s</span><span class="k">↑ 343 KB/s</span></div>
+          <svg class="spark" viewBox="0 0 320 54" preserveAspectRatio="none">
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12 L320,54 L0,54 Z" fill="rgba(0,122,255,.12)"/>
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12" fill="none" stroke="#007aff" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="card">
+          <h4>服务</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑧ 浅色模（同结构派生）</b>
+      <span class="hint">浅色非「另做一套」：同一语义 token 按 macOS 亮色语义派生（底 #ECECF0 / 面板 #FFF / 1px 黑 8% 描边）。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑨ 降级态 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>概览</h3><span class="r">编辑</span></div>
+      <div class="content">
+        <div class="banner">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2" stroke-linecap="round" style="flex:none; margin-top:1px"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+          <div><div class="t">采集器未运行</div><div class="s">路由器数据聚合服务不可用（quartz-daemon 未运行或正在启动）。数据恢复后自动刷新。</div></div>
+        </div>
+        <div class="hero">
+          <div class="top">
+            <div class="logo"></div>
+            <div><h4>QuartzWrt-R4S</h4><div class="meta">FriendlyElec NanoPi R4S · QuartzWrt 0.1.0</div></div>
+          </div>
+          <div class="state"><span class="pill"><span class="dot warn"></span>已连接 · 数据降级</span></div>
+        </div>
+        <div class="card">
+          <h4>系统</h4>
+          <div class="row"><span class="k">CPU</span><span class="v faint">—</span></div>
+          <div class="row"><span class="k">内存</span><span class="v faint">—</span></div>
+          <div class="row"><span class="k">温度</span><span class="v faint">不可用（无传感器）</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑨ 降级态（daemon 停机 / 无传感器）</b>
+      <span class="hint">与 Dashboard 四态同语义：`data_unavailable` → 顶部横幅 + 横幅下卡片「—」；叶字段 null（如无温度传感器）→ 卡内「不可用」。任何情况不白屏。</span>
+    </figcaption>
+  </figure>
+
+</main>
+</body>
+</html>
