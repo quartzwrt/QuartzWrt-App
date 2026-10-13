@@ -15,10 +15,12 @@ OUT = ROOT / "design" / "shots"
 OUT.mkdir(parents=True, exist_ok=True)
 
 CASES = {
-    "overview-dark": 2,   # 序号（从 0 起）：③ 概览
-    "pairing-dark": 1,    # ② 配对
-    "light-overview": 7,  # ⑧ 浅色概览
-    "degraded-dark": 8,   # ⑨ 降级态
+    "overview-dark": 2,     # 序号（从 0 起）：③ 概览
+    "pairing-dark": 1,      # ② 配对
+    "light-overview": 7,    # ⑧ 浅色概览
+    "degraded-dark": 8,     # ⑨ 降级态
+    "extended-overview": 9, # ⑩ 扩展示例（通用卡+泛化行）
+    "service-detail": 10,   # ⑪ 服务详情
 }
 
 

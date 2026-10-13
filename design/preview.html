@@ -177,9 +177,10 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 <div class="pagetop">
   <h1>QuartzWrt App · UI 预览 <span class="tag">v0.1 讨论稿</span><span class="tag">评审用</span></h1>
   <div class="sub">
-    对应 <b>docs/DESIGN.md §8</b>（信息架构）与 <b>docs/UI-DESIGN.md v0.1</b>。数据取自冻结契约 AGGREGATE-API v1
+    对应 <b>docs/DESIGN.md §8</b>（信息架构）与 <b>docs/UI-DESIGN.md v0.2</b>（含 §4 可扩展性设计）。数据取自冻结契约 AGGREGATE-API v1
     样例与 WP-5 接口面（真实字段与数值量级），非最终文案。深色为参考稿原生（WP-2 同源 token），浅色按同一语义派生；
     统一 1px 描边分层、圆角 ≤12px、仅颜色过渡（无渐变/发光）。图标为占位线稿，拟随 WP-2 Logo 家族统一。
+    ⑩⑪ 为<b>扩展性演示屏</b>：新 daemon 节以「通用 KV 卡」零改版可见、新服务以「泛化行」自动出现、动作挂靠详情页注册表。
   </div>
 </div>
 
@@ -575,6 +576,79 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
     </div></div>
     <figcaption><b>⑨ 降级态（daemon 停机 / 无传感器）</b>
       <span class="hint">与 Dashboard 四态同语义：`data_unavailable` → 顶部横幅 + 横幅下卡片「—」；叶字段 null（如无温度传感器）→ 卡内「不可用」。任何情况不白屏。</span>
+    </figcaption>
+  </figure>
+  <!-- ⑩ 概览 · 扩展示例（通用卡 + 泛化行） -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>概览</h3><span class="r">编辑</span></div>
+      <div class="content">
+        <div class="hero" style="padding: 13px 16px 12px">
+          <div class="top">
+            <div class="logo" style="width:38px;height:38px"></div>
+            <div><h4 style="font-size:15.5px">QuartzWrt-R4S</h4>
+              <div class="meta" style="font-size:11.8px">QuartzWrt 0.1.0 · 运行 3 天 13:24</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h4>无线</h4>
+          <div class="row"><span class="k">在线客户端</span><span class="v">12</span></div>
+          <div class="row"><span class="k">主信道</span><span class="v">5G · 149</span></div>
+          <div class="row"><span class="k">噪声</span><span class="v mono">-95 dBm</span></div>
+        </div>
+        <div class="card">
+          <h4>服务</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
+          <div class="row"><span class="k"><span class="dot ok"></span>PassWall</span><span class="v faint" style="font-size:12.5px">运行中</span></div>
+          <div class="row"><span class="k"><span class="dot off"></span>AdGuard Home</span><span class="v faint" style="font-size:12.5px">已停止</span></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑩ 扩展演示：新 daemon 节 + 新服务</b>
+      <span class="hint">「无线」节此前无专属卡 → 按<b>通用 KV 卡</b>渲染（节名 + 标量键值行；上限 ~6 行、超限进详情），零改版即可见；服务卡中 OpenClash 走<b>富化</b>渲染（带 core 版本），PassWall / AdGuard Home 走<b>泛化</b>行（数据带 title 即显示：状态点 + 名称），未知服务自动列出不崩。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑪ 服务详情（动作挂靠） -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3 style="display:flex;align-items:center;gap:4px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M15 5l-7 7 7 7"/></svg>服务</h3><span class="r"></span></div>
+      <div class="content">
+        <div class="hero" style="padding: 13px 16px 12px">
+          <div class="top">
+            <div class="ico" style="width:40px;height:40px;border-radius:10px;background:var(--well);display:flex;align-items:center;justify-content:center;color:var(--muted)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6l7-3z"/></svg>
+            </div>
+            <div><h4 style="font-size:16.5px">OpenClash</h4>
+              <div class="meta" style="font-size:12px">代理服务 · 由软件包提供</div></div>
+          </div>
+          <div class="state"><span class="pill ok"><span class="dot ok"></span>运行中</span></div>
+        </div>
+        <div class="card">
+          <h4>状态</h4>
+          <div class="row"><span class="k">运行状态</span><span class="v">运行中</span></div>
+          <div class="row"><span class="k">核心</span><span class="v mono" style="font-size:13px">mihomo 1.19.2</span></div>
+          <div class="row"><span class="k">状态来源</span><span class="v" style="font-size:13px">路由器探针（零重编）</span></div>
+        </div>
+        <div class="card">
+          <h4>动作</h4>
+          <div class="row"><span class="k">重启服务</span><span class="v" style="color:var(--accent)">›</span></div>
+          <div class="row"><span class="k">停止</span><span class="v" style="color:var(--err)">›</span></div>
+          <p class="sub" style="margin-top:8px">动作按当前状态可用性置灰；新增动作 = 能力注册表加一条（WP-5 白名单 / WP-8 Bridge）。</p>
+        </div>
+      </div>
+    </div></div>
+    <figcaption><b>⑪ 服务详情（扩展挂靠点）</b>
+      <span class="hint">行点击 → 详情页（go_router 路由，页面模块化）；状态字段来自快照 services 开放映射；动作来自能力注册表——新增插件/动作不改页面结构。未来「查看日志/核心更新」等作为注册表条目加入本页。</span>
     </figcaption>
   </figure>
 
