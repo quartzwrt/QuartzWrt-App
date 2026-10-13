@@ -18,19 +18,22 @@ class RouterRegistry {
 
   final SharedPreferences _prefs;
 
+  /// 返回**可增长副本**（调用方会 removeWhere/拼接——曾因返回 const [] 在
+  /// 首次配对时抛 "Cannot remove from an unmodifiable list"，回归测试见
+  /// test/router_registry_test.dart）。
   List<PairedRouter> list() {
     final raw = _prefs.getString(_kRouters);
-    if (raw == null || raw.isEmpty) return const [];
+    if (raw == null || raw.isEmpty) return <PairedRouter>[];
     try {
       final arr = jsonDecode(raw);
-      if (arr is! List) return const [];
+      if (arr is! List) return <PairedRouter>[];
       return arr
           .whereType<Map<String, dynamic>>()
           .map(PairedRouter.fromJson)
           .whereType<PairedRouter>()
           .toList();
     } catch (_) {
-      return const [];
+      return <PairedRouter>[];
     }
   }
 
@@ -47,12 +50,13 @@ class RouterRegistry {
   String? get activeId => _prefs.getString(_kActive);
 
   Future<void> upsert(PairedRouter r) async {
-    final all = [...list()..removeWhere((x) => x.id == r.id), r];
+    final all = [...list()]..removeWhere((x) => x.id == r.id);
+    all.add(r);
     await _prefs.setString(_kRouters, jsonEncode(all.map((x) => x.toJson()).toList()));
   }
 
   Future<void> remove(String id) async {
-    final all = list()..removeWhere((x) => x.id == id);
+    final all = [...list()]..removeWhere((x) => x.id == id);
     await _prefs.setString(_kRouters, jsonEncode(all.map((x) => x.toJson()).toList()));
     if (activeId == id) {
       await setActive(all.isEmpty ? null : all.first.id);

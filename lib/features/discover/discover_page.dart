@@ -131,6 +131,13 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 busy = false;
                 error = _mapPairError(l10n, e);
               });
+            } catch (_) {
+              // 兜底：任何未预期异常都必须解除 Pairing… 卡态（曾因注册表写入
+              // 异常导致弹层永久卡住、无提示）。
+              setSheet(() {
+                busy = false;
+                error = l10n.errConnect;
+              });
             }
           }
 
