@@ -83,6 +83,18 @@ class PackageOp {
         output: _str(j['output']),
         durationMs: _int(j['duration_ms']),
       );
+
+  /// 兼容旧固件（quartz-app-api < v1.1 末版）：history 条目曾以「统一包条目形态」
+  /// 承载（name=动作 id、version=目标、description=输出、file_size=耗时、installed=ok）。
+  /// 缺 action 字段时按该映射回退；两侧皆缺则原样（_OpCard 会显示空标题）。
+  factory PackageOp.fromLegacyJson(Map<String, dynamic> j) => PackageOp(
+        ts: _int(j['ts']),
+        action: _str(j['action']).isNotEmpty ? _str(j['action']) : _str(j['name']),
+        target: _str(j['target']).isNotEmpty ? _str(j['target']) : _str(j['version']),
+        ok: j['ok'] == true ? true : j['installed'] == true,
+        output: _str(j['output']).isNotEmpty ? _str(j['output']) : _str(j['description']),
+        durationMs: _int(j['duration_ms']) != 0 ? _int(j['duration_ms']) : _int(j['file_size']),
+      );
 }
 
 /// packages 方法分页回包。
@@ -115,7 +127,7 @@ class PackagesPage {
     if (list is List) {
       for (final e in list) {
         if (e is! Map<String, dynamic>) continue;
-        raw.add(scope == 'history' ? PackageOp.fromJson(e) : PackageItem.fromJson(e));
+        raw.add(scope == 'history' ? PackageOp.fromLegacyJson(e) : PackageItem.fromJson(e));
       }
     }
     return PackagesPage(

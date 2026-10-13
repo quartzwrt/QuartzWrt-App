@@ -68,7 +68,7 @@ void main() {
       expect(pg.ops, isEmpty);
     });
 
-    test('history scope → PackageOp（action 短名/耗时/失败）', () {
+    test('history scope → PackageOp（显式字段：action/ok/耗时）', () {
       final pg = PackagesPage.fromPayload({
         'scope': 'history',
         'items': [
@@ -80,9 +80,29 @@ void main() {
       expect(ops.length, 2);
       expect(ops[0].op, 'remove');
       expect(ops[0].ok, isFalse);
+      expect(ops[0].ts, 100);
       expect(ops[1].op, 'upgrade');
       expect(ops[1].durationMs, 1234);
       expect(pg.items, isEmpty);
+    });
+
+    test('history 旧固件形态回退（统一包条目映射）', () {
+      final pg = PackagesPage.fromPayload({
+        'scope': 'history',
+        'items': [
+          {'name': 'packages.remove', 'version': 'no-such', 'description': 'ERROR: No such package', 'file_size': 78, 'installed': false},
+          {'name': 'packages.refresh', 'version': '', 'description': 'OK: 10456 distinct packages available', 'file_size': 2764, 'installed': true},
+        ],
+      });
+      final ops = pg.ops;
+      expect(ops.length, 2);
+      expect(ops[0].op, 'remove');
+      expect(ops[0].target, 'no-such');
+      expect(ops[0].ok, isFalse);
+      expect(ops[0].output, contains('No such package'));
+      expect(ops[1].op, 'refresh');
+      expect(ops[1].ok, isTrue);
+      expect(ops[1].durationMs, 2764);
     });
 
     test('appended 累积下一页', () {
