@@ -178,12 +178,12 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 <body>
 
 <div class="pagetop">
-  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.3 定案稿</span><span class="tag">评审确认版</span></h1>
+  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.4</span><span class="tag">应用页细化·评审</span></h1>
   <div class="sub">
-    依据 <b>docs/UI-DESIGN.md v0.3</b>（七项已拍板）——<b>tab 结构：概览 / 网络 / 应用 / 设置</b>（设置内含「系统设置 + 应用设置」两组；
-    第 5 个 tab 位预留给后续功能，当前隐藏）。「对设备本身的控制」归系统设置，「对网络的控制」归网络页。
-    数据取自冻结契约 AGGREGATE-API v1 与 WP-5 接口面；深色为参考稿原生（WP-2 同源 token），浅色同一语义派生。
-    ⑩⑪ 为扩展机制演示屏（通用卡 / 条件卡 / 泛化行 / 动作挂靠）。
+    依据 <b>docs/UI-DESIGN.md</b>（v0.3 定案 IA + 本次应用页细化）。**应用 tab = 应用控制 + 软件包管理**两个子段：
+    「应用」列出已安装且可控制的应用（状态 · 启动/停止/重启 → 详情）；「软件包」管安装面（已安装/可升级/版本/卸载）。
+    数据来自冻结契约 AGGREGATE-API v1 与 WP-5 接口面；<b>软件包列表与升级/卸载属于写操作与新数据面——按扩展模型是加法</b>（WP-5 增读方法 + 动作 id，见各屏脚注）。
+    ⑩⑪ 为扩展机制演示屏。
   </div>
 </div>
 
@@ -397,13 +397,14 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
     </figcaption>
   </figure>
 
-  <!-- ⑤ 应用 -->
+  <!-- ⑤ 应用 · 控制子段 -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
       <div class="appbar"><h3>应用</h3><span class="r">3 个</span></div>
       <div class="content">
-        <p class="sub" style="margin: 0 2px 10px">路由器上安装的软件包（自动发现；新装应用免重启出现）。</p>
+        <div class="seg" style="margin: 0 2px 12px"><span class="on">应用</span><span>软件包</span></div>
+        <p class="sub" style="margin: 0 2px 10px">已安装且支持 App 内控制的应用；点入详情操作。</p>
         <div class="devs">
           <div class="dev">
             <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6l7-3z"/></svg></div>
@@ -422,8 +423,8 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
           </div>
         </div>
         <div class="card" style="margin-top:12px">
-          <h4>未安装</h4>
-          <p class="sub">Docker / Tailscale 等安装后将自动出现在上方列表（探针机制，零重编）。</p>
+          <h4>未安装的应用</h4>
+          <p class="sub">Docker / Tailscale 等安装后将自动出现在上方列表（探针机制）。到「软件包」子段可查看与安装。</p>
         </div>
       </div>
       <div class="tabbar">
@@ -433,8 +434,55 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
-    <figcaption><b>⑤ 应用（安装在路由器上的软件包）</b>
-      <span class="hint">列表 = 快照 services 开放映射（WP-4 探针描述文件驱动）；条目行点进「应用详情」（⑪）做状态/控制。未安装不占位；安装后自动出现。</span>
+    <figcaption><b>⑤ 应用 · 「应用」子段（控制面）</b>
+      <span class="hint">列出已安装且<u>可控制</u>的应用（数据=快照 services 开放映射；控制=WP-5 动作面 service.start/stop/restart——两者都已存在）。行 → 应用详情（⑪）。</span>
+    </figcaption>
+  </figure>
+
+  <!-- ⑤b 应用 · 软件包子段 -->
+  <figure class="case">
+    <div class="phone" data-mode="dark"><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
+      <div class="appbar"><h3>应用</h3><span class="r">335 个</span></div>
+      <div class="content">
+        <div class="seg" style="margin: 0 2px 12px"><span>应用</span><span class="on">软件包</span></div>
+
+        <div class="card">
+          <h4>可升级 · 3</h4>
+          <div class="row"><span class="k">quartz-daemon</span><span class="v" style="font-size:12.5px"><span class="faint mono">0.1.0-r1 →</span> 0.1.1</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k mono" style="font-size:11.5px">luci 源 · 7.1 MB</span></div>
+          <div class="row"><span class="k">luci-theme-quartz</span><span class="v" style="font-size:12.5px"><span class="faint mono">26.285 →</span> 26.287</span></div>
+          <div class="row" style="justify-content:flex-start"><span class="k mono" style="font-size:11.5px">luci 源 · 412 KB</span></div>
+          <div class="row"><span class="k">luci-app-dashboard</span><span class="v" style="font-size:12.5px"><span class="faint mono">26.285 →</span> 26.287</span></div>
+          <div class="btnrow" style="margin-top:10px">
+            <div class="btn primary" style="padding:10px 0; font-size:14px">全部升级（3）</div>
+          </div>
+          <p class="sub" style="margin-top:8px">升级经 WP-5 动作面（服务端逐包执行 + 审计）；中途断网可在「操作记录」查看结果。</p>
+        </div>
+
+        <div class="card">
+          <h4>已安装</h4>
+          <div class="row"><span class="k">quartz-daemon</span><span class="v mono" style="font-size:12.5px">0.1.0-r1 · 7.1 MB</span></div>
+          <div class="row"><span class="k">luci-theme-quartz</span><span class="v mono" style="font-size:12.5px">26.285 · 412 KB</span></div>
+          <div class="row"><span class="k">luci-app-openclash</span><span class="v mono" style="font-size:12.5px">0.46.050 · 1.2 MB</span></div>
+          <div class="row"><span class="k">dnsmasq</span><span class="v mono" style="font-size:12.5px">2.91 · 320 KB</span></div>
+          <div class="allrow" style="border-top:1px solid var(--border)"><span>全部软件包（335）· 搜索</span><span>›</span></div>
+        </div>
+
+        <div class="card">
+          <h4>安装新软件包</h4>
+          <p class="sub">浏览可用软件源、安装新包（需要 WP-5 扩展读方法 + packages.install 动作——见脚注；v1 先做「已安装/升级」闭环）。</p>
+        </div>
+      </div>
+      <div class="tabbar">
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
+      </div>
+    </div></div>
+    <figcaption><b>⑤b 应用 · 「软件包」子段（管理面）</b>
+      <span class="hint"><b>需 WP-5 扩展（加法，不推翻现有结构）</b>：①读方法 <code>packages</code>（列表/版本/可升级，分页——避免塞进 32KB 快照）；②动作 id <code>packages.upgrade</code>/<code>packages.refresh</code>（<code>action</code> 方法已通用，只是白名单加条目）；③卸载/安装=危险动作+确认层（安装浏览可后置）。数据源=路由器 apk 体系（LuCI 软件包页同源）。</span>
     </figcaption>
   </figure>
 
@@ -668,10 +716,17 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
           <div class="row"><span class="k">停止</span><span class="v" style="color:var(--err)">›</span></div>
           <p class="sub" style="margin-top:8px">动作按当前状态可用性置灰；新增动作 = 能力注册表加一条（WP-5 白名单 / WP-8 Bridge）。</p>
         </div>
+        <div class="card">
+          <h4>软件包</h4>
+          <div class="row"><span class="k">版本</span><span class="v mono" style="font-size:13px">0.46.050-r1</span></div>
+          <div class="row"><span class="k">来源</span><span class="v" style="font-size:13px">基座 luci 源</span></div>
+          <div class="row"><span class="k">安装大小</span><span class="v mono" style="font-size:13px">1.2 MB</span></div>
+          <div class="row"><span class="k" style="color:var(--err)">卸载…</span><span class="v faint">›</span></div>
+        </div>
       </div>
     </div></div>
-    <figcaption><b>⑪ 应用详情（扩展挂靠点）</b>
-      <span class="hint">应用列表行 → 详情页（go_router 路由，页面模块化）；状态字段来自快照 services 开放映射；动作来自能力注册表——新增插件/动作不改页面结构。</span>
+    <figcaption><b>⑪ 应用详情（控制面 + 安装面汇合点）</b>
+      <span class="hint">应用列表行 → 详情页；状态来自快照 services 开放映射，控制来自能力注册表（WP-5 动作面），包信息与卸载来自软件包读/写面——新旧两面在同一页汇合，新增插件/动作不改页面结构。</span>
     </figcaption>
   </figure>
 
