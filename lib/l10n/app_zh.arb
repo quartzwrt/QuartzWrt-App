@@ -1,0 +1,11 @@
+{
+  "@@locale": "zh",
+  "appTitle": "QuartzWrt",
+  "notConnectedTitle": "未连接路由器",
+  "notConnectedBody": "在局域网中自动发现 QuartzWrt 路由器，或手动按地址添加。",
+  "actionScan": "扫描局域网",
+  "actionAddByAddress": "按地址添加",
+  "settingsTitle": "设置",
+  "aboutTitle": "关于",
+  "aboutBody": "QuartzWrt 配套应用"
+}

@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "appTitle": "QuartzWrt",
+  "notConnectedTitle": "No router connected",
+  "notConnectedBody": "Discover QuartzWrt routers on your local network, or add one by address.",
+  "actionScan": "Scan network",
+  "actionAddByAddress": "Add by address",
+  "settingsTitle": "Settings",
+  "aboutTitle": "About",
+  "aboutBody": "QuartzWrt companion app"
+}

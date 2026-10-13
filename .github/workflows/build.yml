@@ -1,0 +1,75 @@
+name: Build
+
+# 触发策略（DESIGN §9）：
+#   - push/PR：analyze + test（轻量门禁）
+#   - tag v*：analyze + test + release APK + 附件到 GitHub Release
+#   - workflow_dispatch：手动全量（含 APK 构建）
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: 3.47.7 # 锁定 stable（DESIGN §2.1；升级须同步本文件与 README）
+
+jobs:
+  test:
+    name: analyze + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  apk:
+    name: build release APK
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+
+      # 签名：仓库 Secrets 存在则用之（KEYSTORE_BASE64 / KEY_ALIAS / KEY_PASSWORD /
+      # STORE_PASSWORD）；缺席则回落 debug 签名（仅用于内部验证，勿分发）。
+      - name: Configure signing
+        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/quartz-release.jks
+          cat > android/key.properties <<EOF
+          storeFile=quartz-release.jks
+          storePassword=$STORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quartzwrt-app-apk
+          path: build/app/outputs/flutter-apk/*.apk
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/*.apk
