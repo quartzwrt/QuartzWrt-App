@@ -1,11 +1,301 @@
 {
   "@@locale": "en",
   "appTitle": "QuartzWrt",
-  "notConnectedTitle": "No router connected",
-  "notConnectedBody": "Discover QuartzWrt routers on your local network, or add one by address.",
-  "actionScan": "Scan network",
-  "actionAddByAddress": "Add by address",
+  "navOverview": "Overview",
+  "navNetwork": "Network",
+  "navApps": "Apps",
+  "navSettings": "Settings",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "retry": "Retry",
+  "refresh": "Refresh",
+  "close": "Close",
+  "loading": "Loading…",
+  "unknownValue": "—",
+  "unavailable": "Unavailable",
+  "notInstalled": "Not installed",
+  "running": "Running",
+  "stopped2": "Stopped",
+  "actionDone": "Done",
+  "actionFailed": "Action failed: {detail}",
+  "@actionFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTitle": "Connect a router",
+  "discoverScanning": "Scanning local network (mDNS)…",
+  "discoverNone": "No other devices found — make sure your phone is on the same network.",
+  "addByAddress": "Add by address…",
+  "addByAddressTitle": "Add router by address",
+  "hostLabel": "Address",
+  "portLabel": "Port",
+  "badgeVerifiable": "Fingerprint verifiable",
+  "badgeUnverified": "Fingerprint unverified",
+  "noTabAfterPair": "Main screen appears after pairing",
+  "pairTitle": "Connect to {name}",
+  "@pairTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "certFingerprint": "Certificate fingerprint (SHA-256)",
+  "firmwareLabel": "Firmware",
+  "routerPassword": "Router admin password",
+  "routerPasswordHint": "Used once to pair; the app then signs in with a revocable token.",
+  "pairButton": "Pair",
+  "pairing": "Pairing…",
+  "errInvalidCredentials": "Wrong password",
+  "errRateLimited": "Too many attempts, retry in {sec}s",
+  "@errRateLimited": {
+    "placeholders": {
+      "sec": {
+        "type": "int"
+      }
+    }
+  },
+  "errPasswordNotSet": "Set the router admin password first (LuCI → System → Administration).",
+  "errFingerprintMismatch": "Router identity changed — pairing blocked.",
+  "errConnect": "Cannot reach the router.",
+  "errBadCert": "Certificate check failed.",
+  "errTimeout": "Connection timed out.",
+  "overviewTitle": "Overview",
+  "connectedDirect": "Connected · LAN",
+  "runFor": "Up {d} days {h}:{m}",
+  "@runFor": {
+    "placeholders": {
+      "d": {
+        "type": "int"
+      },
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "runForShort": "Up {h}:{m}",
+  "@runForShort": {
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "systemCardTitle": "System",
+  "cpuLabel": "CPU",
+  "memLabel": "Memory",
+  "storageLabel": "Storage",
+  "tempLabel": "Temperature",
+  "loadLabel": "Load",
+  "tempUnavailable": "Unavailable (no sensor)",
+  "networkCardTitle": "Network · WAN",
+  "clientsCardTitle": "Clients",
+  "appsCardTitle": "Apps",
+  "dockerCardTitle": "Docker",
+  "dockerRunning": "Running containers",
+  "dockerImages": "Images",
+  "dockerUnhealthy": "Unhealthy",
+  "bannerCollectorDown": "Collector not running",
+  "bannerCollectorDownBody": "Router data service unavailable (quartz-daemon not running or starting). It refreshes automatically.",
+  "bannerConnectionLost": "Connection lost",
+  "bannerConnectionLostBody": "Showing the last known data. Retrying automatically.",
+  "bannerNeedRepair": "Pairing revoked or expired",
+  "bannerNeedRepairBody": "Re-pair this router to continue.",
+  "otherClientsCount": "+{n} more",
+  "@otherClientsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "networkTitle": "Network",
+  "wanNetworkCardTitle": "WAN · Network",
+  "wanDown": "Offline",
+  "wirelessCardTitle": "Wireless",
+  "noiseLabel": "Noise",
+  "clientsOnlineHeader": "{n} online",
+  "@clientsOnlineHeader": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "allClientsEntry": "All clients ({n})",
+  "@allClientsEntry": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "clientsPageTitle": "Clients",
+  "clientsEmpty": "No clients online.",
+  "networkServicesTitle": "Network services",
+  "dnsServiceLabel": "DNS (dnsmasq)",
+  "wanReconnectPlanned": "Planned",
+  "lastSeenNow": "just now",
+  "lastSeenMin": "{n} min ago",
+  "@lastSeenMin": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "lastSeenHour": "{n} h ago",
+  "@lastSeenHour": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "lastSeenDay": "{n} d ago",
+  "@lastSeenDay": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "appsTitle": "Apps",
+  "segApps": "Apps",
+  "segPackages": "Packages",
+  "appsControllableIntro": "Installed apps with in-app control; tap for details.",
+  "appsNone": "No controllable apps installed.",
+  "appsNotInstalledTitle": "Not installed",
+  "appsNotInstalledBody": "Docker, Tailscale and others appear here automatically once installed.",
+  "appDetailStatusTitle": "Status",
+  "appDetailStatusRunning": "Running",
+  "coreLabel": "Core",
+  "statusSourceLabel": "Status source",
+  "statusSourceProbe": "Router probe (no rebuild)",
+  "actionsTitle": "Actions",
+  "actionsNote": "Actions follow router capability registry (WP-5 allowlist / WP-8 bridge).",
+  "actionRestart": "Restart service",
+  "actionStop": "Stop",
+  "actionStart": "Start",
+  "packageCardTitle": "Package",
+  "packageVersion": "Version",
+  "packageSource": "Source",
+  "packageSize": "Installed size",
+  "packageRemove": "Remove…",
+  "packagesApiMissingTitle": "Package management not available",
+  "packagesApiMissingBody": "The router API has no package support yet (requires quartz-app-api update). Installed/upgrade list will appear here automatically.",
+  "upgradableHeader": "Upgradable · {n}",
+  "@upgradableHeader": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeAllBtn": "Upgrade all ({n})",
+  "@upgradeAllBtn": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "installedHeader": "Installed · {n}",
+  "@installedHeader": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "allPackagesEntry": "All packages ({n}) · search",
+  "@allPackagesEntry": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "installNewTitle": "Install a new package",
+  "installNewBody": "Browsing and installing new packages is planned (v1 focuses on installed/upgrade/records).",
+  "opLogEntry": "Records",
+  "opLogTitle": "Operation records",
+  "opLogEmpty": "No recent operations.",
+  "opLogRetain": "Keeps the latest 30 entries.",
+  "opReindex": "Software index refreshed",
+  "opUpgradeAll": "Upgraded packages ({n})",
+  "@opUpgradeAll": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "opUpgrade": "Upgrade {name}",
+  "@opUpgrade": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "opRemove": "Remove {name}",
+  "@opRemove": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "opResultOk": "Success",
+  "opResultFail": "Failed",
+  "opResultPartial": "Partial",
   "settingsTitle": "Settings",
+  "sysSettingsGroup": "System settings · Router",
+  "appSettingsGroup": "App settings · This phone",
+  "pairedBadge": "Paired · LAN",
+  "fingerprintLabel": "Certificate fingerprint",
+  "pairedDevicesEntry": "Paired devices",
+  "addRouterEntry": "Add a router",
+  "deviceControlTitle": "Device control",
+  "rebootRouter": "Reboot router",
+  "restartService": "Restart service…",
+  "appearanceTitle": "Appearance",
+  "followSystem": "System",
+  "modeDark": "Dark",
+  "modeLight": "Light",
+  "languageTitle": "Language",
   "aboutTitle": "About",
-  "aboutBody": "QuartzWrt companion app"
+  "appVersionLabel": "App version",
+  "apiLabel": "API",
+  "devicesPageTitle": "Paired devices",
+  "devicesCurrentBadge": "this phone",
+  "devicesRevokedBadge": "revoked",
+  "revokeBtn": "Revoke",
+  "revokeConfirmTitle": "Revoke this device?",
+  "revokeConfirmBody": "The device must pair again to regain access.",
+  "rebootConfirmTitle": "Reboot router?",
+  "rebootConfirmBody": "{name} will reboot now. Network drops for about 1–2 minutes; the app reconnects automatically.",
+  "@rebootConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "removeRouterTitle": "Remove this router from the app?",
+  "removeRouterBody": "Also revoke this phone on the router (recommended).",
+  "removeRouterBtn": "Remove",
+  "kernelLabel": "kernel",
+  "rePair": "Re-pair",
+  "collectorErrors": "Collector messages"
 }

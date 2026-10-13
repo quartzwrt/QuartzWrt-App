@@ -13,24 +13,518 @@ class AppL10nEn extends AppL10n {
   String get appTitle => 'QuartzWrt';
 
   @override
-  String get notConnectedTitle => 'No router connected';
+  String get navOverview => 'Overview';
 
   @override
-  String get notConnectedBody =>
-      'Discover QuartzWrt routers on your local network, or add one by address.';
+  String get navNetwork => 'Network';
 
   @override
-  String get actionScan => 'Scan network';
+  String get navApps => 'Apps';
 
   @override
-  String get actionAddByAddress => 'Add by address';
+  String get navSettings => 'Settings';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get loading => 'Loading…';
+
+  @override
+  String get unknownValue => '—';
+
+  @override
+  String get unavailable => 'Unavailable';
+
+  @override
+  String get notInstalled => 'Not installed';
+
+  @override
+  String get running => 'Running';
+
+  @override
+  String get stopped2 => 'Stopped';
+
+  @override
+  String get actionDone => 'Done';
+
+  @override
+  String actionFailed(String detail) {
+    return 'Action failed: $detail';
+  }
+
+  @override
+  String get discoverTitle => 'Connect a router';
+
+  @override
+  String get discoverScanning => 'Scanning local network (mDNS)…';
+
+  @override
+  String get discoverNone =>
+      'No other devices found — make sure your phone is on the same network.';
+
+  @override
+  String get addByAddress => 'Add by address…';
+
+  @override
+  String get addByAddressTitle => 'Add router by address';
+
+  @override
+  String get hostLabel => 'Address';
+
+  @override
+  String get portLabel => 'Port';
+
+  @override
+  String get badgeVerifiable => 'Fingerprint verifiable';
+
+  @override
+  String get badgeUnverified => 'Fingerprint unverified';
+
+  @override
+  String get noTabAfterPair => 'Main screen appears after pairing';
+
+  @override
+  String pairTitle(String name) {
+    return 'Connect to $name';
+  }
+
+  @override
+  String get certFingerprint => 'Certificate fingerprint (SHA-256)';
+
+  @override
+  String get firmwareLabel => 'Firmware';
+
+  @override
+  String get routerPassword => 'Router admin password';
+
+  @override
+  String get routerPasswordHint =>
+      'Used once to pair; the app then signs in with a revocable token.';
+
+  @override
+  String get pairButton => 'Pair';
+
+  @override
+  String get pairing => 'Pairing…';
+
+  @override
+  String get errInvalidCredentials => 'Wrong password';
+
+  @override
+  String errRateLimited(int sec) {
+    return 'Too many attempts, retry in ${sec}s';
+  }
+
+  @override
+  String get errPasswordNotSet =>
+      'Set the router admin password first (LuCI → System → Administration).';
+
+  @override
+  String get errFingerprintMismatch =>
+      'Router identity changed — pairing blocked.';
+
+  @override
+  String get errConnect => 'Cannot reach the router.';
+
+  @override
+  String get errBadCert => 'Certificate check failed.';
+
+  @override
+  String get errTimeout => 'Connection timed out.';
+
+  @override
+  String get overviewTitle => 'Overview';
+
+  @override
+  String get connectedDirect => 'Connected · LAN';
+
+  @override
+  String runFor(int d, int h, String m) {
+    return 'Up $d days $h:$m';
+  }
+
+  @override
+  String runForShort(int h, String m) {
+    return 'Up $h:$m';
+  }
+
+  @override
+  String get systemCardTitle => 'System';
+
+  @override
+  String get cpuLabel => 'CPU';
+
+  @override
+  String get memLabel => 'Memory';
+
+  @override
+  String get storageLabel => 'Storage';
+
+  @override
+  String get tempLabel => 'Temperature';
+
+  @override
+  String get loadLabel => 'Load';
+
+  @override
+  String get tempUnavailable => 'Unavailable (no sensor)';
+
+  @override
+  String get networkCardTitle => 'Network · WAN';
+
+  @override
+  String get clientsCardTitle => 'Clients';
+
+  @override
+  String get appsCardTitle => 'Apps';
+
+  @override
+  String get dockerCardTitle => 'Docker';
+
+  @override
+  String get dockerRunning => 'Running containers';
+
+  @override
+  String get dockerImages => 'Images';
+
+  @override
+  String get dockerUnhealthy => 'Unhealthy';
+
+  @override
+  String get bannerCollectorDown => 'Collector not running';
+
+  @override
+  String get bannerCollectorDownBody =>
+      'Router data service unavailable (quartz-daemon not running or starting). It refreshes automatically.';
+
+  @override
+  String get bannerConnectionLost => 'Connection lost';
+
+  @override
+  String get bannerConnectionLostBody =>
+      'Showing the last known data. Retrying automatically.';
+
+  @override
+  String get bannerNeedRepair => 'Pairing revoked or expired';
+
+  @override
+  String get bannerNeedRepairBody => 'Re-pair this router to continue.';
+
+  @override
+  String otherClientsCount(int n) {
+    return '+$n more';
+  }
+
+  @override
+  String get networkTitle => 'Network';
+
+  @override
+  String get wanNetworkCardTitle => 'WAN · Network';
+
+  @override
+  String get wanDown => 'Offline';
+
+  @override
+  String get wirelessCardTitle => 'Wireless';
+
+  @override
+  String get noiseLabel => 'Noise';
+
+  @override
+  String clientsOnlineHeader(int n) {
+    return '$n online';
+  }
+
+  @override
+  String allClientsEntry(int n) {
+    return 'All clients ($n)';
+  }
+
+  @override
+  String get clientsPageTitle => 'Clients';
+
+  @override
+  String get clientsEmpty => 'No clients online.';
+
+  @override
+  String get networkServicesTitle => 'Network services';
+
+  @override
+  String get dnsServiceLabel => 'DNS (dnsmasq)';
+
+  @override
+  String get wanReconnectPlanned => 'Planned';
+
+  @override
+  String get lastSeenNow => 'just now';
+
+  @override
+  String lastSeenMin(int n) {
+    return '$n min ago';
+  }
+
+  @override
+  String lastSeenHour(int n) {
+    return '$n h ago';
+  }
+
+  @override
+  String lastSeenDay(int n) {
+    return '$n d ago';
+  }
+
+  @override
+  String get appsTitle => 'Apps';
+
+  @override
+  String get segApps => 'Apps';
+
+  @override
+  String get segPackages => 'Packages';
+
+  @override
+  String get appsControllableIntro =>
+      'Installed apps with in-app control; tap for details.';
+
+  @override
+  String get appsNone => 'No controllable apps installed.';
+
+  @override
+  String get appsNotInstalledTitle => 'Not installed';
+
+  @override
+  String get appsNotInstalledBody =>
+      'Docker, Tailscale and others appear here automatically once installed.';
+
+  @override
+  String get appDetailStatusTitle => 'Status';
+
+  @override
+  String get appDetailStatusRunning => 'Running';
+
+  @override
+  String get coreLabel => 'Core';
+
+  @override
+  String get statusSourceLabel => 'Status source';
+
+  @override
+  String get statusSourceProbe => 'Router probe (no rebuild)';
+
+  @override
+  String get actionsTitle => 'Actions';
+
+  @override
+  String get actionsNote =>
+      'Actions follow router capability registry (WP-5 allowlist / WP-8 bridge).';
+
+  @override
+  String get actionRestart => 'Restart service';
+
+  @override
+  String get actionStop => 'Stop';
+
+  @override
+  String get actionStart => 'Start';
+
+  @override
+  String get packageCardTitle => 'Package';
+
+  @override
+  String get packageVersion => 'Version';
+
+  @override
+  String get packageSource => 'Source';
+
+  @override
+  String get packageSize => 'Installed size';
+
+  @override
+  String get packageRemove => 'Remove…';
+
+  @override
+  String get packagesApiMissingTitle => 'Package management not available';
+
+  @override
+  String get packagesApiMissingBody =>
+      'The router API has no package support yet (requires quartz-app-api update). Installed/upgrade list will appear here automatically.';
+
+  @override
+  String upgradableHeader(int n) {
+    return 'Upgradable · $n';
+  }
+
+  @override
+  String upgradeAllBtn(int n) {
+    return 'Upgrade all ($n)';
+  }
+
+  @override
+  String installedHeader(int n) {
+    return 'Installed · $n';
+  }
+
+  @override
+  String allPackagesEntry(int n) {
+    return 'All packages ($n) · search';
+  }
+
+  @override
+  String get installNewTitle => 'Install a new package';
+
+  @override
+  String get installNewBody =>
+      'Browsing and installing new packages is planned (v1 focuses on installed/upgrade/records).';
+
+  @override
+  String get opLogEntry => 'Records';
+
+  @override
+  String get opLogTitle => 'Operation records';
+
+  @override
+  String get opLogEmpty => 'No recent operations.';
+
+  @override
+  String get opLogRetain => 'Keeps the latest 30 entries.';
+
+  @override
+  String get opReindex => 'Software index refreshed';
+
+  @override
+  String opUpgradeAll(int n) {
+    return 'Upgraded packages ($n)';
+  }
+
+  @override
+  String opUpgrade(String name) {
+    return 'Upgrade $name';
+  }
+
+  @override
+  String opRemove(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String get opResultOk => 'Success';
+
+  @override
+  String get opResultFail => 'Failed';
+
+  @override
+  String get opResultPartial => 'Partial';
 
   @override
   String get settingsTitle => 'Settings';
 
   @override
+  String get sysSettingsGroup => 'System settings · Router';
+
+  @override
+  String get appSettingsGroup => 'App settings · This phone';
+
+  @override
+  String get pairedBadge => 'Paired · LAN';
+
+  @override
+  String get fingerprintLabel => 'Certificate fingerprint';
+
+  @override
+  String get pairedDevicesEntry => 'Paired devices';
+
+  @override
+  String get addRouterEntry => 'Add a router';
+
+  @override
+  String get deviceControlTitle => 'Device control';
+
+  @override
+  String get rebootRouter => 'Reboot router';
+
+  @override
+  String get restartService => 'Restart service…';
+
+  @override
+  String get appearanceTitle => 'Appearance';
+
+  @override
+  String get followSystem => 'System';
+
+  @override
+  String get modeDark => 'Dark';
+
+  @override
+  String get modeLight => 'Light';
+
+  @override
+  String get languageTitle => 'Language';
+
+  @override
   String get aboutTitle => 'About';
 
   @override
-  String get aboutBody => 'QuartzWrt companion app';
+  String get appVersionLabel => 'App version';
+
+  @override
+  String get apiLabel => 'API';
+
+  @override
+  String get devicesPageTitle => 'Paired devices';
+
+  @override
+  String get devicesCurrentBadge => 'this phone';
+
+  @override
+  String get devicesRevokedBadge => 'revoked';
+
+  @override
+  String get revokeBtn => 'Revoke';
+
+  @override
+  String get revokeConfirmTitle => 'Revoke this device?';
+
+  @override
+  String get revokeConfirmBody =>
+      'The device must pair again to regain access.';
+
+  @override
+  String get rebootConfirmTitle => 'Reboot router?';
+
+  @override
+  String rebootConfirmBody(String name) {
+    return '$name will reboot now. Network drops for about 1–2 minutes; the app reconnects automatically.';
+  }
+
+  @override
+  String get removeRouterTitle => 'Remove this router from the app?';
+
+  @override
+  String get removeRouterBody =>
+      'Also revoke this phone on the router (recommended).';
+
+  @override
+  String get removeRouterBtn => 'Remove';
+
+  @override
+  String get kernelLabel => 'kernel';
+
+  @override
+  String get rePair => 'Re-pair';
+
+  @override
+  String get collectorErrors => 'Collector messages';
 }
