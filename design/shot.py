@@ -17,10 +17,13 @@ OUT.mkdir(parents=True, exist_ok=True)
 CASES = {
     "overview-dark": 2,     # 序号（从 0 起）：③ 概览
     "pairing-dark": 1,      # ② 配对
+    "network-dark": 3,      # ④ 网络
+    "apps-dark": 4,         # ⑤ 应用
+    "settings-dark": 5,     # ⑥ 设置（系统设置+应用设置）
     "light-overview": 7,    # ⑧ 浅色概览
     "degraded-dark": 8,     # ⑨ 降级态
-    "extended-overview": 9, # ⑩ 扩展示例（通用卡+泛化行）
-    "service-detail": 10,   # ⑪ 服务详情
+    "extended-overview": 9, # ⑩ 扩展示例（通用卡+Docker 条件卡+泛化行）
+    "service-detail": 10,   # ⑪ 应用详情
 }
 
 

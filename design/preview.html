@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QuartzWrt App · UI 预览 v0.1（讨论稿）</title>
+<title>QuartzWrt App · UI 预览 v0.3（定案稿·评审）</title>
 <style>
 /* ============ 设计 token（与 WP-2 luci-theme-quartz 同源；深色为参考稿原生） ============ */
 .phone {
@@ -35,7 +35,7 @@ body {
 }
 .pagetop { max-width: 1380px; margin: 0 auto 28px; }
 .pagetop h1 { font-size: 24px; font-weight: 650; letter-spacing: .2px; }
-.pagetop .sub { margin-top: 8px; color: #9a9aa2; font-size: 13.5px; line-height: 1.7; max-width: 900px; }
+.pagetop .sub { margin-top: 8px; color: #9a9aa2; font-size: 13.5px; line-height: 1.7; max-width: 940px; }
 .pagetop .tag { display:inline-block; margin-right:8px; padding:2px 8px; border:1px solid #3a3a40;
   border-radius: 999px; font-size: 11.5px; color:#b9b9c0; }
 
@@ -45,7 +45,7 @@ body {
 .swatches { display:flex; gap:14px; flex-wrap:wrap; }
 .sw { display:flex; align-items:center; gap:8px; font-size:12px; color:#c6c6cc; }
 .sw i { width:22px; height:22px; border-radius:6px; border:1px solid rgba(255,255,255,.14); display:block; }
-.tokens .note { font-size:12px; color:#8a8a92; line-height:1.8; max-width:520px; }
+.tokens .note { font-size:12px; color:#8a8a92; line-height:1.8; max-width:560px; }
 .tokens .note b { color:#c9c9cf; font-weight:600; }
 
 .gallery { max-width: 1380px; margin: 0 auto; display:flex; flex-wrap:wrap; gap: 44px 40px; }
@@ -85,7 +85,9 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 .card { background: var(--panel); border:1px solid var(--border); border-radius: var(--radius);
   padding: 13px 15px; margin-bottom: 12px; }
 .card h4 { font-size: 12.5px; font-weight: 650; color: var(--muted); letter-spacing:.35px;
-  margin-bottom: 10px; text-transform: none; }
+  margin-bottom: 10px; }
+.grouplabel { font-size: 12.5px; font-weight: 650; color: var(--faint); letter-spacing:.35px;
+  margin: 4px 4px 8px; }
 .row { display:flex; align-items:center; justify-content:space-between; padding: 6px 0; }
 .row .k { color: var(--muted); font-size: 13.5px; }
 .row .v { font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
@@ -96,7 +98,6 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 .bar { height:6px; border-radius:3px; background: var(--well); overflow:hidden; }
 .phone[data-mode="light"] .bar { background: #e4e4e9; }
 .bar > i { display:block; height:100%; border-radius:3px; background: var(--accent); }
-.bar > i.ok { background: var(--ok); } .bar > i.warn { background: var(--warn); }
 .sub { color: var(--muted); font-size: 12.5px; line-height:1.6; }
 .faint { color: var(--faint); }
 .mono { font-variant-numeric: tabular-nums; }
@@ -119,17 +120,19 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 /* sparkline */
 .spark { width: 100%; height: 54px; display:block; }
 
-/* 列表（设备） */
+/* 列表 */
 .devs { border:1px solid var(--border); border-radius: var(--radius); background: var(--panel); overflow:hidden; }
 .dev { display:flex; align-items:center; gap:12px; padding: 11px 14px; }
 .dev + .dev { border-top: 1px solid var(--border); }
 .dev .ico { width: 34px; height:34px; border-radius: 9px; background: var(--well); flex:none;
   display:flex; align-items:center; justify-content:center; color: var(--muted); }
-.phone[data-mode="light"] .dev .ico { background: var(--well); }
 .dev .nm { font-weight:600; font-size: 14px; }
 .dev .ip { color: var(--muted); font-size: 12px; margin-top:2px; }
 .dev .right { margin-left:auto; text-align:right; color: var(--faint); font-size: 11.5px; line-height:1.5; }
 .dev .right .iface { color: var(--muted); }
+.dev .chev { color: var(--faint); font-size: 15px; margin-left: 6px; }
+.allrow { display:flex; align-items:center; justify-content:space-between; padding: 11px 14px;
+  border-top: 1px solid var(--border); color: var(--accent); font-size: 13px; font-weight:600; }
 
 /* 设置 */
 .seg { display:flex; background: var(--well); border-radius: 9px; padding: 2px; gap:2px; }
@@ -175,12 +178,12 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
 <body>
 
 <div class="pagetop">
-  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.1 讨论稿</span><span class="tag">评审用</span></h1>
+  <h1>QuartzWrt App · UI 预览 <span class="tag">v0.3 定案稿</span><span class="tag">评审确认版</span></h1>
   <div class="sub">
-    对应 <b>docs/DESIGN.md §8</b>（信息架构）与 <b>docs/UI-DESIGN.md v0.2</b>（含 §4 可扩展性设计）。数据取自冻结契约 AGGREGATE-API v1
-    样例与 WP-5 接口面（真实字段与数值量级），非最终文案。深色为参考稿原生（WP-2 同源 token），浅色按同一语义派生；
-    统一 1px 描边分层、圆角 ≤12px、仅颜色过渡（无渐变/发光）。图标为占位线稿，拟随 WP-2 Logo 家族统一。
-    ⑩⑪ 为<b>扩展性演示屏</b>：新 daemon 节以「通用 KV 卡」零改版可见、新服务以「泛化行」自动出现、动作挂靠详情页注册表。
+    依据 <b>docs/UI-DESIGN.md v0.3</b>（七项已拍板）——<b>tab 结构：概览 / 网络 / 应用 / 设置</b>（设置内含「系统设置 + 应用设置」两组；
+    第 5 个 tab 位预留给后续功能，当前隐藏）。「对设备本身的控制」归系统设置，「对网络的控制」归网络页。
+    数据取自冻结契约 AGGREGATE-API v1 与 WP-5 接口面；深色为参考稿原生（WP-2 同源 token），浅色同一语义派生。
+    ⑩⑪ 为扩展机制演示屏（通用卡 / 条件卡 / 泛化行 / 动作挂靠）。
   </div>
 </div>
 
@@ -201,7 +204,7 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
   <div class="note">
     <b>版式</b>：系统字体栈（零 webfont）· 卡片圆角 12 / 控件 8 · 间距 8 栅格 ·
     数字全部 tabular-nums（速率/百分比不跳动）。<br>
-    <b>状态语义</b>：绿点=运行/在线，橙=注意（如 core 有更新），红=危险/离线，灰点=未安装/停用。
+    <b>状态语义</b>：绿点=运行/在线，橙=注意，红=危险/离线，灰点=未安装/停用。
   </div>
 </div>
 
@@ -319,128 +322,141 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
         </div>
 
         <div class="card">
-          <h4>在线设备 · 12</h4>
+          <h4>上网设备 · 12</h4>
           <div class="row"><span class="k">NAS</span><span class="v mono">192.168.1.10</span></div>
           <div class="row"><span class="k">iPhone-15</span><span class="v mono">192.168.1.23</span></div>
           <div class="row"><span class="k">MacBook-Pro</span><span class="v mono">192.168.1.31</span></div>
         </div>
 
         <div class="card">
-          <h4>服务</h4>
+          <h4>应用</h4>
           <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
-          <p class="sub" style="margin-top:6px">Docker 未安装（出厂不含）—— 安装后自动出现在此。</p>
+          <div class="row"><span class="k"><span class="dot ok"></span>PassWall</span><span class="v faint" style="font-size:12.5px">运行中</span></div>
         </div>
       </div>
       <div class="tabbar">
         <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
     <figcaption><b>③ 概览（主界面）</b>
-      <span class="hint">hero + 四卡；数值与 Dashboard 同源同口径（契约 v1）。Docker 未装时不显示整卡（出厂常态）。下拉刷新；5s 前台轮询。</span>
+      <span class="hint">hero + 系统 / 网络·WAN / 上网设备 / 应用 四摘要卡；数值与 Dashboard 同源同口径（契约 v1）。下拉刷新；5s 前台轮询。</span>
     </figcaption>
   </figure>
 
-  <!-- ④ 设备 -->
+  <!-- ④ 网络 -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
-      <div class="appbar"><h3>设备</h3><span class="r">12 在线</span></div>
+      <div class="appbar"><h3>网络</h3><span class="r">12 在线</span></div>
       <div class="content">
+        <div class="card">
+          <h4>WAN · 网络管理</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>eth0 · DHCP</span><span class="v mono">100.64.7.23</span></div>
+          <div class="row" style="padding-top:2px"><span class="k">↓ 1.31 MB/s</span><span class="k">↑ 343 KB/s</span></div>
+          <svg class="spark" viewBox="0 0 320 54" preserveAspectRatio="none">
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12 L320,54 L0,54 Z" fill="rgba(0,122,255,.13)"/>
+            <path d="M0,44 L18,38 L36,42 L54,30 L72,24 L90,28 L108,18 L126,22 L144,12 L162,16 L180,10 L198,14 L216,8 L234,12 L252,16 L270,11 L288,14 L306,9 L320,12" fill="none" stroke="#007aff" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="card">
+          <h4>无线</h4>
+          <div class="row"><span class="k">5G · 信道 149 · 80 MHz</span><span class="v">12 台</span></div>
+          <div class="row"><span class="k">2.4G · 信道 6 · 20 MHz</span><span class="v">4 台</span></div>
+          <div class="row"><span class="k">噪声</span><span class="v mono">-95 dBm</span></div>
+        </div>
         <div class="devs">
+          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+            <div><div class="nm">iPhone-15</div><div class="ip mono">192.168.1.23 · 5G 无线</div></div>
+            <div class="right">刚刚</div></div>
           <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/></svg></div>
-            <div><div class="nm">NAS</div><div class="ip mono">192.168.1.10 · 00:11:32:7d:55:60</div></div>
-            <div class="right">刚刚<br><span class="iface">br-lan</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
-            <div><div class="nm">iPhone-15</div><div class="ip mono">192.168.1.23 · 3c:22:fb:9a:1e:07</div></div>
-            <div class="right">刚刚<br><span class="iface">5G 无线</span></div></div>
+            <div><div class="nm">NAS</div><div class="ip mono">192.168.1.10 · br-lan</div></div>
+            <div class="right">刚刚</div></div>
           <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M2 9h20"/></svg></div>
-            <div><div class="nm">MacBook-Pro</div><div class="ip mono">192.168.1.31 · a4:83:e7:0c:44:12</div></div>
-            <div class="right">1 分钟前<br><span class="iface">5G 无线</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="10" rx="2"/></svg></div>
-            <div><div class="nm">LivingRoom-TV</div><div class="ip mono">192.168.1.42 · 8c:79:f5:1b:2c:90</div></div>
-            <div class="right">2 分钟前<br><span class="iface">br-lan</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 15h16"/></svg></div>
-            <div><div class="nm">iPad-Air</div><div class="ip mono">192.168.1.35 · d0:81:7a:33:9f:b1</div></div>
-            <div class="right">3 分钟前<br><span class="iface">2.4G 无线</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
-            <div><div class="nm">Pixel-8</div><div class="ip mono">192.168.1.47 · 7c:9a:54:2e:81:66</div></div>
-            <div class="right">4 分钟前<br><span class="iface">5G 无线</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M2 9h20"/></svg></div>
-            <div><div class="nm">work-laptop</div><div class="ip mono">192.168.1.52 · 34:13:e8:77:01:aa</div></div>
-            <div class="right">6 分钟前<br><span class="iface">br-lan</span></div></div>
-          <div class="dev"><div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
-            <div><div class="nm">Xiaomi-14</div><div class="ip mono">192.168.1.61 · 58:2a:f7:1d:93:4e</div></div>
-            <div class="right">9 分钟前<br><span class="iface">5G 无线</span></div></div>
+            <div><div class="nm">MacBook-Pro</div><div class="ip mono">192.168.1.31 · 5G 无线</div></div>
+            <div class="right">1 分钟前</div></div>
+          <div class="allrow"><span>全部上网设备（12）</span><span>›</span></div>
         </div>
-        <p class="sub" style="margin:10px 2px 0">显示前 8 台（共 12 在线，按最后在线排序）。「最后在线」= 最近一次确认在线的时刻（契约语义）。</p>
+        <div class="card" style="margin-top:12px">
+          <h4>网络服务 · 控制</h4>
+          <div class="row"><span class="k"><span class="dot ok"></span>DNS（dnsmasq）</span><span class="v" style="color:var(--accent)">重启 ›</span></div>
+          <div class="row"><span class="k">WAN 重连</span><span class="v faint">规划中</span></div>
+        </div>
       </div>
       <div class="tabbar">
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
-    <figcaption><b>④ 设备页</b>
-      <span class="hint">在线表（host/IP/MAC/接口/最后在线）；契约 32 条上限内全量，超出按「共 N 在线」提示。后续限速/管控动作经 WP-5 动作面接入（后置）。</span>
+    <figcaption><b>④ 网络（网络管理 · 无线 · 上网设备）</b>
+      <span class="hint">「对网络的控制」集中于此（网络服务重启行；WAN 重连等经 WP-5 动作表扩展位）。无线卡为 daemon 无线新节落地后的呈现（现有契约 v1 无 wireless 节——先由 L1 通用卡出现，再富化，见 ⑩）。上网设备表与详情沿用同一 Pattern。</span>
     </figcaption>
   </figure>
 
-  <!-- ⑤ 系统 -->
+  <!-- ⑤ 应用 -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
-      <div class="appbar"><h3>系统</h3><span class="r"></span></div>
+      <div class="appbar"><h3>应用</h3><span class="r">3 个</span></div>
       <div class="content">
-        <div class="card">
-          <h4>资源</h4>
-          <div class="row"><span class="k">负载（1/5/15 分钟）</span><span class="v mono">0.42 / 0.31 / 0.25</span></div>
-          <div class="row"><span class="k">CPU</span><span class="v">7.8%</span></div>
-          <div class="row"><span class="k">内存</span><span class="v">1.28 / 4.00 GB（32%）</span></div>
-          <div class="row"><span class="k">交换</span><span class="v">未启用</span></div>
-          <div class="row"><span class="k">存储</span><span class="v">385 MB / 1.00 GB（37.5%）</span></div>
-          <div class="row"><span class="k">温度</span><span class="v">46.5 °C</span></div>
-          <div class="row"><span class="k">运行时长</span><span class="v mono">3 天 13:24</span></div>
+        <p class="sub" style="margin: 0 2px 10px">路由器上安装的软件包（自动发现；新装应用免重启出现）。</p>
+        <div class="devs">
+          <div class="dev">
+            <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6l7-3z"/></svg></div>
+            <div><div class="nm">OpenClash</div><div class="ip"><span class="dot ok"></span>运行中 · mihomo 1.19.2</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="dev">
+            <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/></svg></div>
+            <div><div class="nm">PassWall</div><div class="ip"><span class="dot ok"></span>运行中</div></div>
+            <div class="chev">›</div>
+          </div>
+          <div class="dev">
+            <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6l7-3z"/><path d="M9.5 12l1.8 1.8 3.2-3.6"/></svg></div>
+            <div><div class="nm">AdGuard Home</div><div class="ip"><span class="dot off"></span>已停止</div></div>
+            <div class="chev">›</div>
+          </div>
         </div>
-        <div class="card">
-          <h4>维护动作</h4>
-          <div class="row"><span class="k"><span class="dot ok"></span>OpenClash · 运行中</span><span class="v" style="color:var(--accent)">重启 ›</span></div>
-          <div class="row"><span class="k"><span class="dot off"></span>Docker · 未安装</span><span class="v faint">—</span></div>
-          <div class="row"><span class="k"><span class="dot ok"></span>DNS 服务（dnsmasq）</span><span class="v" style="color:var(--accent)">重启 ›</span></div>
-        </div>
-        <div class="card">
-          <h4>路由器</h4>
-          <div class="row"><span class="k" style="color:var(--err); font-weight:600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px"><path d="M12 3v9"/><path d="M6.2 7.2a8 8 0 1 0 11.6 0"/></svg> 重启路由器</span><span class="v faint">›</span></div>
+        <div class="card" style="margin-top:12px">
+          <h4>未安装</h4>
+          <p class="sub">Docker / Tailscale 等安装后将自动出现在上方列表（探针机制，零重编）。</p>
         </div>
       </div>
       <div class="tabbar">
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
-    <figcaption><b>⑤ 系统页 · 资源与控制</b>
-      <span class="hint">动作集 = WP-5 白名单（服务启停/重启、重启路由器、Docker 容器操作）；入口按快照能力显示（未安装即灰）。执行后 ≤2s 快照自动反映新状态。</span>
+    <figcaption><b>⑤ 应用（安装在路由器上的软件包）</b>
+      <span class="hint">列表 = 快照 services 开放映射（WP-4 探针描述文件驱动）；条目行点进「应用详情」（⑪）做状态/控制。未安装不占位；安装后自动出现。</span>
     </figcaption>
   </figure>
 
-  <!-- ⑥ 设置 -->
+  <!-- ⑥ 设置（系统设置 + 应用设置） -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
       <div class="appbar"><h3>设置</h3><span class="r"></span></div>
       <div class="content">
+        <div class="grouplabel">系统设置 · 路由器</div>
         <div class="card">
-          <h4>路由器</h4>
           <div class="row"><span class="k"><span class="dot ok"></span>QuartzWrt-R4S</span><span class="v sub">已配对 · 直连</span></div>
           <div class="row"><span class="k">证书指纹</span><span class="v mono" style="font-size:12px">9d79 d120 … 30a8 ✓</span></div>
           <div class="row"><span class="k">已配对设备</span><span class="v" style="color:var(--accent)">2 台 ›</span></div>
           <div class="row"><span class="k">添加路由器</span><span class="v faint">›</span></div>
         </div>
+        <div class="card">
+          <h4>设备控制</h4>
+          <div class="row"><span class="k" style="color:var(--err); font-weight:600">重启路由器</span><span class="v faint">›</span></div>
+          <div class="row"><span class="k">重启服务…</span><span class="v faint">›</span></div>
+        </div>
+        <div class="grouplabel" style="margin-top:14px">应用设置 · 本机</div>
         <div class="card">
           <h4>外观</h4>
           <div class="seg"><span>跟随系统</span><span class="on">深色</span><span>浅色</span></div>
@@ -457,13 +473,13 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
       </div>
       <div class="tabbar">
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
-    <figcaption><b>⑥ 设置</b>
-      <span class="hint">多路由器管理 + 设备吊销（`devices`/`revoke`）；外观三态；语言 zh/en。指纹行常显——用户可随时核对 pin。</span>
+    <figcaption><b>⑥ 设置（系统设置 + 应用设置）</b>
+      <span class="hint">「系统设置」= 路由器侧（配对/安全/设备控制：重启路由器、重启服务）；「应用设置」= 本机 App（外观/语言/关于）。设备本身控制的归口即此页。</span>
     </figcaption>
   </figure>
 
@@ -471,9 +487,11 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
-      <div class="appbar"><h3>系统</h3><span class="r"></span></div>
+      <div class="appbar"><h3>设置</h3><span class="r"></span></div>
       <div class="content">
-        <div class="card"><h4>路由器</h4>
+        <div class="grouplabel">系统设置 · 路由器</div>
+        <div class="card">
+          <h4>设备控制</h4>
           <div class="row"><span class="k" style="color:var(--err); font-weight:600">重启路由器</span><span class="v faint">›</span></div>
         </div>
       </div>
@@ -485,8 +503,8 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
         <div class="btnrow"><div class="btn plain">取消</div><div class="btn danger">重启</div></div>
       </div>
     </div></div>
-    <figcaption><b>⑦ 危险操作确认</b>
-      <span class="hint">破坏性动作一律底部确认层 + 影响说明（断开连接/时长）；按钮红字弱底，不做全红实心（避免误触主按钮区域）。</span>
+    <figcaption><b>⑦ 危险操作确认（底部确认层）</b>
+      <span class="hint">破坏性动作一律底部确认层 + 影响说明（断开连接/时长）；红字弱底按钮，不做全红实心（避免误触）。</span>
     </figcaption>
   </figure>
 
@@ -527,14 +545,14 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
           </svg>
         </div>
         <div class="card">
-          <h4>服务</h4>
+          <h4>应用</h4>
           <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
         </div>
       </div>
       <div class="tabbar">
         <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
@@ -569,16 +587,17 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
       </div>
       <div class="tabbar">
         <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
     <figcaption><b>⑨ 降级态（daemon 停机 / 无传感器）</b>
-      <span class="hint">与 Dashboard 四态同语义：`data_unavailable` → 顶部横幅 + 横幅下卡片「—」；叶字段 null（如无温度传感器）→ 卡内「不可用」。任何情况不白屏。</span>
+      <span class="hint">与 Dashboard 四态同语义：`data_unavailable` → 顶部横幅 + 卡片「—」；叶字段 null（如无温度传感器）→ 卡内「不可用」。任何情况不白屏。</span>
     </figcaption>
   </figure>
-  <!-- ⑩ 概览 · 扩展示例（通用卡 + 泛化行） -->
+
+  <!-- ⑩ 扩展示例（通用卡 + 条件卡 + 泛化/富化行） -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
@@ -592,36 +611,40 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
           </div>
         </div>
         <div class="card">
-          <h4>无线</h4>
-          <div class="row"><span class="k">在线客户端</span><span class="v">12</span></div>
-          <div class="row"><span class="k">主信道</span><span class="v">5G · 149</span></div>
-          <div class="row"><span class="k">噪声</span><span class="v mono">-95 dBm</span></div>
+          <h4>USB 存储</h4>
+          <div class="row"><span class="k">挂载</span><span class="v mono">/dev/sda1 → /mnt/usb</span></div>
+          <div class="row"><span class="k">容量</span><span class="v">86 GB / 128 GB</span></div>
         </div>
         <div class="card">
-          <h4>服务</h4>
+          <h4>Docker</h4>
+          <div class="row"><span class="k">运行容器</span><span class="v">3 / 5</span></div>
+          <div class="row"><span class="k">镜像</span><span class="v">7</span></div>
+          <div class="row"><span class="k"><span class="dot warn"></span>非健康容器</span><span class="v mono" style="font-size:12.5px">nextcloud</span></div>
+        </div>
+        <div class="card">
+          <h4>应用</h4>
           <div class="row"><span class="k"><span class="dot ok"></span>OpenClash</span><span class="v mono" style="font-size:12.5px">mihomo 1.19.2</span></div>
           <div class="row"><span class="k"><span class="dot ok"></span>PassWall</span><span class="v faint" style="font-size:12.5px">运行中</span></div>
-          <div class="row"><span class="k"><span class="dot off"></span>AdGuard Home</span><span class="v faint" style="font-size:12.5px">已停止</span></div>
         </div>
       </div>
       <div class="tabbar">
         <span class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>概览</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8"/></svg>设备</span>
-        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="var(--bg)"/><circle cx="15" cy="12" r="2" fill="var(--bg)"/><circle cx="7" cy="18" r="2" fill="var(--bg)"/></svg>系统</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.6 4 5.6 4 9s-1.2 6.4-4 9c-2.8-2.6-4-5.6-4-9s1.2-6.4 4-9Z"/></svg>网络</span>
+        <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>应用</span>
         <span class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>设置</span>
       </div>
     </div></div>
-    <figcaption><b>⑩ 扩展演示：新 daemon 节 + 新服务</b>
-      <span class="hint">「无线」节此前无专属卡 → 按<b>通用 KV 卡</b>渲染（节名 + 标量键值行；上限 ~6 行、超限进详情），零改版即可见；服务卡中 OpenClash 走<b>富化</b>渲染（带 core 版本），PassWall / AdGuard Home 走<b>泛化</b>行（数据带 title 即显示：状态点 + 名称），未知服务自动列出不崩。</span>
+    <figcaption><b>⑩ 扩展演示：新节通用卡 + Docker 条件卡 + 泛化/富化行</b>
+      <span class="hint">「USB 存储」为 daemon 未来新节 → 零改版以通用 KV 卡出现；<b>Docker 卡安装后才显示</b>（已拍板 2）；应用摘要里 OpenClash=富化行、PassWall=泛化行（数据带 title 即显示）。</span>
     </figcaption>
   </figure>
 
-  <!-- ⑪ 服务详情（动作挂靠） -->
+  <!-- ⑪ 应用详情（动作挂靠） -->
   <figure class="case">
     <div class="phone" data-mode="dark"><div class="screen">
       <div class="statusbar"><span>9:41</span><span class="icons"><i></i><i class="w2"></i><i></i></span></div>
       <div class="appbar"><h3 style="display:flex;align-items:center;gap:4px">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M15 5l-7 7 7 7"/></svg>服务</h3><span class="r"></span></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M15 5l-7 7 7 7"/></svg>应用</h3><span class="r"></span></div>
       <div class="content">
         <div class="hero" style="padding: 13px 16px 12px">
           <div class="top">
@@ -647,8 +670,8 @@ figcaption .hint { display:block; margin-top:4px; color:#8a8a92; font-size:12.3p
         </div>
       </div>
     </div></div>
-    <figcaption><b>⑪ 服务详情（扩展挂靠点）</b>
-      <span class="hint">行点击 → 详情页（go_router 路由，页面模块化）；状态字段来自快照 services 开放映射；动作来自能力注册表——新增插件/动作不改页面结构。未来「查看日志/核心更新」等作为注册表条目加入本页。</span>
+    <figcaption><b>⑪ 应用详情（扩展挂靠点）</b>
+      <span class="hint">应用列表行 → 详情页（go_router 路由，页面模块化）；状态字段来自快照 services 开放映射；动作来自能力注册表——新增插件/动作不改页面结构。</span>
     </figcaption>
   </figure>
 
