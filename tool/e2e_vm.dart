@@ -1,9 +1,11 @@
 // W6.2 端到端冒烟（对真实路由器 / VM）：
 //   dart run tool/e2e_vm.dart [host] [port] [password]
 // 验证：TOFU 指纹捕获 → login 双令牌 → 严格 pin 客户端 status → 错误密码拒绝 →
-// logout 清理。仅依赖纯 Dart 层（api/pairing；不触 Flutter）。
+// 软件包面（WP-5 packages：installed/upgradable/history/available）→ logout 清理。
+// 仅依赖纯 Dart 层（api/pairing；不触 Flutter）。
 import 'dart:io';
 
+import 'package:quartzwrt_app/api/packages.dart';
 import 'package:quartzwrt_app/auth/pairing.dart';
 
 Future<void> main(List<String> args) async {
@@ -49,6 +51,27 @@ Future<void> main(List<String> args) async {
   } on PairException catch (e) {
     check('wrong password rejected (${e.code})', e.code == 'invalid_credentials');
   }
+
+  // ---- 软件包面（WP-5 packages 扩展；只读 scope，不改路由器状态）----
+  final tok = out.tokens.accessToken;
+
+  final inst = await c.packages(accessToken: tok, scope: 'installed', page: 1, perPage: 5);
+  final instPage = inst.ok ? PackagesPage.fromPayload(inst.data) : null;
+  check(
+    'packages installed (total=${instPage?.total}, first=${instPage?.items.isEmpty ?? true ? '-' : instPage!.items.first.name})',
+    inst.ok && (instPage?.total ?? 0) > 50 && (instPage?.items.isNotEmpty ?? false),
+  );
+
+  final up = await c.packages(accessToken: tok, scope: 'upgradable', perPage: 5);
+  check('packages upgradable readable (ok=${up.ok}, total=${up.ok ? PackagesPage.fromPayload(up.data).total : '-'})', up.ok);
+
+  final hist = await c.packages(accessToken: tok, scope: 'history');
+  check('packages history readable (ok=${hist.ok}, items=${hist.ok ? PackagesPage.fromPayload(hist.data).ops.length : '-'})', hist.ok);
+
+  final srch = await c.packages(accessToken: tok, scope: 'available', query: 'tail', perPage: 100);
+  final names = srch.ok ? PackagesPage.fromPayload(srch.data).items.map((p) => p.name).toList() : const <String>[];
+  check('packages available search "tail" hits tailscale (${names.length} matches)',
+      srch.ok && names.any((n) => n.contains('tailscale')));
 
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);

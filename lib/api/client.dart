@@ -153,15 +153,20 @@ class QuartzApiClient implements ApiTransport {
   Future<ApiResult> revoke({required String accessToken, required String deviceId}) =>
       call('revoke', {'access_token': accessToken, 'device_id': deviceId});
 
-  /// 软件包面（WP-6 登记项；路由器未实现时返回 `bad_request` → 上层降级展示）。
+  /// 软件包面（WP-5 §4.5）。scope ∈ installed|upgradable|available|history；
+  /// query=包名子串（服务端包裹为 apk 模式）；page/perPage 分页。
   Future<ApiResult> packages({
     required String accessToken,
     required String scope,
     String? query,
+    int? page,
+    int? perPage,
   }) =>
       call('packages', {
         'access_token': accessToken,
         'scope': scope,
-        'query': ?query,
+        if (query != null && query.isNotEmpty) 'query': query,
+        'page': ?page,
+        'per_page': ?perPage,
       });
 }

@@ -231,7 +231,7 @@
   "opLogEntry": "Records",
   "opLogTitle": "Operation records",
   "opLogEmpty": "No recent operations.",
-  "opLogRetain": "Keeps the latest 30 entries.",
+  "opLogRetain": "Only the latest 30 operations are kept (upgrade / remove / update lists).",
   "opReindex": "Software index refreshed",
   "opUpgradeAll": "Upgraded packages ({n})",
   "@opUpgradeAll": {
@@ -354,5 +354,118 @@
   "embedLoginHint": "After signing in, this device joins your tailnet and remote addresses prefer the embedded node automatically.",
   "embedCopyBtn": "Copy link",
   "embedCopied": "Copied",
-  "embedErrorDetail": "Error detail"
+  "embedErrorDetail": "Error detail",
+  "pkgViewUpgradable": "Upgradable",
+  "pkgViewUpgradableN": "Upgradable ({n})",
+  "@pkgViewUpgradableN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgViewInstalled": "Installed",
+  "pkgViewAll": "All",
+  "pkgSearchHint": "Search packages (by name)",
+  "pkgSearchPrompt": "Type a name to search packages. Installed / Upgradable live in the other two tabs.",
+  "pkgSearchNone": "No matching packages.",
+  "pkgEmptyUpgradable": "All packages are up to date.",
+  "pkgEmptyInstalled": "No installed packages found.",
+  "pkgRefreshDone": "Package lists updated ({s}s)",
+  "@pkgRefreshDone": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgUpgrade": "Upgrade",
+  "pkgUpgradeTo": "Upgrade to {version}",
+  "@pkgUpgradeTo": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgUpgraded": "Upgraded {name}",
+  "@pkgUpgraded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemove": "Remove",
+  "pkgRemoved": "Removed {name}",
+  "@pkgRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemoveConfirmTitle": "Remove {name}?",
+  "@pkgRemoveConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemoveConfirmBody": "Removes the package from the router. Dependent components may break and related services stop. This cannot be undone.",
+  "pkgUpgradeAllConfirmTitle": "Upgrade all?",
+  "pkgUpgradeAllConfirmBody": "Upgrades all upgradable packages ({n}). Related services may restart and network is used; do not power off.",
+  "@pkgUpgradeAllConfirmBody": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgBadgeInstalled": "Installed",
+  "pkgBadgeUpgrade": "Upgrade",
+  "pkgLoadMore": "Load more ({shown}/{total})",
+  "@pkgLoadMore": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgShownOf": "Showing {shown}/{total}",
+  "@pkgShownOf": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgCardName": "Name",
+  "pkgCardUpgradeTo": "Upgrade available: {version}",
+  "@pkgCardUpgradeTo": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgCardNotInstalled": "This app is not installed as a package (or the name differs). Search in the Packages tab to confirm.",
+  "opLogMeta": "{status} · {dur}",
+  "@opLogMeta": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "dur": {
+        "type": "String"
+      }
+    }
+  }
 }

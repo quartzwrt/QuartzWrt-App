@@ -117,7 +117,7 @@
   "opLogEntry": "记录",
   "opLogTitle": "操作记录",
   "opLogEmpty": "暂无操作记录。",
-  "opLogRetain": "仅保留最近 30 条；点条目查看逐包结果。",
+  "opLogRetain": "仅保留最近 30 条（升级 / 卸载 / 刷新索引）。",
   "opReindex": "刷新软件源",
   "opUpgradeAll": "升级（{n}）",
   "opUpgrade": "升级 {name}",
@@ -205,5 +205,118 @@
   "embedLoginHint": "登录后本机即成为 tailnet 设备，远程地址将自动优先经内嵌节点连接。",
   "embedCopyBtn": "复制链接",
   "embedCopied": "已复制",
-  "embedErrorDetail": "错误信息"
+  "embedErrorDetail": "错误信息",
+  "pkgViewUpgradable": "可升级",
+  "pkgViewUpgradableN": "可升级 ({n})",
+  "@pkgViewUpgradableN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgViewInstalled": "已安装",
+  "pkgViewAll": "全部",
+  "pkgSearchHint": "搜索软件包（名称）",
+  "pkgSearchPrompt": "输入名称搜索软件包；「已安装 / 可升级」在其它两个分段。",
+  "pkgSearchNone": "未找到匹配的软件包。",
+  "pkgEmptyUpgradable": "全部软件包均为最新。",
+  "pkgEmptyInstalled": "未读取到已安装软件包。",
+  "pkgRefreshDone": "索引已刷新（{s}s）",
+  "@pkgRefreshDone": {
+    "placeholders": {
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgUpgrade": "升级",
+  "pkgUpgradeTo": "升级到 {version}",
+  "@pkgUpgradeTo": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgUpgraded": "已升级 {name}",
+  "@pkgUpgraded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemove": "卸载",
+  "pkgRemoved": "已卸载 {name}",
+  "@pkgRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemoveConfirmTitle": "卸载 {name}？",
+  "@pkgRemoveConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgRemoveConfirmBody": "将从路由器移除该软件包；依赖它的组件可能失效，相关服务会停止。此操作不可撤销。",
+  "pkgUpgradeAllConfirmTitle": "全部升级？",
+  "pkgUpgradeAllConfirmBody": "将升级全部可升级软件包（{n} 个），期间可能重启相关服务并占用网络；请勿断电。",
+  "@pkgUpgradeAllConfirmBody": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgBadgeInstalled": "已安装",
+  "pkgBadgeUpgrade": "可升级",
+  "pkgLoadMore": "加载更多（{shown}/{total}）",
+  "@pkgLoadMore": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgShownOf": "已显示 {shown}/{total}",
+  "@pkgShownOf": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pkgCardName": "名称",
+  "pkgCardUpgradeTo": "可升级到 {version}",
+  "@pkgCardUpgradeTo": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "pkgCardNotInstalled": "该应用未以软件包形式安装（或名称不匹配）；可在「软件包」分段搜索确认。",
+  "opLogMeta": "{status} · 耗时 {dur}",
+  "@opLogMeta": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "dur": {
+        "type": "String"
+      }
+    }
+  }
 }

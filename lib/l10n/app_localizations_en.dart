@@ -402,7 +402,8 @@ class AppL10nEn extends AppL10n {
   String get opLogEmpty => 'No recent operations.';
 
   @override
-  String get opLogRetain => 'Keeps the latest 30 entries.';
+  String get opLogRetain =>
+      'Only the latest 30 operations are kept (upgrade / remove / update lists).';
 
   @override
   String get opReindex => 'Software index refreshed';
@@ -691,4 +692,110 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get embedErrorDetail => 'Error detail';
+
+  @override
+  String get pkgViewUpgradable => 'Upgradable';
+
+  @override
+  String pkgViewUpgradableN(int n) {
+    return 'Upgradable ($n)';
+  }
+
+  @override
+  String get pkgViewInstalled => 'Installed';
+
+  @override
+  String get pkgViewAll => 'All';
+
+  @override
+  String get pkgSearchHint => 'Search packages (by name)';
+
+  @override
+  String get pkgSearchPrompt =>
+      'Type a name to search packages. Installed / Upgradable live in the other two tabs.';
+
+  @override
+  String get pkgSearchNone => 'No matching packages.';
+
+  @override
+  String get pkgEmptyUpgradable => 'All packages are up to date.';
+
+  @override
+  String get pkgEmptyInstalled => 'No installed packages found.';
+
+  @override
+  String pkgRefreshDone(int s) {
+    return 'Package lists updated (${s}s)';
+  }
+
+  @override
+  String get pkgUpgrade => 'Upgrade';
+
+  @override
+  String pkgUpgradeTo(String version) {
+    return 'Upgrade to $version';
+  }
+
+  @override
+  String pkgUpgraded(String name) {
+    return 'Upgraded $name';
+  }
+
+  @override
+  String get pkgRemove => 'Remove';
+
+  @override
+  String pkgRemoved(String name) {
+    return 'Removed $name';
+  }
+
+  @override
+  String pkgRemoveConfirmTitle(String name) {
+    return 'Remove $name?';
+  }
+
+  @override
+  String get pkgRemoveConfirmBody =>
+      'Removes the package from the router. Dependent components may break and related services stop. This cannot be undone.';
+
+  @override
+  String get pkgUpgradeAllConfirmTitle => 'Upgrade all?';
+
+  @override
+  String pkgUpgradeAllConfirmBody(int n) {
+    return 'Upgrades all upgradable packages ($n). Related services may restart and network is used; do not power off.';
+  }
+
+  @override
+  String get pkgBadgeInstalled => 'Installed';
+
+  @override
+  String get pkgBadgeUpgrade => 'Upgrade';
+
+  @override
+  String pkgLoadMore(int shown, int total) {
+    return 'Load more ($shown/$total)';
+  }
+
+  @override
+  String pkgShownOf(int shown, int total) {
+    return 'Showing $shown/$total';
+  }
+
+  @override
+  String get pkgCardName => 'Name';
+
+  @override
+  String pkgCardUpgradeTo(String version) {
+    return 'Upgrade available: $version';
+  }
+
+  @override
+  String get pkgCardNotInstalled =>
+      'This app is not installed as a package (or the name differs). Search in the Packages tab to confirm.';
+
+  @override
+  String opLogMeta(String status, String dur) {
+    return '$status · $dur';
+  }
 }

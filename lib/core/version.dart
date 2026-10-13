@@ -1,5 +1,5 @@
 // 版本单一来源（DESIGN §9：lib/core/version.dart；与 pubspec.yaml `version` 同步）。
 library;
 
-const String kAppVersion = '0.2.0';
-const String kAppBuild = '2';
+const String kAppVersion = '0.3.0';
+const String kAppBuild = '3';

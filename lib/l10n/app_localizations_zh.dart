@@ -393,7 +393,7 @@ class AppL10nZh extends AppL10n {
   String get opLogEmpty => '暂无操作记录。';
 
   @override
-  String get opLogRetain => '仅保留最近 30 条；点条目查看逐包结果。';
+  String get opLogRetain => '仅保留最近 30 条（升级 / 卸载 / 刷新索引）。';
 
   @override
   String get opReindex => '刷新软件源';
@@ -671,4 +671,107 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get embedErrorDetail => '错误信息';
+
+  @override
+  String get pkgViewUpgradable => '可升级';
+
+  @override
+  String pkgViewUpgradableN(int n) {
+    return '可升级 ($n)';
+  }
+
+  @override
+  String get pkgViewInstalled => '已安装';
+
+  @override
+  String get pkgViewAll => '全部';
+
+  @override
+  String get pkgSearchHint => '搜索软件包（名称）';
+
+  @override
+  String get pkgSearchPrompt => '输入名称搜索软件包；「已安装 / 可升级」在其它两个分段。';
+
+  @override
+  String get pkgSearchNone => '未找到匹配的软件包。';
+
+  @override
+  String get pkgEmptyUpgradable => '全部软件包均为最新。';
+
+  @override
+  String get pkgEmptyInstalled => '未读取到已安装软件包。';
+
+  @override
+  String pkgRefreshDone(int s) {
+    return '索引已刷新（${s}s）';
+  }
+
+  @override
+  String get pkgUpgrade => '升级';
+
+  @override
+  String pkgUpgradeTo(String version) {
+    return '升级到 $version';
+  }
+
+  @override
+  String pkgUpgraded(String name) {
+    return '已升级 $name';
+  }
+
+  @override
+  String get pkgRemove => '卸载';
+
+  @override
+  String pkgRemoved(String name) {
+    return '已卸载 $name';
+  }
+
+  @override
+  String pkgRemoveConfirmTitle(String name) {
+    return '卸载 $name？';
+  }
+
+  @override
+  String get pkgRemoveConfirmBody => '将从路由器移除该软件包；依赖它的组件可能失效，相关服务会停止。此操作不可撤销。';
+
+  @override
+  String get pkgUpgradeAllConfirmTitle => '全部升级？';
+
+  @override
+  String pkgUpgradeAllConfirmBody(int n) {
+    return '将升级全部可升级软件包（$n 个），期间可能重启相关服务并占用网络；请勿断电。';
+  }
+
+  @override
+  String get pkgBadgeInstalled => '已安装';
+
+  @override
+  String get pkgBadgeUpgrade => '可升级';
+
+  @override
+  String pkgLoadMore(int shown, int total) {
+    return '加载更多（$shown/$total）';
+  }
+
+  @override
+  String pkgShownOf(int shown, int total) {
+    return '已显示 $shown/$total';
+  }
+
+  @override
+  String get pkgCardName => '名称';
+
+  @override
+  String pkgCardUpgradeTo(String version) {
+    return '可升级到 $version';
+  }
+
+  @override
+  String get pkgCardNotInstalled => '该应用未以软件包形式安装（或名称不匹配）；可在「软件包」分段搜索确认。';
+
+  @override
+  String opLogMeta(String status, String dur) {
+    return '$status · 耗时 $dur';
+  }
 }

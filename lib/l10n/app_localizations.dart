@@ -802,7 +802,7 @@ abstract class AppL10n {
   /// No description provided for @opLogRetain.
   ///
   /// In en, this message translates to:
-  /// **'Keeps the latest 30 entries.'**
+  /// **'Only the latest 30 operations are kept (upgrade / remove / update lists).'**
   String get opLogRetain;
 
   /// No description provided for @opReindex.
@@ -1332,6 +1332,168 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Error detail'**
   String get embedErrorDetail;
+
+  /// No description provided for @pkgViewUpgradable.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgradable'**
+  String get pkgViewUpgradable;
+
+  /// No description provided for @pkgViewUpgradableN.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgradable ({n})'**
+  String pkgViewUpgradableN(int n);
+
+  /// No description provided for @pkgViewInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get pkgViewInstalled;
+
+  /// No description provided for @pkgViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get pkgViewAll;
+
+  /// No description provided for @pkgSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search packages (by name)'**
+  String get pkgSearchHint;
+
+  /// No description provided for @pkgSearchPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a name to search packages. Installed / Upgradable live in the other two tabs.'**
+  String get pkgSearchPrompt;
+
+  /// No description provided for @pkgSearchNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching packages.'**
+  String get pkgSearchNone;
+
+  /// No description provided for @pkgEmptyUpgradable.
+  ///
+  /// In en, this message translates to:
+  /// **'All packages are up to date.'**
+  String get pkgEmptyUpgradable;
+
+  /// No description provided for @pkgEmptyInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'No installed packages found.'**
+  String get pkgEmptyInstalled;
+
+  /// No description provided for @pkgRefreshDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Package lists updated ({s}s)'**
+  String pkgRefreshDone(int s);
+
+  /// No description provided for @pkgUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get pkgUpgrade;
+
+  /// No description provided for @pkgUpgradeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to {version}'**
+  String pkgUpgradeTo(String version);
+
+  /// No description provided for @pkgUpgraded.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgraded {name}'**
+  String pkgUpgraded(String name);
+
+  /// No description provided for @pkgRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get pkgRemove;
+
+  /// No description provided for @pkgRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed {name}'**
+  String pkgRemoved(String name);
+
+  /// No description provided for @pkgRemoveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String pkgRemoveConfirmTitle(String name);
+
+  /// No description provided for @pkgRemoveConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes the package from the router. Dependent components may break and related services stop. This cannot be undone.'**
+  String get pkgRemoveConfirmBody;
+
+  /// No description provided for @pkgUpgradeAllConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade all?'**
+  String get pkgUpgradeAllConfirmTitle;
+
+  /// No description provided for @pkgUpgradeAllConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrades all upgradable packages ({n}). Related services may restart and network is used; do not power off.'**
+  String pkgUpgradeAllConfirmBody(int n);
+
+  /// No description provided for @pkgBadgeInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Installed'**
+  String get pkgBadgeInstalled;
+
+  /// No description provided for @pkgBadgeUpgrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get pkgBadgeUpgrade;
+
+  /// No description provided for @pkgLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more ({shown}/{total})'**
+  String pkgLoadMore(int shown, int total);
+
+  /// No description provided for @pkgShownOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {shown}/{total}'**
+  String pkgShownOf(int shown, int total);
+
+  /// No description provided for @pkgCardName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get pkgCardName;
+
+  /// No description provided for @pkgCardUpgradeTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade available: {version}'**
+  String pkgCardUpgradeTo(String version);
+
+  /// No description provided for @pkgCardNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is not installed as a package (or the name differs). Search in the Packages tab to confirm.'**
+  String get pkgCardNotInstalled;
+
+  /// No description provided for @opLogMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{status} · {dur}'**
+  String opLogMeta(String status, String dur);
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
