@@ -4,6 +4,11 @@ name: Build
 #   - push/PR：analyze + test（轻量门禁）
 #   - tag v*：analyze + test + release APK + 附件到 GitHub Release
 #   - workflow_dispatch：手动全量（含 APK 构建）
+# tag 推送时用 GITHUB_TOKEN 创建 Release —— 需显式授予写权限（默认只读会 403
+# "Resource not accessible by integration"，WP-9 实测）。
+permissions:
+  contents: write
+
 on:
   push:
     branches: [main]
