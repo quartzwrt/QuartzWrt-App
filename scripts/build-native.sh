@@ -9,8 +9,20 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$ROOT/native/tailnet"
 OUT="$ROOT/android/app/src/main/jniLibs"
 
-GO="${GO:-$HOME/go-sdk/bin/go}"
-command -v "$GO" >/dev/null 2>&1 || { echo "未找到 go（设置 GO=<path>）" >&2; exit 1; }
+# Go 解析（WP-9 修）：显式 GO > PATH 里的 go（CI actions/setup-go）> 本地 SDK 目录
+# 注意：原实现默认写死 $HOME/go-sdk/bin/go（本地 WSL 布局）——CI 里 setup-go 只把 go 放进
+# PATH，于是 tag 触发的 APK 构建一直在"未找到 go"处失败（App 仓库此前无任何 Release）。
+GO="${GO:-}"
+if [ -z "$GO" ]; then
+  if command -v go >/dev/null 2>&1; then
+    GO="$(command -v go)"
+  elif [ -x "$HOME/go-sdk/bin/go" ]; then
+    GO="$HOME/go-sdk/bin/go"
+  else
+    echo "未找到 go（设置 GO=<path>）" >&2; exit 1
+  fi
+fi
+echo "使用 go：$GO（$("$GO" version 2>/dev/null || echo '?'）)"
 # go.mod 声明的 toolchain（tailscale 依赖要求 ≥1.27.1）；auto 会用本地缓存或自动下载
 export GOTOOLCHAIN="${GOTOOLCHAIN:-auto}"
 export GOFLAGS="${GOFLAGS:--mod=mod}"
