@@ -467,5 +467,47 @@
         "type": "String"
       }
     }
-  }
+  },
+  "save": "Save",
+  "bandixRowOnline": "Online {online}/{devices}",
+  "@bandixRowOnline": {
+    "placeholders": {
+      "online": {
+        "type": "int"
+      },
+      "devices": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixTitle": "Bandix traffic & limits",
+  "bandixTrafficTitle": "Traffic detail",
+  "bandixUnavailable": "Traffic data unavailable (collector did not return it or upstream is down).",
+  "bandixNotEnabled": "Bandix traffic monitoring is not enabled or not installed — enable it on the web settings page.",
+  "bandixOnlineDevices": "Online devices",
+  "bandixWanRate": "WAN rate",
+  "bandixDownload": "Download",
+  "bandixUpload": "Upload",
+  "bandixDnsQueriesLabel": "DNS queries",
+  "connectionsLabel": "Connections",
+  "notEnabled": "Not enabled",
+  "bandixLimitTitle": "Default rate limit",
+  "bandixLimitBody": "Applies to devices without an individual limit; 0 = unlimited. Unit: KB/s.",
+  "bandixLimitRx": "Download limit (KB/s)",
+  "bandixLimitTx": "Upload limit (KB/s)",
+  "bandixLimitsUnavailable": "Could not read current config (bridge unavailable); saving will still be attempted.",
+  "bandixInvalidNumber": "Enter a non-negative integer.",
+  "bandixWhitelistTitle": "Rate-limit whitelist",
+  "bandixWhitelistBody": "Whitelisted devices are not rate-limited; the switch applies immediately.",
+  "bandixWhitelistEnabled": "Enable whitelist",
+  "bandixAdd": "Add",
+  "bandixHostnameTitle": "Hostname binding",
+  "bandixHostnameBody": "Bind a display name to a device (leave empty to clear); it may take a few seconds to apply.",
+  "bandixHostnameField": "Hostname",
+  "bandixHostnameHint": "e.g. living-room-tv",
+  "bandixMacRequired": "Enter or pick a device MAC first.",
+  "bandixPanelNote": "Data comes from the bridge contract quartz.bandix (same source as the web UI); engine params (port/interface/data dir) stay on the web settings page.",
+  "bandixTopTitle": "Top devices by traffic",
+  "bandixTopNote": "Sorted by cumulative traffic (top 8); share = cumulative bytes share.",
+  "bandixSummaryNote": "Values come from bandix statistics (device-side WAN totals); pull to refresh."
 }

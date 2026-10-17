@@ -1494,6 +1494,198 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'{status} · {dur}'**
   String opLogMeta(String status, String dur);
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @bandixRowOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Online {online}/{devices}'**
+  String bandixRowOnline(int online, int devices);
+
+  /// No description provided for @bandixTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bandix traffic & limits'**
+  String get bandixTitle;
+
+  /// No description provided for @bandixTrafficTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic detail'**
+  String get bandixTrafficTitle;
+
+  /// No description provided for @bandixUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic data unavailable (collector did not return it or upstream is down).'**
+  String get bandixUnavailable;
+
+  /// No description provided for @bandixNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Bandix traffic monitoring is not enabled or not installed — enable it on the web settings page.'**
+  String get bandixNotEnabled;
+
+  /// No description provided for @bandixOnlineDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Online devices'**
+  String get bandixOnlineDevices;
+
+  /// No description provided for @bandixWanRate.
+  ///
+  /// In en, this message translates to:
+  /// **'WAN rate'**
+  String get bandixWanRate;
+
+  /// No description provided for @bandixDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get bandixDownload;
+
+  /// No description provided for @bandixUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload'**
+  String get bandixUpload;
+
+  /// No description provided for @bandixDnsQueriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'DNS queries'**
+  String get bandixDnsQueriesLabel;
+
+  /// No description provided for @connectionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Connections'**
+  String get connectionsLabel;
+
+  /// No description provided for @notEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enabled'**
+  String get notEnabled;
+
+  /// No description provided for @bandixLimitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Default rate limit'**
+  String get bandixLimitTitle;
+
+  /// No description provided for @bandixLimitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to devices without an individual limit; 0 = unlimited. Unit: KB/s.'**
+  String get bandixLimitBody;
+
+  /// No description provided for @bandixLimitRx.
+  ///
+  /// In en, this message translates to:
+  /// **'Download limit (KB/s)'**
+  String get bandixLimitRx;
+
+  /// No description provided for @bandixLimitTx.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload limit (KB/s)'**
+  String get bandixLimitTx;
+
+  /// No description provided for @bandixLimitsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read current config (bridge unavailable); saving will still be attempted.'**
+  String get bandixLimitsUnavailable;
+
+  /// No description provided for @bandixInvalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a non-negative integer.'**
+  String get bandixInvalidNumber;
+
+  /// No description provided for @bandixWhitelistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate-limit whitelist'**
+  String get bandixWhitelistTitle;
+
+  /// No description provided for @bandixWhitelistBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Whitelisted devices are not rate-limited; the switch applies immediately.'**
+  String get bandixWhitelistBody;
+
+  /// No description provided for @bandixWhitelistEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable whitelist'**
+  String get bandixWhitelistEnabled;
+
+  /// No description provided for @bandixAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get bandixAdd;
+
+  /// No description provided for @bandixHostnameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname binding'**
+  String get bandixHostnameTitle;
+
+  /// No description provided for @bandixHostnameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Bind a display name to a device (leave empty to clear); it may take a few seconds to apply.'**
+  String get bandixHostnameBody;
+
+  /// No description provided for @bandixHostnameField.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname'**
+  String get bandixHostnameField;
+
+  /// No description provided for @bandixHostnameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. living-room-tv'**
+  String get bandixHostnameHint;
+
+  /// No description provided for @bandixMacRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter or pick a device MAC first.'**
+  String get bandixMacRequired;
+
+  /// No description provided for @bandixPanelNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Data comes from the bridge contract quartz.bandix (same source as the web UI); engine params (port/interface/data dir) stay on the web settings page.'**
+  String get bandixPanelNote;
+
+  /// No description provided for @bandixTopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Top devices by traffic'**
+  String get bandixTopTitle;
+
+  /// No description provided for @bandixTopNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by cumulative traffic (top 8); share = cumulative bytes share.'**
+  String get bandixTopNote;
+
+  /// No description provided for @bandixSummaryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Values come from bandix statistics (device-side WAN totals); pull to refresh.'**
+  String get bandixSummaryNote;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

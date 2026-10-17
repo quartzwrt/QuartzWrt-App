@@ -2,6 +2,20 @@
 
 版本与 `pubspec.yaml` `version`、`lib/core/version.dart` 同步维护（DESIGN §9）。
 
+## 0.4.0 — 2026-10-17
+
+- **bandix 流量面（WP-8 bridge 链路 L2/L3）**：应用列表 bandix 行富化（在线设备数，
+  数据 = 快照 `bandix` 节，与 Dashboard 同字节）；应用详情新增「流量与限速」卡
+  （在线/速率/连接/DNS 摘要 + 动作条目）；新增**流量明细页**（`/apps/bandix`：
+  摘要 + 设备流量 Top≤8 + 下拉刷新）。
+- **动作条目（WP-5「ubus 转发项」链路）**：默认限速（KB/s 显示 → Byte/s 转发）、
+  限速白名单（开关 + 增删）、主机名绑定（从在线设备快选 MAC）三个底部对话框；
+  当前值经唯一读条目 `bandix.limits` 读取；写动作经 `bandix.*` 转发项。
+- 机制：`lib/features/registry.dart`（UI-DESIGN §4.2 `ServiceRowSpec` 首个落地——
+  列表富化 / 详情扩展单点注册）；模型层 `Snapshot.bandix/bandixTop` 容忍解析。
+- 测试 77 项（新增 6：模型容忍/富化行文本/详情卡与不可用态/流量页与不可用态）；
+  App v0.4.0（构建 4）。
+
 ## 0.3.0 — 2026-10-14
 
 - **软件包管理面（WP-5 `packages` 扩展的 App 侧落地）**：应用 tab「软件包」子段——可升级

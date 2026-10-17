@@ -798,4 +798,111 @@ class AppL10nEn extends AppL10n {
   String opLogMeta(String status, String dur) {
     return '$status · $dur';
   }
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String bandixRowOnline(int online, int devices) {
+    return 'Online $online/$devices';
+  }
+
+  @override
+  String get bandixTitle => 'Bandix traffic & limits';
+
+  @override
+  String get bandixTrafficTitle => 'Traffic detail';
+
+  @override
+  String get bandixUnavailable =>
+      'Traffic data unavailable (collector did not return it or upstream is down).';
+
+  @override
+  String get bandixNotEnabled =>
+      'Bandix traffic monitoring is not enabled or not installed — enable it on the web settings page.';
+
+  @override
+  String get bandixOnlineDevices => 'Online devices';
+
+  @override
+  String get bandixWanRate => 'WAN rate';
+
+  @override
+  String get bandixDownload => 'Download';
+
+  @override
+  String get bandixUpload => 'Upload';
+
+  @override
+  String get bandixDnsQueriesLabel => 'DNS queries';
+
+  @override
+  String get connectionsLabel => 'Connections';
+
+  @override
+  String get notEnabled => 'Not enabled';
+
+  @override
+  String get bandixLimitTitle => 'Default rate limit';
+
+  @override
+  String get bandixLimitBody =>
+      'Applies to devices without an individual limit; 0 = unlimited. Unit: KB/s.';
+
+  @override
+  String get bandixLimitRx => 'Download limit (KB/s)';
+
+  @override
+  String get bandixLimitTx => 'Upload limit (KB/s)';
+
+  @override
+  String get bandixLimitsUnavailable =>
+      'Could not read current config (bridge unavailable); saving will still be attempted.';
+
+  @override
+  String get bandixInvalidNumber => 'Enter a non-negative integer.';
+
+  @override
+  String get bandixWhitelistTitle => 'Rate-limit whitelist';
+
+  @override
+  String get bandixWhitelistBody =>
+      'Whitelisted devices are not rate-limited; the switch applies immediately.';
+
+  @override
+  String get bandixWhitelistEnabled => 'Enable whitelist';
+
+  @override
+  String get bandixAdd => 'Add';
+
+  @override
+  String get bandixHostnameTitle => 'Hostname binding';
+
+  @override
+  String get bandixHostnameBody =>
+      'Bind a display name to a device (leave empty to clear); it may take a few seconds to apply.';
+
+  @override
+  String get bandixHostnameField => 'Hostname';
+
+  @override
+  String get bandixHostnameHint => 'e.g. living-room-tv';
+
+  @override
+  String get bandixMacRequired => 'Enter or pick a device MAC first.';
+
+  @override
+  String get bandixPanelNote =>
+      'Data comes from the bridge contract quartz.bandix (same source as the web UI); engine params (port/interface/data dir) stay on the web settings page.';
+
+  @override
+  String get bandixTopTitle => 'Top devices by traffic';
+
+  @override
+  String get bandixTopNote =>
+      'Sorted by cumulative traffic (top 8); share = cumulative bytes share.';
+
+  @override
+  String get bandixSummaryNote =>
+      'Values come from bandix statistics (device-side WAN totals); pull to refresh.';
 }

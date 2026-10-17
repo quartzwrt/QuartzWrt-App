@@ -774,4 +774,103 @@ class AppL10nZh extends AppL10n {
   String opLogMeta(String status, String dur) {
     return '$status · 耗时 $dur';
   }
+
+  @override
+  String get save => '保存';
+
+  @override
+  String bandixRowOnline(int online, int devices) {
+    return '在线 $online/$devices';
+  }
+
+  @override
+  String get bandixTitle => 'Bandix 流量与限速';
+
+  @override
+  String get bandixTrafficTitle => '流量明细';
+
+  @override
+  String get bandixUnavailable => '流量数据暂不可用（采集器未返回或上游暂不可用）。';
+
+  @override
+  String get bandixNotEnabled => 'bandix 流量监控未启用或未安装；可在网页端 bandix 设置页开启。';
+
+  @override
+  String get bandixOnlineDevices => '在线设备';
+
+  @override
+  String get bandixWanRate => 'WAN 速率';
+
+  @override
+  String get bandixDownload => '下行';
+
+  @override
+  String get bandixUpload => '上行';
+
+  @override
+  String get bandixDnsQueriesLabel => 'DNS 查询';
+
+  @override
+  String get connectionsLabel => '连接';
+
+  @override
+  String get notEnabled => '未启用';
+
+  @override
+  String get bandixLimitTitle => '默认限速';
+
+  @override
+  String get bandixLimitBody => '对未单独限速的设备生效；0 = 不限速。单位 KB/s。';
+
+  @override
+  String get bandixLimitRx => '下行限速（KB/s）';
+
+  @override
+  String get bandixLimitTx => '上行限速（KB/s）';
+
+  @override
+  String get bandixLimitsUnavailable => '未能读取当前配置（bridge 暂不可用）；保存仍会尝试。';
+
+  @override
+  String get bandixInvalidNumber => '请输入非负整数。';
+
+  @override
+  String get bandixWhitelistTitle => '限速白名单';
+
+  @override
+  String get bandixWhitelistBody => '白名单内设备不受限速；开关即时生效。';
+
+  @override
+  String get bandixWhitelistEnabled => '启用白名单';
+
+  @override
+  String get bandixAdd => '添加';
+
+  @override
+  String get bandixHostnameTitle => '主机名绑定';
+
+  @override
+  String get bandixHostnameBody => '为设备绑定显示名（留空 = 清除绑定）；生效可能有数秒延迟。';
+
+  @override
+  String get bandixHostnameField => '主机名';
+
+  @override
+  String get bandixHostnameHint => '如 living-room-tv';
+
+  @override
+  String get bandixMacRequired => '请先填写或选择设备 MAC。';
+
+  @override
+  String get bandixPanelNote =>
+      '数据经 bridge 契约 quartz.bandix（与网页同源）；引擎参数（端口/网卡/数据目录）请在网页设置页修改。';
+
+  @override
+  String get bandixTopTitle => '设备流量 Top';
+
+  @override
+  String get bandixTopNote => '按累计流量降序（前 8 台）；占比 = 累计流量份额。';
+
+  @override
+  String get bandixSummaryNote => '数值来自 bandix 统计（设备侧 WAN 合计）；下拉刷新。';
 }

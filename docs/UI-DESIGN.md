@@ -62,10 +62,10 @@
 
 - **卡片注册表**：`lib/features/overview/cards/` 一卡一文件，`CardSpec{id, order, visible(Snapshot), build(ctx, Snapshot)}`；`registry.dart` 汇总。可见性谓词统一处理节缺失/为 null（**Docker 卡即此机制：`docker.available==true` 才渲染**）。
 - **通用兜底卡**：未被任何 CardSpec 消费的顶层节自动追加通用 KV 卡（⑩ 的 USB 存储即此）。
-- **服务/应用行 spec**：`ServiceRowSpec{id, title(ctx,data), enrich(data)}` + 默认泛化行（title 取数据 `title` → i18n 映射 → id 原样；running 状态点）。
+- **服务/应用行 spec**：`ServiceRowSpec{id, enrich(l10n,entry,snap), detailCard}` + 默认泛化行（running 状态点；未知服务仍通用渲染）。**已落地**（`lib/features/registry.dart`；首个条目 = bandix：列表富化 + 详情「流量与限速」卡）。
 - **动作能力注册表**：`ActionSpec{id, label, danger?, confirmText?, params?, enabled(snapshot), run(client)}`；系统设置动作区/网络服务行/应用详情页**只渲染注册表**。WP-5 白名单或 WP-8 Bridge 新增动作 = 加一条注册 + arb 文案。
 - **路由**：go_router 声明式；路径 `/<tab>/<feature>/<id>`？详情页 `/<tab>/detail/<id>`；新页面 = 加路由条目。
-- **注册单点**：`lib/features/registry.dart`（cards/services/actions 三张表），评审一次 diff 看到"新功能做了什么"。
+- **注册单点**：`lib/features/registry.dart`（services 表已落地；cards 表在 `features/overview/registry.dart`，actions 表在 `features/actions/actions.dart`——三处单点，评审一次 diff 看到"新功能做了什么"）。
 
 ### 4.3 信息架构留位（拍板 1 落地）
 
@@ -116,6 +116,7 @@
 
 *v1.1 2026-10-13 —— W6.5 远程访问引导页（⑬，真数据状态卡/四步/地址管理）+ 远程识别徽标与端点故障切换；W6.6 打磨落地（品牌启动图标与启动屏、详情页过渡、tab 状态保留 StatefulShellRoute、对比度与语义、语言段选回显修正、文案定稿）；走查证据 `design/shots/emu-w65/`。*
 *v1.2 2026-10-14 —— **软件包管理面落地（§5 现状列全部实装）**：可升级/已安装/全部（搜索）三视图 + 刷新索引 + 单包/全部升级 + 卸载（危险确认层）+ 加载更多分页 + 操作记录页⑫真数据（`scope=history`）+ 应用详情「软件包」卡；安装浏览保持 v1 后置。App v0.3.0，证据 `design/shots/emu-pkg/`。*
+*v1.3 2026-10-17 —— **bandix 流量面（L2 注册表增强 + L3 新页面模块）**：§4.2 `ServiceRowSpec` 首个落地（`lib/features/registry.dart`）；应用列表富化行、详情「流量与限速」卡（含三个动作对话框：默认限速/白名单/主机名绑定）、流量明细页 `/apps/bandix`（摘要 + Top≤8 + 下拉刷新）；数据面 = 快照 §3.7（与 Dashboard 同字节）；动作面 = WP-5 转发项 `bandix.*`（含唯一读条目 `bandix.limits`）。App v0.4.0（构建 4），测试 77 项。*
 
 *v0.1 2026-10-13 —— 首稿（讨论稿）：九屏预览 + 评审图。*
 *v0.2 2026-10-13 —— 扩展性设计（四层阶梯/注册表/tab 纪律）+ ⑩⑪ 演示屏；待拍板七项。*

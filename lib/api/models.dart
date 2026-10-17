@@ -216,6 +216,19 @@ class Snapshot {
 
   int get clientsTotal => (clients?['total'] as int?) ?? clientItems.length;
 
+  /// bandix 节（契约 §3.7；WP-8 bridge 链路，慢刷 10s——与 Dashboard 同字节）。
+  /// 整节缺失 = 上游暂不可用；`available != true` = 未装/未开流量监控。
+  Map<String, dynamic>? get bandix => _sec('bandix');
+
+  bool get bandixAvailable => bandix?['available'] == true;
+
+  /// bandix Top 设备（≤8；按累计流量降序）。
+  List<Map<String, dynamic>> get bandixTop {
+    final t = bandix?['top'];
+    if (t is! List) return const [];
+    return t.whereType<Map<String, dynamic>>().toList();
+  }
+
   /// WAN 摘要（net.wan；缺失 → 空 map）。
   Map<String, dynamic> get wan {
     final w = net['wan'];

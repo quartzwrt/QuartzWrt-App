@@ -318,5 +318,47 @@
         "type": "String"
       }
     }
-  }
+  },
+  "save": "保存",
+  "bandixRowOnline": "在线 {online}/{devices}",
+  "@bandixRowOnline": {
+    "placeholders": {
+      "online": {
+        "type": "int"
+      },
+      "devices": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixTitle": "Bandix 流量与限速",
+  "bandixTrafficTitle": "流量明细",
+  "bandixUnavailable": "流量数据暂不可用（采集器未返回或上游暂不可用）。",
+  "bandixNotEnabled": "bandix 流量监控未启用或未安装；可在网页端 bandix 设置页开启。",
+  "bandixOnlineDevices": "在线设备",
+  "bandixWanRate": "WAN 速率",
+  "bandixDownload": "下行",
+  "bandixUpload": "上行",
+  "bandixDnsQueriesLabel": "DNS 查询",
+  "connectionsLabel": "连接",
+  "notEnabled": "未启用",
+  "bandixLimitTitle": "默认限速",
+  "bandixLimitBody": "对未单独限速的设备生效；0 = 不限速。单位 KB/s。",
+  "bandixLimitRx": "下行限速（KB/s）",
+  "bandixLimitTx": "上行限速（KB/s）",
+  "bandixLimitsUnavailable": "未能读取当前配置（bridge 暂不可用）；保存仍会尝试。",
+  "bandixInvalidNumber": "请输入非负整数。",
+  "bandixWhitelistTitle": "限速白名单",
+  "bandixWhitelistBody": "白名单内设备不受限速；开关即时生效。",
+  "bandixWhitelistEnabled": "启用白名单",
+  "bandixAdd": "添加",
+  "bandixHostnameTitle": "主机名绑定",
+  "bandixHostnameBody": "为设备绑定显示名（留空 = 清除绑定）；生效可能有数秒延迟。",
+  "bandixHostnameField": "主机名",
+  "bandixHostnameHint": "如 living-room-tv",
+  "bandixMacRequired": "请先填写或选择设备 MAC。",
+  "bandixPanelNote": "数据经 bridge 契约 quartz.bandix（与网页同源）；引擎参数（端口/网卡/数据目录）请在网页设置页修改。",
+  "bandixTopTitle": "设备流量 Top",
+  "bandixTopNote": "按累计流量降序（前 8 台）；占比 = 累计流量份额。",
+  "bandixSummaryNote": "数值来自 bandix 统计（设备侧 WAN 合计）；下拉刷新。"
 }

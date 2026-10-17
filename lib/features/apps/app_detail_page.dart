@@ -10,6 +10,7 @@ import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
 import '../actions/actions.dart';
+import '../registry.dart';
 
 class AppDetailPage extends ConsumerWidget {
   const AppDetailPage({super.key, required this.appId});
@@ -119,6 +120,8 @@ class AppDetailPage extends ConsumerWidget {
               ],
             ),
           ),
+          // 服务富化扩展卡（注册表驱动；如 bandix 的「流量与限速」卡）
+          ?serviceRowFor(appId)?.detailCard?.call(context, ref),
           QuartzCard(
             title: l10n.packageCardTitle,
             child: _PackageCard(appId: appId),

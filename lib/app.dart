@@ -11,6 +11,7 @@ import 'core/theme.dart';
 import 'features/apps/app_detail_page.dart';
 import 'features/apps/apps_page.dart';
 import 'features/apps/package_log_page.dart';
+import 'features/bandix/bandix_page.dart';
 import 'features/discover/discover_page.dart';
 import 'features/network/clients_page.dart';
 import 'features/network/network_page.dart';
@@ -81,6 +82,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (_, s) => _fadeUpPage(s, AppDetailPage(appId: s.pathParameters['id']!)),
       ),
       GoRoute(path: '/apps/log', pageBuilder: (_, s) => _fadeUpPage(s, const PackageLogPage())),
+      GoRoute(path: '/apps/bandix', pageBuilder: (_, s) => _fadeUpPage(s, const BandixPage())),
       GoRoute(path: '/settings/devices', pageBuilder: (_, s) => _fadeUpPage(s, const DevicesPage())),
       GoRoute(path: '/settings/remote', pageBuilder: (_, s) => _fadeUpPage(s, const RemotePage())),
     ],

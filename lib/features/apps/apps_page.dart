@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../api/models.dart';
 import '../../core/theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
+import '../registry.dart';
 import 'packages_section.dart';
 
 enum _Seg { apps, packages }
@@ -62,7 +64,7 @@ class _AppsPageState extends ConsumerState<AppsPage> {
           ),
           Expanded(
             child: _seg == _Seg.apps
-                ? _AppsList(entries: entries)
+                ? _AppsList(entries: entries, snap: snap)
                 : const PackagesSection(),
           ),
         ],
@@ -72,9 +74,10 @@ class _AppsPageState extends ConsumerState<AppsPage> {
 }
 
 class _AppsList extends StatelessWidget {
-  const _AppsList({required this.entries});
+  const _AppsList({required this.entries, this.snap});
 
   final List<(String, Map<String, dynamic>)> entries;
+  final Snapshot? snap;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +115,7 @@ class _AppsList extends StatelessWidget {
                             [
                               e.$2['running'] == true ? l10n.running : l10n.stopped2,
                               if ((e.$2['core'] as String?)?.isNotEmpty == true) e.$2['core'] as String,
+                              ?serviceRowFor(e.$1)?.enrich?.call(l10n, e.$2, snap),
                             ].join(' · '),
                           ),
                         ),
