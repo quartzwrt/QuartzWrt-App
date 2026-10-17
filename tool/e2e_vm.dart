@@ -80,6 +80,39 @@ Future<void> main(List<String> args) async {
   check('packages available search "tail" hits tailscale (${names.length} matches)',
       srch.ok && names.any((n) => n.contains('tailscale')));
 
+  // ---- bandix 面（WP-8 P2；读走快照 §3.7，配置读/动作走 WP-5 转发项；只读+负例）----
+  final bx = snapMap['bandix'];
+  if (bx is Map<String, dynamic> && bx['available'] == true) {
+    final top = bx['top'] is List ? bx['top'] as List : const [];
+    check(
+      'snapshot.bandix shape (devices=${bx['devices']}, online=${bx['online']}, top=${top.length})',
+      bx['devices'] is int && bx['online'] is int && bx['wan'] is Map,
+    );
+    if (top.isNotEmpty && top.first is Map) {
+      final t0 = top.first as Map;
+      check('bandix top item shape (mac/ip/pct)',
+          t0['mac'] is String && t0['pct'] is num && (t0['rx_b'] is num || t0['tx_b'] is num));
+    }
+  } else {
+    stdout.writeln('SKIP  snapshot.bandix 不可用（未装/未开 traffic）——跳过形态断言');
+  }
+
+  final lim = await c.action(accessToken: tok, action: 'bandix.limits');
+  final limData = lim.ok ? lim.data['result'] : null;
+  final limInner = limData is Map ? limData['data'] : null;
+  final wl = limInner is Map ? limInner['whitelist'] : null;
+  check(
+    'action bandix.limits（读条目；whitelist.enabled=${wl is Map ? wl['enabled'] : '-'}）',
+    lim.ok && wl is Map,
+  );
+
+  final badMac = await c.action(
+      accessToken: tok, action: 'bandix.whitelist_delete', args: {'mac': 'not-a-mac'});
+  check('bandix 负例：非法 MAC 被拒（${badMac.error?.code}）', badMac.error?.code == 'bad_request');
+
+  final unknown = await c.action(accessToken: tok, action: 'bandix.installUpdate');
+  check('bandix 负例：未注册动作被拒（${unknown.error?.code}）', unknown.error?.code == 'forbidden_action');
+
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);
 
