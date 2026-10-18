@@ -77,6 +77,13 @@ class RouterRegistry {
     await upsert(r.copyWith(clearRemote: true));
   }
 
+  /// 置位蜂窝 tab 粘性标记（幂等；仅首次会写盘）。
+  Future<void> setCellularSeen(String id) async {
+    final cur = list().where((r) => r.id == id).toList();
+    if (cur.isEmpty || cur.first.cellularSeen) return;
+    await upsert(cur.first.copyWith(cellularSeen: true));
+  }
+
   Future<void> setActive(String? id) async {
     if (id == null) {
       await _prefs.remove(_kActive);

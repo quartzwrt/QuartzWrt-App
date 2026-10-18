@@ -921,4 +921,300 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get bandixTotalLabel => '累计';
+
+  @override
+  String get navRouter => '路由器';
+
+  @override
+  String get navCellular => '蜂窝';
+
+  @override
+  String get cellularUnavailableBody => '蜂窝数据不可用：路由器未安装 QModem 或无模组。';
+
+  @override
+  String cellularMonthUsage(String size) {
+    return '本月 $size';
+  }
+
+  @override
+  String get cellularSignal => '信号';
+
+  @override
+  String get cellularSignalQuality => '信号质量';
+
+  @override
+  String get cellularSignalUnsupported => '本模组不支持信号指标';
+
+  @override
+  String get cellularQualityGood => '良';
+
+  @override
+  String get cellularQualityFair => '中';
+
+  @override
+  String get cellularQualityPoor => '弱';
+
+  @override
+  String get cellularRsrpHistory => 'RSRP 历史';
+
+  @override
+  String cellularSeriesHint(String step, String points) {
+    return '${step}s/点 · $points 点';
+  }
+
+  @override
+  String get cellularNetworkSim => '网络 · SIM';
+
+  @override
+  String get cellularServingCell => '服务小区';
+
+  @override
+  String get cellularSimLabel => 'SIM';
+
+  @override
+  String get cellularSimSlot => '槽位';
+
+  @override
+  String get cellularFirmware => '固件';
+
+  @override
+  String get cellularDial => '拨号';
+
+  @override
+  String get cellularDialConnected => '已连接';
+
+  @override
+  String get cellularDialDisconnected => '未连接';
+
+  @override
+  String get cellularDialNow => '拨号';
+
+  @override
+  String get cellularHang => '断开';
+
+  @override
+  String get cellularRedial => '重拨';
+
+  @override
+  String get cellularHangWarning => '断开会使模组的网络连接下线；若局域网走该模组，本机可能失联。';
+
+  @override
+  String get cellularRedialWarning => '重拨会短暂中断模组连接。';
+
+  @override
+  String get cellularEntryNetwork => '网络配置';
+
+  @override
+  String get cellularEntryAt => 'AT 调试';
+
+  @override
+  String get cellularEntryLog => '拨号日志';
+
+  @override
+  String get cellularMoreEntriesPlanned => 'SIM 切换 · 短信 · 高级 将在后续轮次补齐';
+
+  @override
+  String get cellularNetworkPrefer => '网络偏好';
+
+  @override
+  String get cellularNetworkPreferHint => '可多选；取消某档即禁止注册该制式（上游以数组接收）。';
+
+  @override
+  String get cellularApplyPrefer => '应用网络偏好';
+
+  @override
+  String get cellularLockband => '频段锁定';
+
+  @override
+  String get cellularLockbandUnlocked => '未锁定（使用全部可用频段）';
+
+  @override
+  String get cellularLockbandHint =>
+      '频段锁定为厂商方言参数，锁定错误频段可能失联；v1 仅提供\"解除锁定\"，完整锁定请用网页端。';
+
+  @override
+  String get cellularLockbandUnlock => '解除锁定';
+
+  @override
+  String get cellularAdvanced => '高级';
+
+  @override
+  String get cellularUsbMode => 'USB 拨号模式';
+
+  @override
+  String get cellularTemp => '模组温度';
+
+  @override
+  String get cellularSettingsHint => '读取当前设置失败，可下拉刷新后重试。';
+
+  @override
+  String get cellularDangerWarning => '该操作会改写模组配置，可能导致连接中断。';
+
+  @override
+  String get cellularAtSend => '发送';
+
+  @override
+  String get cellularAtPresets => '预置命令';
+
+  @override
+  String get cellularAtWarningTitle => '命令面与网页端一致，风险自担';
+
+  @override
+  String get cellularAtWarningBody =>
+      '预置命令与网页端同一份（路由器提供）；任意 AT 指令会真实下发到模组，误用可能改 NV/锁频段/致失联。发送前二次确认，全部动作记入审计。';
+
+  @override
+  String cellularAtConfirmTitle(String at) {
+    return '发送 $at？';
+  }
+
+  @override
+  String get clearAction => '清空';
+
+  @override
+  String get cellularLogHintTitle => '日志来自模组拨号脚本（尾部 100 行）';
+
+  @override
+  String get cellularLogHintBody => '内容可能包含运营商信息与号码，请勿随截图外发。';
+
+  @override
+  String get cellularLogEmpty => '（暂无日志）';
+
+  @override
+  String get model => '型号';
+
+  @override
+  String get deleteAction => '删除';
+
+  @override
+  String get cellularEntrySim => 'SIM 管理';
+
+  @override
+  String get cellularEntrySms => '短信';
+
+  @override
+  String get cellularSimNoSwitchTitle => '本模组不支持 SIM 切换';
+
+  @override
+  String get cellularSimNoSwitchBody =>
+      '硬件/固件未提供 SIM 槽位切换能力（`supportSwitch=0`），此处只读展示。';
+
+  @override
+  String get cellularSimStatus => '状态';
+
+  @override
+  String get cellularSimSwitch => '切换 SIM 槽位';
+
+  @override
+  String get cellularSimSwitchApply => '应用切换';
+
+  @override
+  String cellularSimSwitchConfirm(String slot) {
+    return '切换到 SIM $slot？';
+  }
+
+  @override
+  String get cellularSimSwitchWarning => '切换会重启模组数据通道，期间网络中断。';
+
+  @override
+  String get cellularSmsStorage => '短信存储';
+
+  @override
+  String get cellularSmsPrivacyTitle => '短信内容只在本机内存';
+
+  @override
+  String get cellularSmsPrivacyBody => '不落盘、不上传；退出页面即清空。';
+
+  @override
+  String get cellularSmsEmpty => '（暂无短信）';
+
+  @override
+  String cellularSmsCount(String total, String unread) {
+    return '$total 条 · $unread 未读';
+  }
+
+  @override
+  String get cellularSmsSentTag => '已发';
+
+  @override
+  String get cellularSmsDeleteConfirm => '删除这条短信？';
+
+  @override
+  String get cellularSmsDeleteBody => '删除后无法恢复。';
+
+  @override
+  String get cellularSmsCompose => '写短信';
+
+  @override
+  String get cellularSmsRecipient => '收件号码';
+
+  @override
+  String get cellularSmsContent => '短信内容';
+
+  @override
+  String get cellularSmsSendAction => '发送';
+
+  @override
+  String get cellularModule => '模组';
+
+  @override
+  String get cellularUsbModeSection => 'USB 拨号模式';
+
+  @override
+  String get cellularUsbModeWarningTitle => '会重新枚举 USB 数据通道';
+
+  @override
+  String get cellularUsbModeWarningBody =>
+      '模式（qmi/ecm/mbim/rndis/ncm）决定模组以何种形态提供数据口，切换会断开当前连接并重新枚举；与\"5G/4G 网络偏好\"无关。';
+
+  @override
+  String get cellularUsbModeApply => '应用 USB 模式';
+
+  @override
+  String get cellularReboot => '模组重启';
+
+  @override
+  String get cellularRebootSoft => '软重启（软复位模组）';
+
+  @override
+  String get cellularRebootHard => '硬重启（断电级复位）';
+
+  @override
+  String get cellularRebootUnsupported => '本模组未声明重启能力。';
+
+  @override
+  String get cellularRebootWarning => '重启会中断数据连接数十秒。';
+
+  @override
+  String get cellularImeiSection => 'IMEI（敏感）';
+
+  @override
+  String get cellularImeiWarningTitle => '更改 IMEI 有法律与合规风险';
+
+  @override
+  String get cellularImeiWarningBody =>
+      '与网页端一致：我们不屏蔽该能力，风险由使用者自担；请确认当地法规允许后再操作，改动会记入审计。';
+
+  @override
+  String get cellularImeiInput => '新 IMEI（15 位）';
+
+  @override
+  String get cellularImeiApply => '写入 IMEI';
+
+  @override
+  String get cellularMaintenance => '统计与日志';
+
+  @override
+  String get cellularSaveStats => '保存统计到 NVM';
+
+  @override
+  String get cellularClearStats => '清零流量统计';
+
+  @override
+  String get cellularClearDialLog => '清空拨号日志';
+
+  @override
+  String cellularDisabledFeatures(String list) {
+    return '本模组禁用特性：$list';
+  }
 }

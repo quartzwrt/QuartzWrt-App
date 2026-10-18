@@ -5,6 +5,7 @@
 // 仅依赖纯 Dart 层（api/pairing；不触 Flutter）。
 import 'dart:io';
 
+import 'package:quartzwrt_app/api/models.dart';
 import 'package:quartzwrt_app/api/packages.dart';
 import 'package:quartzwrt_app/auth/pairing.dart';
 
@@ -79,6 +80,25 @@ Future<void> main(List<String> args) async {
   final names = srch.ok ? PackagesPage.fromPayload(srch.data).items.map((p) => p.name).toList() : const <String>[];
   check('packages available search "tail" hits tailscale (${names.length} matches)',
       srch.ok && names.any((n) => n.contains('tailscale')));
+
+  // ---- 蜂窝面（W6.12；读走快照 §3.9，页面级读/动作走 WP-5 转发项）----
+  // VM 无 5G 模组（x86 镜像不预装 qmodem）→ 断言「空态契约」：节存在、
+  // available=false（App 据此隐藏蜂窝 tab），且模型层能正确解析。
+  final cellRaw = snapMap['cellular'];
+  check('snapshot.cellular 存在（§3.9 节）', cellRaw is Map<String, dynamic>);
+  final cell = Snapshot.parse(snapMap)?.cellular;
+  check(
+    'cellular 空态：available=false 且 shown=false（tab 隐藏）',
+    cell != null && cell.available == false && cell.shown == false,
+  );
+  final dial = await c.action(
+      accessToken: tok, action: 'qmodem.dial', args: {'config_section': 'modem1'});
+  check(
+    'qmodem 条目链路可达（未装 qmodem → data_unavailable，非 forbidden；${dial.error?.code}）',
+    dial.error?.code == 'data_unavailable',
+  );
+  final unreg = await c.action(accessToken: tok, action: 'qmodem.scan_all');
+  check('qmodem 未注册条目被拒（${unreg.error?.code}）', unreg.error?.code == 'forbidden_action');
 
   // ---- bandix 面（WP-8 P2；读走快照 §3.7，配置读/动作走 WP-5 转发项；只读+负例）----
   final bx = snapMap['bandix'];

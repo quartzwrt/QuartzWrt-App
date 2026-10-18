@@ -952,4 +952,317 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get bandixTotalLabel => 'Total';
+
+  @override
+  String get navRouter => 'Router';
+
+  @override
+  String get navCellular => 'Cellular';
+
+  @override
+  String get cellularUnavailableBody =>
+      'Cellular data unavailable: QModem is not installed or no modem is present.';
+
+  @override
+  String cellularMonthUsage(String size) {
+    return 'This month $size';
+  }
+
+  @override
+  String get cellularSignal => 'Signal';
+
+  @override
+  String get cellularSignalQuality => 'Signal quality';
+
+  @override
+  String get cellularSignalUnsupported =>
+      'Signal metrics not supported by this modem';
+
+  @override
+  String get cellularQualityGood => 'Good';
+
+  @override
+  String get cellularQualityFair => 'Fair';
+
+  @override
+  String get cellularQualityPoor => 'Weak';
+
+  @override
+  String get cellularRsrpHistory => 'RSRP history';
+
+  @override
+  String cellularSeriesHint(String step, String points) {
+    return 'every ${step}s · $points points';
+  }
+
+  @override
+  String get cellularNetworkSim => 'Network · SIM';
+
+  @override
+  String get cellularServingCell => 'Serving cell';
+
+  @override
+  String get cellularSimLabel => 'SIM';
+
+  @override
+  String get cellularSimSlot => 'slot';
+
+  @override
+  String get cellularFirmware => 'Firmware';
+
+  @override
+  String get cellularDial => 'Dial-up';
+
+  @override
+  String get cellularDialConnected => 'Connected';
+
+  @override
+  String get cellularDialDisconnected => 'Disconnected';
+
+  @override
+  String get cellularDialNow => 'Connect';
+
+  @override
+  String get cellularHang => 'Disconnect';
+
+  @override
+  String get cellularRedial => 'Reconnect';
+
+  @override
+  String get cellularHangWarning =>
+      'Disconnecting takes the modem offline; if your LAN routes through it, this device may lose connectivity.';
+
+  @override
+  String get cellularRedialWarning =>
+      'Reconnecting briefly interrupts the modem link.';
+
+  @override
+  String get cellularEntryNetwork => 'Network';
+
+  @override
+  String get cellularEntryAt => 'AT debug';
+
+  @override
+  String get cellularEntryLog => 'Dial log';
+
+  @override
+  String get cellularMoreEntriesPlanned =>
+      'SIM switch · SMS · Advanced are planned for later rounds';
+
+  @override
+  String get cellularNetworkPrefer => 'Network preference';
+
+  @override
+  String get cellularNetworkPreferHint =>
+      'Multiple choices allowed; disabling a RAT forbids registering it (sent as an array).';
+
+  @override
+  String get cellularApplyPrefer => 'Apply preference';
+
+  @override
+  String get cellularLockband => 'Band lock';
+
+  @override
+  String get cellularLockbandUnlocked => 'Not locked (all bands available)';
+
+  @override
+  String get cellularLockbandHint =>
+      'Band lock uses vendor-specific parameters; locking a wrong band can drop the link. v1 only offers \"unlock\" — use the web UI for full locking.';
+
+  @override
+  String get cellularLockbandUnlock => 'Unlock bands';
+
+  @override
+  String get cellularAdvanced => 'Advanced';
+
+  @override
+  String get cellularUsbMode => 'USB dial mode';
+
+  @override
+  String get cellularTemp => 'Modem temperature';
+
+  @override
+  String get cellularSettingsHint =>
+      'Failed to read current settings; pull to refresh and retry.';
+
+  @override
+  String get cellularDangerWarning =>
+      'This rewrites modem configuration and may interrupt connectivity.';
+
+  @override
+  String get cellularAtSend => 'Send';
+
+  @override
+  String get cellularAtPresets => 'Quick commands';
+
+  @override
+  String get cellularAtWarningTitle =>
+      'Same command surface as the web UI; use at your own risk';
+
+  @override
+  String get cellularAtWarningBody =>
+      'Quick commands come from the router (same source as the web UI). Any AT command is sent to the modem for real and can modify NV items, lock bands, or drop the link. Each send is confirmed and audited.';
+
+  @override
+  String cellularAtConfirmTitle(String at) {
+    return 'Send $at?';
+  }
+
+  @override
+  String get clearAction => 'Clear';
+
+  @override
+  String get cellularLogHintTitle =>
+      'Log comes from the modem dial script (last 100 lines)';
+
+  @override
+  String get cellularLogHintBody =>
+      'May contain carrier details and phone numbers; avoid sharing screenshots.';
+
+  @override
+  String get cellularLogEmpty => '(no log yet)';
+
+  @override
+  String get model => 'Model';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get cellularEntrySim => 'SIM';
+
+  @override
+  String get cellularEntrySms => 'SMS';
+
+  @override
+  String get cellularSimNoSwitchTitle =>
+      'SIM switching is not supported by this modem';
+
+  @override
+  String get cellularSimNoSwitchBody =>
+      'The modem does not expose SIM slot switching (`supportSwitch=0`); read-only.';
+
+  @override
+  String get cellularSimStatus => 'Status';
+
+  @override
+  String get cellularSimSwitch => 'Switch SIM slot';
+
+  @override
+  String get cellularSimSwitchApply => 'Apply switch';
+
+  @override
+  String cellularSimSwitchConfirm(String slot) {
+    return 'Switch to SIM $slot?';
+  }
+
+  @override
+  String get cellularSimSwitchWarning =>
+      'Switching restarts the modem data path; the network drops during the switch.';
+
+  @override
+  String get cellularSmsStorage => 'SMS storage';
+
+  @override
+  String get cellularSmsPrivacyTitle => 'Messages stay in device memory only';
+
+  @override
+  String get cellularSmsPrivacyBody =>
+      'Not persisted or uploaded; cleared when you leave the page.';
+
+  @override
+  String get cellularSmsEmpty => '(no messages)';
+
+  @override
+  String cellularSmsCount(String total, String unread) {
+    return '$total messages · $unread unread';
+  }
+
+  @override
+  String get cellularSmsSentTag => 'sent';
+
+  @override
+  String get cellularSmsDeleteConfirm => 'Delete this message?';
+
+  @override
+  String get cellularSmsDeleteBody => 'This cannot be undone.';
+
+  @override
+  String get cellularSmsCompose => 'New message';
+
+  @override
+  String get cellularSmsRecipient => 'Recipient';
+
+  @override
+  String get cellularSmsContent => 'Message';
+
+  @override
+  String get cellularSmsSendAction => 'Send';
+
+  @override
+  String get cellularModule => 'Modem';
+
+  @override
+  String get cellularUsbModeSection => 'USB dial mode';
+
+  @override
+  String get cellularUsbModeWarningTitle => 'Re-enumerates the USB data path';
+
+  @override
+  String get cellularUsbModeWarningBody =>
+      'The mode (qmi/ecm/mbim/rndis/ncm) decides how the modem exposes its data port; switching drops the current link and re-enumerates. Unrelated to 5G/4G network preference.';
+
+  @override
+  String get cellularUsbModeApply => 'Apply USB mode';
+
+  @override
+  String get cellularReboot => 'Modem reboot';
+
+  @override
+  String get cellularRebootSoft => 'Soft reboot';
+
+  @override
+  String get cellularRebootHard => 'Hard reboot';
+
+  @override
+  String get cellularRebootUnsupported =>
+      'This modem declares no reboot capability.';
+
+  @override
+  String get cellularRebootWarning =>
+      'Rebooting interrupts the data link for tens of seconds.';
+
+  @override
+  String get cellularImeiSection => 'IMEI (sensitive)';
+
+  @override
+  String get cellularImeiWarningTitle =>
+      'Changing IMEI carries legal and compliance risk';
+
+  @override
+  String get cellularImeiWarningBody =>
+      'Same as the web UI: the capability is not blocked; the risk is yours. Verify local regulations first — the change is audited.';
+
+  @override
+  String get cellularImeiInput => 'New IMEI (15 digits)';
+
+  @override
+  String get cellularImeiApply => 'Write IMEI';
+
+  @override
+  String get cellularMaintenance => 'Statistics & logs';
+
+  @override
+  String get cellularSaveStats => 'Save stats to NVM';
+
+  @override
+  String get cellularClearStats => 'Clear traffic stats';
+
+  @override
+  String get cellularClearDialLog => 'Clear dial log';
+
+  @override
+  String cellularDisabledFeatures(String list) {
+    return 'Disabled features: $list';
+  }
 }

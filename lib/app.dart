@@ -12,6 +12,13 @@ import 'features/apps/app_detail_page.dart';
 import 'features/apps/apps_page.dart';
 import 'features/apps/package_log_page.dart';
 import 'features/bandix/bandix_page.dart';
+import 'features/cellular/cellular_at_page.dart';
+import 'features/cellular/cellular_log_page.dart';
+import 'features/cellular/cellular_network_page.dart';
+import 'features/cellular/cellular_advanced_page.dart';
+import 'features/cellular/cellular_page.dart';
+import 'features/cellular/cellular_sim_page.dart';
+import 'features/cellular/cellular_sms_page.dart';
 import 'features/discover/discover_page.dart';
 import 'features/network/clients_page.dart';
 import 'features/network/network_page.dart';
@@ -46,6 +53,13 @@ CustomTransitionPage<void> _fadeUpPage(GoRouterState state, Widget child) =>
       child: child,
     );
 
+/// 当前蜂窝页操作的模组 section（单模组=第一个；多模组切换在页面内，v1 传首页选中）。
+String _cellularSection(Ref ref) {
+  final snap = ref.read(snapshotProvider).data?.cellular;
+  final modems = snap?.modems ?? const [];
+  return modems.isEmpty ? '' : modems.first.id;
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
   final registry = ref.watch(registryProvider);
   return GoRouter(
@@ -72,6 +86,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
           ]),
           StatefulShellBranch(routes: [
+            GoRoute(path: '/cellular', builder: (_, _) => const CellularPage()),
+          ]),
+          StatefulShellBranch(routes: [
             GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
           ]),
         ],
@@ -83,6 +100,30 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/apps/log', pageBuilder: (_, s) => _fadeUpPage(s, const PackageLogPage())),
       GoRoute(path: '/apps/bandix', pageBuilder: (_, s) => _fadeUpPage(s, const BandixPage())),
+      GoRoute(
+        path: '/cellular/network',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularNetworkPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/at',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularAtPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/sim',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularSimPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/sms',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularSmsPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/advanced',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularAdvancedPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/log',
+        pageBuilder: (_, s) => _fadeUpPage(s, CellularLogPage(section: _cellularSection(ref))),
+      ),
       GoRoute(path: '/settings/devices', pageBuilder: (_, s) => _fadeUpPage(s, const DevicesPage())),
       GoRoute(path: '/settings/remote', pageBuilder: (_, s) => _fadeUpPage(s, const RemotePage())),
     ],

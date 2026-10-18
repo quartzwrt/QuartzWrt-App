@@ -4,6 +4,8 @@
 // 解析失败不抛穿 UI——模型层保留 [Snapshot.raw] 供通用渲染与排障。
 library;
 
+import 'cellular.dart';
+
 /// info 方法返回的路由器身份。
 class RouterInfo {
   const RouterInfo({
@@ -77,6 +79,7 @@ class PairedRouter {
     required this.addedAt,
     this.remoteHost,
     this.remotePort,
+    this.cellularSeen = false,
   });
 
   final String id; // = deviceId（唯一）
@@ -90,11 +93,21 @@ class PairedRouter {
   final String? remoteHost;
   final int? remotePort;
 
+  /// 蜂窝 tab **粘性门控**（IA v2 定案）：一旦确认该路由器有 qmodem+模组即持久化，
+  /// 此后仅"重新配对到另一台路由器"时重算——避免临时断网/采集降级导致 tab 忽隐忽现。
+  final bool cellularSeen;
+
   String get baseUrl => 'https://$host:$port';
 
   bool get hasRemote => (remoteHost ?? '').isNotEmpty;
 
-  PairedRouter copyWith({String? remoteHost, int? remotePort, bool clearRemote = false}) => PairedRouter(
+  PairedRouter copyWith({
+    String? remoteHost,
+    int? remotePort,
+    bool clearRemote = false,
+    bool? cellularSeen,
+  }) =>
+      PairedRouter(
         id: id,
         name: name,
         model: model,
@@ -105,6 +118,7 @@ class PairedRouter {
         addedAt: addedAt,
         remoteHost: clearRemote ? null : (remoteHost ?? this.remoteHost),
         remotePort: clearRemote ? null : (remotePort ?? this.remotePort),
+        cellularSeen: cellularSeen ?? this.cellularSeen,
       );
 
   Map<String, dynamic> toJson() => {
@@ -118,6 +132,7 @@ class PairedRouter {
         'added_at': addedAt,
         if (hasRemote) 'remote_host': remoteHost,
         if (hasRemote) 'remote_port': remotePort ?? 443,
+        if (cellularSeen) 'cellular_seen': true,
       };
 
   static PairedRouter? fromJson(Map<String, dynamic> j) {
@@ -136,6 +151,7 @@ class PairedRouter {
       addedAt: (j['added_at'] as int?) ?? 0,
       remoteHost: (remoteHost == null || remoteHost.isEmpty) ? null : remoteHost,
       remotePort: (j['remote_port'] as int?) ?? 443,
+      cellularSeen: (j['cellular_seen'] as bool?) ?? false,
     );
   }
 }
@@ -185,6 +201,13 @@ class Snapshot {
   Map<String, dynamic> get system => _sec('system') ?? const {};
   Map<String, dynamic> get net => _sec('net') ?? const {};
   Map<String, dynamic>? get docker => _sec('docker');
+
+  /// 蜂窝节（契约 §3.9；未装 qmodem / 无模组时为 null 或 available=false）。
+  Cellular? get cellular {
+    final c = _sec('cellular');
+    return c == null ? null : Cellular.fromJson(c);
+  }
+
   Map<String, dynamic>? get clients => _sec('clients');
   Map<String, dynamic>? get services => _sec('services');
 

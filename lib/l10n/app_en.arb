@@ -550,5 +550,146 @@
   },
   "bandixPolicyQuota": "Quota",
   "bandixPolicyDefault": "Default",
-  "bandixTotalLabel": "Total"
+  "bandixTotalLabel": "Total",
+  "navRouter": "Router",
+  "navCellular": "Cellular",
+  "cellularUnavailableBody": "Cellular data unavailable: QModem is not installed or no modem is present.",
+  "cellularMonthUsage": "This month {size}",
+  "@cellularMonthUsage": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "cellularSignal": "Signal",
+  "cellularSignalQuality": "Signal quality",
+  "cellularSignalUnsupported": "Signal metrics not supported by this modem",
+  "cellularQualityGood": "Good",
+  "cellularQualityFair": "Fair",
+  "cellularQualityPoor": "Weak",
+  "cellularRsrpHistory": "RSRP history",
+  "cellularSeriesHint": "every {step}s · {points} points",
+  "@cellularSeriesHint": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "cellularNetworkSim": "Network · SIM",
+  "cellularServingCell": "Serving cell",
+  "cellularSimLabel": "SIM",
+  "cellularSimSlot": "slot",
+  "cellularFirmware": "Firmware",
+  "cellularDial": "Dial-up",
+  "cellularDialConnected": "Connected",
+  "cellularDialDisconnected": "Disconnected",
+  "cellularDialNow": "Connect",
+  "cellularHang": "Disconnect",
+  "cellularRedial": "Reconnect",
+  "cellularHangWarning": "Disconnecting takes the modem offline; if your LAN routes through it, this device may lose connectivity.",
+  "cellularRedialWarning": "Reconnecting briefly interrupts the modem link.",
+  "cellularEntryNetwork": "Network",
+  "cellularEntryAt": "AT debug",
+  "cellularEntryLog": "Dial log",
+  "cellularMoreEntriesPlanned": "SIM switch · SMS · Advanced are planned for later rounds",
+  "cellularNetworkPrefer": "Network preference",
+  "cellularNetworkPreferHint": "Multiple choices allowed; disabling a RAT forbids registering it (sent as an array).",
+  "cellularApplyPrefer": "Apply preference",
+  "cellularLockband": "Band lock",
+  "cellularLockbandUnlocked": "Not locked (all bands available)",
+  "cellularLockbandHint": "Band lock uses vendor-specific parameters; locking a wrong band can drop the link. v1 only offers \"unlock\" — use the web UI for full locking.",
+  "cellularLockbandUnlock": "Unlock bands",
+  "cellularAdvanced": "Advanced",
+  "cellularUsbMode": "USB dial mode",
+  "cellularTemp": "Modem temperature",
+  "cellularSettingsHint": "Failed to read current settings; pull to refresh and retry.",
+  "cellularDangerWarning": "This rewrites modem configuration and may interrupt connectivity.",
+  "cellularAtSend": "Send",
+  "cellularAtPresets": "Quick commands",
+  "cellularAtWarningTitle": "Same command surface as the web UI; use at your own risk",
+  "cellularAtWarningBody": "Quick commands come from the router (same source as the web UI). Any AT command is sent to the modem for real and can modify NV items, lock bands, or drop the link. Each send is confirmed and audited.",
+  "cellularAtConfirmTitle": "Send {at}?",
+  "@cellularAtConfirmTitle": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAction": "Clear",
+  "cellularLogHintTitle": "Log comes from the modem dial script (last 100 lines)",
+  "cellularLogHintBody": "May contain carrier details and phone numbers; avoid sharing screenshots.",
+  "cellularLogEmpty": "(no log yet)",
+  "model": "Model",
+  "deleteAction": "Delete",
+  "cellularEntrySim": "SIM",
+  "cellularEntrySms": "SMS",
+  "cellularSimNoSwitchTitle": "SIM switching is not supported by this modem",
+  "cellularSimNoSwitchBody": "The modem does not expose SIM slot switching (`supportSwitch=0`); read-only.",
+  "cellularSimStatus": "Status",
+  "cellularSimSwitch": "Switch SIM slot",
+  "cellularSimSwitchApply": "Apply switch",
+  "cellularSimSwitchConfirm": "Switch to SIM {slot}?",
+  "@cellularSimSwitchConfirm": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "cellularSimSwitchWarning": "Switching restarts the modem data path; the network drops during the switch.",
+  "cellularSmsStorage": "SMS storage",
+  "cellularSmsPrivacyTitle": "Messages stay in device memory only",
+  "cellularSmsPrivacyBody": "Not persisted or uploaded; cleared when you leave the page.",
+  "cellularSmsEmpty": "(no messages)",
+  "cellularSmsCount": "{total} messages · {unread} unread",
+  "@cellularSmsCount": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "unread": {
+        "type": "String"
+      }
+    }
+  },
+  "cellularSmsSentTag": "sent",
+  "cellularSmsDeleteConfirm": "Delete this message?",
+  "cellularSmsDeleteBody": "This cannot be undone.",
+  "cellularSmsCompose": "New message",
+  "cellularSmsRecipient": "Recipient",
+  "cellularSmsContent": "Message",
+  "cellularSmsSendAction": "Send",
+  "cellularModule": "Modem",
+  "cellularUsbModeSection": "USB dial mode",
+  "cellularUsbModeWarningTitle": "Re-enumerates the USB data path",
+  "cellularUsbModeWarningBody": "The mode (qmi/ecm/mbim/rndis/ncm) decides how the modem exposes its data port; switching drops the current link and re-enumerates. Unrelated to 5G/4G network preference.",
+  "cellularUsbModeApply": "Apply USB mode",
+  "cellularReboot": "Modem reboot",
+  "cellularRebootSoft": "Soft reboot",
+  "cellularRebootHard": "Hard reboot",
+  "cellularRebootUnsupported": "This modem declares no reboot capability.",
+  "cellularRebootWarning": "Rebooting interrupts the data link for tens of seconds.",
+  "cellularImeiSection": "IMEI (sensitive)",
+  "cellularImeiWarningTitle": "Changing IMEI carries legal and compliance risk",
+  "cellularImeiWarningBody": "Same as the web UI: the capability is not blocked; the risk is yours. Verify local regulations first — the change is audited.",
+  "cellularImeiInput": "New IMEI (15 digits)",
+  "cellularImeiApply": "Write IMEI",
+  "cellularMaintenance": "Statistics & logs",
+  "cellularSaveStats": "Save stats to NVM",
+  "cellularClearStats": "Clear traffic stats",
+  "cellularClearDialLog": "Clear dial log",
+  "cellularDisabledFeatures": "Disabled features: {list}",
+  "@cellularDisabledFeatures": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  }
 }

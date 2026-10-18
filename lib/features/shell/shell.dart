@@ -1,34 +1,48 @@
-// 应用外壳：底部四 tab（概览/网络/应用/设置）+ 预留第 5 位（当前隐藏）。
+// 应用外壳：底部 tab（概览 / 路由器 / 应用 / 蜂窝 / 设置）。
+//
+// 「蜂窝」为**条件 tab**（IA v2 定案 D10′）：`snapshot.cellular.available` 为真，
+// 或该路由器**曾**确认过 qmodem+模组（粘性标记 `PairedRouter.cellularSeen`，避免
+// 临时断网/采集降级导致 tab 忽隐忽现）。
 //
 // W6.6：由 StatefulShellRoute.indexedStack 驱动——切 tab 不重建整页
 // （各 tab 的滚动位置与页面状态保留）。
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../state/app_state.dart';
 
-class ShellScaffold extends StatelessWidget {
+class ShellScaffold extends ConsumerWidget {
   const ShellScaffold({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppL10n.of(context);
-    final tabs = <(IconData, String)>[
-      (Icons.monitor_heart_outlined, l10n.navOverview),
-      (Icons.public_outlined, l10n.navNetwork),
-      (Icons.grid_view_outlined, l10n.navApps),
-      (Icons.settings_outlined, l10n.navSettings),
-      // 第 5 tab 位预留（设计与架构定案）：未来功能上线时在此追加并过评审。
+    final snap = ref.watch(snapshotProvider).data;
+    final router = ref.watch(activeRouterProvider);
+    final cellularVisible =
+        (snap?.cellular?.shown ?? false) || (router?.cellularSeen ?? false);
+    // index → 分支位（蜂窝隐藏时索引表整体前移/后移，保证点击落到正确分支）
+    final branches = <(int, IconData, String)>[
+      (0, Icons.monitor_heart_outlined, l10n.navOverview),
+      (1, Icons.public_outlined, l10n.navRouter),
+      (2, Icons.grid_view_outlined, l10n.navApps),
+      if (cellularVisible) (3, Icons.cell_tower_outlined, l10n.navCellular),
+      (4, Icons.settings_outlined, l10n.navSettings),
     ];
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: _QuartzTabBar(
-        tabs: tabs,
-        index: navigationShell.currentIndex,
-        onTap: (i) => navigationShell.goBranch(i, initialLocation: i == navigationShell.currentIndex),
+        tabs: [for (final b in branches) (b.$2, b.$3)],
+        index: branches.indexWhere((b) => b.$1 == navigationShell.currentIndex).clamp(0, branches.length - 1),
+        onTap: (i) {
+          final target = branches[i].$1;
+          navigationShell.goBranch(target, initialLocation: target == navigationShell.currentIndex);
+        },
       ),
     );
   }

@@ -1764,6 +1764,564 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Total'**
   String get bandixTotalLabel;
+
+  /// No description provided for @navRouter.
+  ///
+  /// In en, this message translates to:
+  /// **'Router'**
+  String get navRouter;
+
+  /// No description provided for @navCellular.
+  ///
+  /// In en, this message translates to:
+  /// **'Cellular'**
+  String get navCellular;
+
+  /// No description provided for @cellularUnavailableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Cellular data unavailable: QModem is not installed or no modem is present.'**
+  String get cellularUnavailableBody;
+
+  /// No description provided for @cellularMonthUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'This month {size}'**
+  String cellularMonthUsage(String size);
+
+  /// No description provided for @cellularSignal.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal'**
+  String get cellularSignal;
+
+  /// No description provided for @cellularSignalQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal quality'**
+  String get cellularSignalQuality;
+
+  /// No description provided for @cellularSignalUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal metrics not supported by this modem'**
+  String get cellularSignalUnsupported;
+
+  /// No description provided for @cellularQualityGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get cellularQualityGood;
+
+  /// No description provided for @cellularQualityFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get cellularQualityFair;
+
+  /// No description provided for @cellularQualityPoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get cellularQualityPoor;
+
+  /// No description provided for @cellularRsrpHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'RSRP history'**
+  String get cellularRsrpHistory;
+
+  /// No description provided for @cellularSeriesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'every {step}s · {points} points'**
+  String cellularSeriesHint(String step, String points);
+
+  /// No description provided for @cellularNetworkSim.
+  ///
+  /// In en, this message translates to:
+  /// **'Network · SIM'**
+  String get cellularNetworkSim;
+
+  /// No description provided for @cellularServingCell.
+  ///
+  /// In en, this message translates to:
+  /// **'Serving cell'**
+  String get cellularServingCell;
+
+  /// No description provided for @cellularSimLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM'**
+  String get cellularSimLabel;
+
+  /// No description provided for @cellularSimSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'slot'**
+  String get cellularSimSlot;
+
+  /// No description provided for @cellularFirmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware'**
+  String get cellularFirmware;
+
+  /// No description provided for @cellularDial.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial-up'**
+  String get cellularDial;
+
+  /// No description provided for @cellularDialConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get cellularDialConnected;
+
+  /// No description provided for @cellularDialDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get cellularDialDisconnected;
+
+  /// No description provided for @cellularDialNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get cellularDialNow;
+
+  /// No description provided for @cellularHang.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get cellularHang;
+
+  /// No description provided for @cellularRedial.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get cellularRedial;
+
+  /// No description provided for @cellularHangWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnecting takes the modem offline; if your LAN routes through it, this device may lose connectivity.'**
+  String get cellularHangWarning;
+
+  /// No description provided for @cellularRedialWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting briefly interrupts the modem link.'**
+  String get cellularRedialWarning;
+
+  /// No description provided for @cellularEntryNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get cellularEntryNetwork;
+
+  /// No description provided for @cellularEntryAt.
+  ///
+  /// In en, this message translates to:
+  /// **'AT debug'**
+  String get cellularEntryAt;
+
+  /// No description provided for @cellularEntryLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial log'**
+  String get cellularEntryLog;
+
+  /// No description provided for @cellularMoreEntriesPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM switch · SMS · Advanced are planned for later rounds'**
+  String get cellularMoreEntriesPlanned;
+
+  /// No description provided for @cellularNetworkPrefer.
+  ///
+  /// In en, this message translates to:
+  /// **'Network preference'**
+  String get cellularNetworkPrefer;
+
+  /// No description provided for @cellularNetworkPreferHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple choices allowed; disabling a RAT forbids registering it (sent as an array).'**
+  String get cellularNetworkPreferHint;
+
+  /// No description provided for @cellularApplyPrefer.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply preference'**
+  String get cellularApplyPrefer;
+
+  /// No description provided for @cellularLockband.
+  ///
+  /// In en, this message translates to:
+  /// **'Band lock'**
+  String get cellularLockband;
+
+  /// No description provided for @cellularLockbandUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not locked (all bands available)'**
+  String get cellularLockbandUnlocked;
+
+  /// No description provided for @cellularLockbandHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Band lock uses vendor-specific parameters; locking a wrong band can drop the link. v1 only offers \"unlock\" — use the web UI for full locking.'**
+  String get cellularLockbandHint;
+
+  /// No description provided for @cellularLockbandUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock bands'**
+  String get cellularLockbandUnlock;
+
+  /// No description provided for @cellularAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get cellularAdvanced;
+
+  /// No description provided for @cellularUsbMode.
+  ///
+  /// In en, this message translates to:
+  /// **'USB dial mode'**
+  String get cellularUsbMode;
+
+  /// No description provided for @cellularTemp.
+  ///
+  /// In en, this message translates to:
+  /// **'Modem temperature'**
+  String get cellularTemp;
+
+  /// No description provided for @cellularSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to read current settings; pull to refresh and retry.'**
+  String get cellularSettingsHint;
+
+  /// No description provided for @cellularDangerWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This rewrites modem configuration and may interrupt connectivity.'**
+  String get cellularDangerWarning;
+
+  /// No description provided for @cellularAtSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get cellularAtSend;
+
+  /// No description provided for @cellularAtPresets.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick commands'**
+  String get cellularAtPresets;
+
+  /// No description provided for @cellularAtWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Same command surface as the web UI; use at your own risk'**
+  String get cellularAtWarningTitle;
+
+  /// No description provided for @cellularAtWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick commands come from the router (same source as the web UI). Any AT command is sent to the modem for real and can modify NV items, lock bands, or drop the link. Each send is confirmed and audited.'**
+  String get cellularAtWarningBody;
+
+  /// No description provided for @cellularAtConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send {at}?'**
+  String cellularAtConfirmTitle(String at);
+
+  /// No description provided for @clearAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clearAction;
+
+  /// No description provided for @cellularLogHintTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log comes from the modem dial script (last 100 lines)'**
+  String get cellularLogHintTitle;
+
+  /// No description provided for @cellularLogHintBody.
+  ///
+  /// In en, this message translates to:
+  /// **'May contain carrier details and phone numbers; avoid sharing screenshots.'**
+  String get cellularLogHintBody;
+
+  /// No description provided for @cellularLogEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'(no log yet)'**
+  String get cellularLogEmpty;
+
+  /// No description provided for @model.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get model;
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteAction;
+
+  /// No description provided for @cellularEntrySim.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM'**
+  String get cellularEntrySim;
+
+  /// No description provided for @cellularEntrySms.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS'**
+  String get cellularEntrySms;
+
+  /// No description provided for @cellularSimNoSwitchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM switching is not supported by this modem'**
+  String get cellularSimNoSwitchTitle;
+
+  /// No description provided for @cellularSimNoSwitchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The modem does not expose SIM slot switching (`supportSwitch=0`); read-only.'**
+  String get cellularSimNoSwitchBody;
+
+  /// No description provided for @cellularSimStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get cellularSimStatus;
+
+  /// No description provided for @cellularSimSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch SIM slot'**
+  String get cellularSimSwitch;
+
+  /// No description provided for @cellularSimSwitchApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply switch'**
+  String get cellularSimSwitchApply;
+
+  /// No description provided for @cellularSimSwitchConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to SIM {slot}?'**
+  String cellularSimSwitchConfirm(String slot);
+
+  /// No description provided for @cellularSimSwitchWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching restarts the modem data path; the network drops during the switch.'**
+  String get cellularSimSwitchWarning;
+
+  /// No description provided for @cellularSmsStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS storage'**
+  String get cellularSmsStorage;
+
+  /// No description provided for @cellularSmsPrivacyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages stay in device memory only'**
+  String get cellularSmsPrivacyTitle;
+
+  /// No description provided for @cellularSmsPrivacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not persisted or uploaded; cleared when you leave the page.'**
+  String get cellularSmsPrivacyBody;
+
+  /// No description provided for @cellularSmsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'(no messages)'**
+  String get cellularSmsEmpty;
+
+  /// No description provided for @cellularSmsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{total} messages · {unread} unread'**
+  String cellularSmsCount(String total, String unread);
+
+  /// No description provided for @cellularSmsSentTag.
+  ///
+  /// In en, this message translates to:
+  /// **'sent'**
+  String get cellularSmsSentTag;
+
+  /// No description provided for @cellularSmsDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this message?'**
+  String get cellularSmsDeleteConfirm;
+
+  /// No description provided for @cellularSmsDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone.'**
+  String get cellularSmsDeleteBody;
+
+  /// No description provided for @cellularSmsCompose.
+  ///
+  /// In en, this message translates to:
+  /// **'New message'**
+  String get cellularSmsCompose;
+
+  /// No description provided for @cellularSmsRecipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient'**
+  String get cellularSmsRecipient;
+
+  /// No description provided for @cellularSmsContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get cellularSmsContent;
+
+  /// No description provided for @cellularSmsSendAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get cellularSmsSendAction;
+
+  /// No description provided for @cellularModule.
+  ///
+  /// In en, this message translates to:
+  /// **'Modem'**
+  String get cellularModule;
+
+  /// No description provided for @cellularUsbModeSection.
+  ///
+  /// In en, this message translates to:
+  /// **'USB dial mode'**
+  String get cellularUsbModeSection;
+
+  /// No description provided for @cellularUsbModeWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enumerates the USB data path'**
+  String get cellularUsbModeWarningTitle;
+
+  /// No description provided for @cellularUsbModeWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The mode (qmi/ecm/mbim/rndis/ncm) decides how the modem exposes its data port; switching drops the current link and re-enumerates. Unrelated to 5G/4G network preference.'**
+  String get cellularUsbModeWarningBody;
+
+  /// No description provided for @cellularUsbModeApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply USB mode'**
+  String get cellularUsbModeApply;
+
+  /// No description provided for @cellularReboot.
+  ///
+  /// In en, this message translates to:
+  /// **'Modem reboot'**
+  String get cellularReboot;
+
+  /// No description provided for @cellularRebootSoft.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft reboot'**
+  String get cellularRebootSoft;
+
+  /// No description provided for @cellularRebootHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard reboot'**
+  String get cellularRebootHard;
+
+  /// No description provided for @cellularRebootUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This modem declares no reboot capability.'**
+  String get cellularRebootUnsupported;
+
+  /// No description provided for @cellularRebootWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebooting interrupts the data link for tens of seconds.'**
+  String get cellularRebootWarning;
+
+  /// No description provided for @cellularImeiSection.
+  ///
+  /// In en, this message translates to:
+  /// **'IMEI (sensitive)'**
+  String get cellularImeiSection;
+
+  /// No description provided for @cellularImeiWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing IMEI carries legal and compliance risk'**
+  String get cellularImeiWarningTitle;
+
+  /// No description provided for @cellularImeiWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as the web UI: the capability is not blocked; the risk is yours. Verify local regulations first — the change is audited.'**
+  String get cellularImeiWarningBody;
+
+  /// No description provided for @cellularImeiInput.
+  ///
+  /// In en, this message translates to:
+  /// **'New IMEI (15 digits)'**
+  String get cellularImeiInput;
+
+  /// No description provided for @cellularImeiApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Write IMEI'**
+  String get cellularImeiApply;
+
+  /// No description provided for @cellularMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics & logs'**
+  String get cellularMaintenance;
+
+  /// No description provided for @cellularSaveStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Save stats to NVM'**
+  String get cellularSaveStats;
+
+  /// No description provided for @cellularClearStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear traffic stats'**
+  String get cellularClearStats;
+
+  /// No description provided for @cellularClearDialLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear dial log'**
+  String get cellularClearDialLog;
+
+  /// No description provided for @cellularDisabledFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled features: {list}'**
+  String cellularDisabledFeatures(String list);
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
