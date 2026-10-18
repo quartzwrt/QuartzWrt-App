@@ -164,10 +164,6 @@ class _CronPageState extends ConsumerState<CronPage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 12, 4, 20),
-                  child: Text(l10n.cronHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
-                ),
               ],
             ),
     );
