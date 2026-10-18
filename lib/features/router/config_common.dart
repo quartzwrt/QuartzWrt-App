@@ -556,6 +556,56 @@ bool _sameMap(Map<String, dynamic> a, Map<String, dynamic> b) {
 
 enum ApplyOutcome { confirmed, rolledBack, timedOut }
 
+/// add/delete → apply → 倒计时确认（W6.11 静态租约等结构变更）。
+/// 返回 null 表示危险确认取消或变更/应用失败。
+Future<ApplyOutcome?> applyConfigMutation(
+  BuildContext context,
+  WidgetRef ref, {
+  required String config,
+  required Future<ApiResult> Function(ConfigClient client) mutate,
+  bool danger = false,
+  String? dangerBody,
+}) async {
+  final l10n = AppL10n.of(context);
+  final client = ref.read(configClientProvider);
+  if (client == null) return null;
+  if (danger) {
+    final ok = await showConfirmSheet(
+      context,
+      title: l10n.configDangerTitle,
+      body: dangerBody ?? l10n.configDangerBody,
+      confirmLabel: l10n.confirm,
+      cancelLabel: l10n.cancel,
+      danger: true,
+    );
+    if (!ok) return null;
+  }
+  final r = await mutate(client);
+  if (!r.ok) {
+    await client.revert(config);
+    if (context.mounted) showConfigSnack(context, configErrorText(l10n, r.error));
+    return null;
+  }
+  final applied = await client.apply(rollback: true, timeout: 90);
+  if (!applied.ok) {
+    await client.revert(config);
+    if (context.mounted) showConfigSnack(context, configErrorText(l10n, applied.error));
+    return null;
+  }
+  if (!context.mounted) return null;
+  final outcome = await showApplyGuard(context, client, timeout: 90);
+  if (!context.mounted) return outcome;
+  switch (outcome) {
+    case ApplyOutcome.confirmed:
+      showConfigSnack(context, l10n.configSaved);
+    case ApplyOutcome.rolledBack:
+      showConfigSnack(context, l10n.configRollbackDone);
+    case ApplyOutcome.timedOut:
+      showConfigSnack(context, l10n.configAutoRolledBack);
+  }
+  return outcome;
+}
+
 /// 写 → apply → 倒计时确认；返回 null 表示用户在危险确认处取消（尚未写）。
 Future<ApplyOutcome?> applyConfigEdits(
   BuildContext context,

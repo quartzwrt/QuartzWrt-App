@@ -17,14 +17,14 @@
 | QuartzWrt-ThirdParty | `9924cba` | qmodem `lang` 适配（**fork `quartz` 分支仍待推送**；推送前勿单独 `sync-mirrors.sh qmodem`） |
 | QuartzWrt-Builder | `52d1227` | TDD §5 模式 A/B 实践判据 |
 
-四仓工作树干净（本轮提交后），`git push` 等用户指令。App 版本 **v0.5.0（构建 8）**。
+四仓工作树干净（本轮提交后），`git push` 等用户指令。App 版本 **v0.5.0（构建 9）**。
 
 **本轮完成的能力**：
 - **路由器 tab**：`/router`（旧 `/network` 深链重定向）；分组入口页（已实现页「可用」/未实现「待后续版本」chip）。
 - **页面**：系统（hostname/描述/时区选择器/日志/串口登录）、启动项（`luci.getInitList`/`setInitAction`，启停/重启 + 危险确认）、接口（LAN/WAN，协议驱动字段可见性）、无线（device/iface 两段，敏感 key 掩码）、DHCP·DNS（dnsmasq + dhcp 节）。
 - **配置安全网**：`config.read` → 本地编辑 → `config.write`（暂存）→ `config.apply{rollback:true,timeout:90}` → 90s 倒计时确认条（保留更改 / 立即回滚）。**立即回滚 = `config.rollback`**（见 §4 坑位 1）。
 - **验收**：Flutter `analyze` 零告警、`test` **96 项全过**；Go 全仓测试全绿 + arm64/mipsle 交叉编译；VM 配置面 **17/17**、路由器后端 **15/15**；App e2e **24 项 ALL PASS（真机 FNet3399）**。
-- **真机复验（2026-10-19，FNet3399 刷 `20261018T172200Z-805c39a` 后）**：App e2e **24/24 ALL PASS**（真实 RG520N-EU 5G 模组：`cellular.available=true`；`qmodem.at_cfg` + `lang=en` 返回 40 条命令；`config.read system` + `luci.init_list/timezones` 通过）；真机发现并修复 **AT 页形态 bug**——上游 `get_at_cfg` 返回 `{at_cfg:{cmds,…}}`，App 原先只读顶层 `cmds`（VM 无模组未暴露），现兼容两种形态。App 构建号 8。
+- **真机复验（2026-10-19，FNet3399 刷 `20261018T172200Z-805c39a` 后）**：App e2e **24/24 ALL PASS**（真实 RG520N-EU 5G 模组：`cellular.available=true`；`qmodem.at_cfg` + `lang=en` 返回 40 条命令；`config.read system` + `luci.init_list/timezones` 通过）；真机发现并修复 **AT 页形态 bug**——上游 `get_at_cfg` 返回 `{at_cfg:{cmds,…}}`，App 原先只读顶层 `cmds`（VM 无模组未暴露），现兼容两种形态。App 构建号 9。
 
 ---
 

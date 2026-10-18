@@ -58,6 +58,16 @@ class ConfigClient {
 
   /// 立即回滚已 apply 但未 confirm 的改动。
   Future<ApiResult> rollback() => _tm.call('config.rollback');
+
+  /// 新增 section（暂存；values 只收注册字段；W6.11 静态租约等）。
+  Future<ApiResult> add(String config, String sectionType, Map<String, dynamic> values) => _tm.call(
+        'config.add',
+        {'config': config, 'section_type': sectionType, 'values': values},
+      );
+
+  /// 删除可删除类型的 section（暂存；如 dhcp host）。
+  Future<ApiResult> delete(String config, String section) =>
+      _tm.call('config.delete', {'config': config, 'section': section});
 }
 
 /// 取错误里最有信息量的一段（detail 优先于 message）。

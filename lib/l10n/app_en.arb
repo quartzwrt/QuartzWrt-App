@@ -883,5 +883,15 @@
   "dhcpRaManagement": "RA management",
   "dhcpDhcpv6": "DHCPv6",
   "dhcpMaster": "Master",
-  "dhcpDnsService": "Advertise DNS"
+  "dhcpDnsService": "Advertise DNS",
+  "dhcpStaticLeases": "Static leases",
+  "dhcpAddLease": "Add static lease",
+  "dhcpLeaseName": "Name",
+  "dhcpLeaseMac": "MAC address",
+  "dhcpLeaseIp": "IP address",
+  "dhcpNoLeases": "No static leases",
+  "dhcpDeleteLease": "Delete static lease",
+  "dhcpDeleteLeaseBody": "After deletion, DHCP will assign a dynamic address.",
+  "dhcpLeaseHint": "Name/static IP may be left blank; MAC is required.",
+  "dhcpLeaseInvalidMac": "Invalid MAC address"
 }

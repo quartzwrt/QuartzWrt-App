@@ -634,5 +634,15 @@
   "dhcpRaManagement": "RA 管理级别",
   "dhcpDhcpv6": "DHCPv6",
   "dhcpMaster": "主服务器",
-  "dhcpDnsService": "通告 DNS"
+  "dhcpDnsService": "通告 DNS",
+  "dhcpStaticLeases": "静态租约",
+  "dhcpAddLease": "添加静态租约",
+  "dhcpLeaseName": "名称",
+  "dhcpLeaseMac": "MAC 地址",
+  "dhcpLeaseIp": "IP 地址",
+  "dhcpNoLeases": "暂无静态租约",
+  "dhcpDeleteLease": "删除静态租约",
+  "dhcpDeleteLeaseBody": "删除后 DHCP 将按动态地址分配。",
+  "dhcpLeaseHint": "名称/静态 IP 可留空；MAC 必填。",
+  "dhcpLeaseInvalidMac": "MAC 地址格式无效"
 }

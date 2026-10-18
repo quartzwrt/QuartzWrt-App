@@ -1711,4 +1711,36 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get dhcpDnsService => 'Advertise DNS';
+
+  @override
+  String get dhcpStaticLeases => 'Static leases';
+
+  @override
+  String get dhcpAddLease => 'Add static lease';
+
+  @override
+  String get dhcpLeaseName => 'Name';
+
+  @override
+  String get dhcpLeaseMac => 'MAC address';
+
+  @override
+  String get dhcpLeaseIp => 'IP address';
+
+  @override
+  String get dhcpNoLeases => 'No static leases';
+
+  @override
+  String get dhcpDeleteLease => 'Delete static lease';
+
+  @override
+  String get dhcpDeleteLeaseBody =>
+      'After deletion, DHCP will assign a dynamic address.';
+
+  @override
+  String get dhcpLeaseHint =>
+      'Name/static IP may be left blank; MAC is required.';
+
+  @override
+  String get dhcpLeaseInvalidMac => 'Invalid MAC address';
 }

@@ -3162,6 +3162,66 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Advertise DNS'**
   String get dhcpDnsService;
+
+  /// No description provided for @dhcpStaticLeases.
+  ///
+  /// In en, this message translates to:
+  /// **'Static leases'**
+  String get dhcpStaticLeases;
+
+  /// No description provided for @dhcpAddLease.
+  ///
+  /// In en, this message translates to:
+  /// **'Add static lease'**
+  String get dhcpAddLease;
+
+  /// No description provided for @dhcpLeaseName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get dhcpLeaseName;
+
+  /// No description provided for @dhcpLeaseMac.
+  ///
+  /// In en, this message translates to:
+  /// **'MAC address'**
+  String get dhcpLeaseMac;
+
+  /// No description provided for @dhcpLeaseIp.
+  ///
+  /// In en, this message translates to:
+  /// **'IP address'**
+  String get dhcpLeaseIp;
+
+  /// No description provided for @dhcpNoLeases.
+  ///
+  /// In en, this message translates to:
+  /// **'No static leases'**
+  String get dhcpNoLeases;
+
+  /// No description provided for @dhcpDeleteLease.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete static lease'**
+  String get dhcpDeleteLease;
+
+  /// No description provided for @dhcpDeleteLeaseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'After deletion, DHCP will assign a dynamic address.'**
+  String get dhcpDeleteLeaseBody;
+
+  /// No description provided for @dhcpLeaseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Name/static IP may be left blank; MAC is required.'**
+  String get dhcpLeaseHint;
+
+  /// No description provided for @dhcpLeaseInvalidMac.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid MAC address'**
+  String get dhcpLeaseInvalidMac;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

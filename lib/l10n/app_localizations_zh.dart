@@ -1651,4 +1651,34 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get dhcpDnsService => '通告 DNS';
+
+  @override
+  String get dhcpStaticLeases => '静态租约';
+
+  @override
+  String get dhcpAddLease => '添加静态租约';
+
+  @override
+  String get dhcpLeaseName => '名称';
+
+  @override
+  String get dhcpLeaseMac => 'MAC 地址';
+
+  @override
+  String get dhcpLeaseIp => 'IP 地址';
+
+  @override
+  String get dhcpNoLeases => '暂无静态租约';
+
+  @override
+  String get dhcpDeleteLease => '删除静态租约';
+
+  @override
+  String get dhcpDeleteLeaseBody => '删除后 DHCP 将按动态地址分配。';
+
+  @override
+  String get dhcpLeaseHint => '名称/静态 IP 可留空；MAC 必填。';
+
+  @override
+  String get dhcpLeaseInvalidMac => 'MAC 地址格式无效';
 }
