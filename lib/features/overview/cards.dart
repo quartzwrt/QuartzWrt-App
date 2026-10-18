@@ -1,6 +1,7 @@
 // 概览卡片实现（一张卡一处；通用兜底卡见 registry.dart）。
 import 'package:flutter/material.dart';
 
+import '../../api/cellular.dart';
 import '../../api/models.dart';
 import '../../core/theme.dart';
 import '../../format.dart';
@@ -211,7 +212,7 @@ Widget networkCard(BuildContext context, Snapshot s) {
             ),
             const Spacer(),
             Text(
-              (wan['ipv4'] as String?) ?? '',
+              maskAddress((wan['ipv4'] as String?) ?? ''),
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 fontFeatures: const [FontFeature.tabularFigures()],
@@ -219,6 +220,23 @@ Widget networkCard(BuildContext context, Snapshot s) {
             ),
           ],
         ),
+        if ((wan['ipv6'] as String?)?.isNotEmpty == true)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(
+              children: [
+                Text(l10n.ipv6Label, style: theme.textTheme.bodySmall),
+                const Spacer(),
+                Text(
+                  maskAddress(wan['ipv6'] as String),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ],
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.only(top: 6, bottom: 2),
           child: Row(

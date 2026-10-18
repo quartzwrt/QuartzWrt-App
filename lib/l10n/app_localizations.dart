@@ -2605,6 +2605,12 @@ abstract class AppL10n {
   /// **'This configuration section is unavailable.'**
   String get configSectionUnavailable;
 
+  /// No description provided for @ipv6Label.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6'**
+  String get ipv6Label;
+
   /// No description provided for @systemGeneral.
   ///
   /// In en, this message translates to:

@@ -1368,6 +1368,9 @@ class AppL10nZh extends AppL10n {
   String get configSectionUnavailable => '该配置节不可用。';
 
   @override
+  String get ipv6Label => 'IPv6';
+
+  @override
   String get systemGeneral => '常规';
 
   @override

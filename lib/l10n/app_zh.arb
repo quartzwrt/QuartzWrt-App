@@ -542,6 +542,7 @@
   "configKeepChanges": "保留更改",
   "configLoadFailedTitle": "读取配置失败",
   "configSectionUnavailable": "该配置节不可用。",
+  "ipv6Label": "IPv6",
   "systemGeneral": "常规",
   "systemHostname": "主机名",
   "systemDescription": "描述",

@@ -767,6 +767,7 @@
   "configKeepChanges": "Keep changes",
   "configLoadFailedTitle": "Failed to load configuration",
   "configSectionUnavailable": "This configuration section is unavailable.",
+  "ipv6Label": "IPv6",
   "systemGeneral": "General",
   "systemHostname": "Hostname",
   "systemDescription": "Description",

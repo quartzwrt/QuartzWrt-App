@@ -1424,6 +1424,9 @@ class AppL10nEn extends AppL10n {
       'This configuration section is unavailable.';
 
   @override
+  String get ipv6Label => 'IPv6';
+
+  @override
   String get systemGeneral => 'General';
 
   @override
