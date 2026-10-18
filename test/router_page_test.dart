@@ -50,7 +50,8 @@ void main() {
     expect(find.text('DHCP 与 DNS'), findsOneWidget);
     expect(find.text('启动项'), findsOneWidget);
     expect(find.text('防火墙'), findsOneWidget);
-    expect(find.text('待后续版本'), findsWidgets);
+    expect(find.text('管理权'), findsOneWidget);
+    expect(find.text('待后续版本'), findsNothing);
     expect(find.text('可用'), findsWidgets);
     expect(find.text('2 在线'), findsOneWidget);
   });

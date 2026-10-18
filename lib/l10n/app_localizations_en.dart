@@ -1434,6 +1434,172 @@ class AppL10nEn extends AppL10n {
   }
 
   @override
+  String get firewallDefaults => 'Default policy';
+
+  @override
+  String get firewallZones => 'Zones';
+
+  @override
+  String get firewallForwards => 'Zone forwarding';
+
+  @override
+  String get firewallRules => 'Traffic rules';
+
+  @override
+  String get firewallRedirects => 'Port forwards';
+
+  @override
+  String get firewallAddZone => 'Add zone';
+
+  @override
+  String get firewallAddForward => 'Add forwarding';
+
+  @override
+  String get firewallAddRule => 'Add rule';
+
+  @override
+  String get firewallAddRedirect => 'Add port forward';
+
+  @override
+  String get firewallEdit => 'Edit';
+
+  @override
+  String get firewallDelete => 'Delete';
+
+  @override
+  String firewallDeleteBody(String title) {
+    return 'Delete \"$title\"? It takes effect immediately; it will auto-rollback if not confirmed within 90 seconds.';
+  }
+
+  @override
+  String get firewallEmptyZones => 'No zones';
+
+  @override
+  String get firewallEmptyForwards => 'No zone forwarding';
+
+  @override
+  String get firewallEmptyRules => 'No rules';
+
+  @override
+  String get firewallEmptyRedirects => 'No port forwards';
+
+  @override
+  String get firewallHint =>
+      'Common fields only; ipset, time windows and raw arguments remain in the web UI.';
+
+  @override
+  String get firewallInput => 'Input';
+
+  @override
+  String get firewallOutput => 'Output';
+
+  @override
+  String get firewallForward => 'Forward';
+
+  @override
+  String get firewallSynFlood => 'SYN-flood protection';
+
+  @override
+  String get firewallFullcone => 'FullCone NAT';
+
+  @override
+  String get firewallFlowOffloading => 'Software flow offloading';
+
+  @override
+  String get firewallFlowOffloadingHw => 'Hardware flow offloading';
+
+  @override
+  String get firewallName => 'Name';
+
+  @override
+  String get firewallNetwork => 'Covered networks';
+
+  @override
+  String get firewallDevice => 'Covered devices';
+
+  @override
+  String get firewallMasq => 'IPv4 masquerading';
+
+  @override
+  String get firewallMtuFix => 'MSS clamping';
+
+  @override
+  String get firewallEnabled => 'Enabled';
+
+  @override
+  String get firewallLog => 'Log';
+
+  @override
+  String get firewallFamily => 'Address family';
+
+  @override
+  String get firewallSrc => 'Source zone';
+
+  @override
+  String get firewallDest => 'Destination zone';
+
+  @override
+  String get firewallProto => 'Protocol';
+
+  @override
+  String get firewallSrcPort => 'Source port';
+
+  @override
+  String get firewallDestPort => 'Destination port';
+
+  @override
+  String get firewallSrcIp => 'Source address';
+
+  @override
+  String get firewallDestIp => 'Destination address';
+
+  @override
+  String get firewallDport => 'External port';
+
+  @override
+  String get firewallTarget => 'Action';
+
+  @override
+  String get firewallReflection => 'NAT reflection';
+
+  @override
+  String get firewallAccept => 'Accept';
+
+  @override
+  String get firewallReject => 'Reject';
+
+  @override
+  String get firewallDrop => 'Drop';
+
+  @override
+  String get firewallMark => 'Mark';
+
+  @override
+  String get firewallDnat => 'DNAT';
+
+  @override
+  String get firewallSnat => 'SNAT';
+
+  @override
+  String get firewallAny => 'Any';
+
+  @override
+  String get firewallIpv4 => 'IPv4';
+
+  @override
+  String get firewallIpv6 => 'IPv6';
+
+  @override
+  String get firewallZoneWarning =>
+      'Changing a zone name/network/masquerading may disconnect the current session; unconfirmed changes auto-rollback within 90 seconds.';
+
+  @override
+  String get firewallAtLeastOne => 'Fill in at least one field';
+
+  @override
+  String get firewallDisabled => 'disabled';
+
+  @override
   String get routerChipReady => 'Ready';
 
   @override

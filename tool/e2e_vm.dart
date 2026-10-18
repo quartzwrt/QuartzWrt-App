@@ -197,6 +197,45 @@ Future<void> main(List<String> args) async {
   check('luci.init_action 负例：路径注入被拒（${badInit.error?.code}）',
       badInit.error?.code == 'bad_request');
 
+  // ---- W6.11 管理权 / 防火墙（r12 注册表 + luci.set_password 转发条目）----
+  final db = await c.call('config.read', {'access_token': tok, 'config': 'dropbear'});
+  final dbVal = db.data['value'];
+  final dbMap = dbVal is Map<String, dynamic> ? dbVal : const <String, dynamic>{};
+  String dbSection = '';
+  Map<String, dynamic> dbValues = const {};
+  for (final e in dbMap.entries) {
+    final v = e.value;
+    if (v is Map<String, dynamic> &&
+        (e.key.contains('dropbear') || v.containsKey('Port') || v.containsKey('PasswordAuth'))) {
+      dbSection = e.key;
+      dbValues = v;
+      break;
+    }
+  }
+  check(
+    'config.read dropbear（${dbSection.isEmpty ? '-' : dbSection} Port=${dbValues['Port'] ?? '-'} PasswordAuth=${dbValues['PasswordAuth'] ?? '-'}）',
+    db.ok && dbSection.isNotEmpty && dbValues['Port'] is String,
+  );
+
+  final fw = await c.call('config.read', {'access_token': tok, 'config': 'firewall'});
+  final fwVal = fw.data['value'];
+  final fwMap = fwVal is Map<String, dynamic> ? fwVal : const <String, dynamic>{};
+  var hasFwZone = false, hasFwRule = false;
+  for (final e in fwMap.entries) {
+    if (e.key.contains('zone') && e.value is Map) hasFwZone = true;
+    if (e.key.contains('rule') && e.value is Map) hasFwRule = true;
+  }
+  check('config.read firewall（${fwMap.length} 节，zone=$hasFwZone rule=$hasFwRule）',
+      fw.ok && fwMap.isNotEmpty && hasFwZone);
+
+  final badPw = await c.action(
+    accessToken: tok,
+    action: 'luci.set_password',
+    args: {'username': 'root', 'password': ''},
+  );
+  check('luci.set_password 负例：空密码被拒（${badPw.error?.code}）',
+      badPw.error?.code == 'bad_request');
+
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);
 

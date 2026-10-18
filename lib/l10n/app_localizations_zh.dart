@@ -1379,6 +1379,170 @@ class AppL10nZh extends AppL10n {
   }
 
   @override
+  String get firewallDefaults => '默认策略';
+
+  @override
+  String get firewallZones => '区域';
+
+  @override
+  String get firewallForwards => '区域转发';
+
+  @override
+  String get firewallRules => '流量规则';
+
+  @override
+  String get firewallRedirects => '端口转发';
+
+  @override
+  String get firewallAddZone => '新增区域';
+
+  @override
+  String get firewallAddForward => '新增转发';
+
+  @override
+  String get firewallAddRule => '新增规则';
+
+  @override
+  String get firewallAddRedirect => '新增端口转发';
+
+  @override
+  String get firewallEdit => '编辑';
+
+  @override
+  String get firewallDelete => '删除';
+
+  @override
+  String firewallDeleteBody(String title) {
+    return '删除「$title」吗？会立即生效，90 秒内未确认将自动回滚。';
+  }
+
+  @override
+  String get firewallEmptyZones => '暂无区域';
+
+  @override
+  String get firewallEmptyForwards => '暂无区域转发';
+
+  @override
+  String get firewallEmptyRules => '暂无规则';
+
+  @override
+  String get firewallEmptyRedirects => '暂无端口转发';
+
+  @override
+  String get firewallHint => '仅列出常用字段；ipset、时间窗口、raw 参数等高级项仍在网页端编辑。';
+
+  @override
+  String get firewallInput => '入站';
+
+  @override
+  String get firewallOutput => '出站';
+
+  @override
+  String get firewallForward => '转发';
+
+  @override
+  String get firewallSynFlood => 'SYN-flood 防护';
+
+  @override
+  String get firewallFullcone => 'FullCone NAT';
+
+  @override
+  String get firewallFlowOffloading => '软件流量卸载';
+
+  @override
+  String get firewallFlowOffloadingHw => '硬件流量卸载';
+
+  @override
+  String get firewallName => '名称';
+
+  @override
+  String get firewallNetwork => '覆盖网络';
+
+  @override
+  String get firewallDevice => '覆盖设备';
+
+  @override
+  String get firewallMasq => 'IPv4 伪装';
+
+  @override
+  String get firewallMtuFix => 'MSS 钳制';
+
+  @override
+  String get firewallEnabled => '启用';
+
+  @override
+  String get firewallLog => '记录日志';
+
+  @override
+  String get firewallFamily => '地址族';
+
+  @override
+  String get firewallSrc => '源区域';
+
+  @override
+  String get firewallDest => '目标区域';
+
+  @override
+  String get firewallProto => '协议';
+
+  @override
+  String get firewallSrcPort => '源端口';
+
+  @override
+  String get firewallDestPort => '目标端口';
+
+  @override
+  String get firewallSrcIp => '源地址';
+
+  @override
+  String get firewallDestIp => '目标地址';
+
+  @override
+  String get firewallDport => '外部端口';
+
+  @override
+  String get firewallTarget => '动作';
+
+  @override
+  String get firewallReflection => 'NAT 回环';
+
+  @override
+  String get firewallAccept => '接受';
+
+  @override
+  String get firewallReject => '拒绝';
+
+  @override
+  String get firewallDrop => '丢弃';
+
+  @override
+  String get firewallMark => '标记';
+
+  @override
+  String get firewallDnat => 'DNAT';
+
+  @override
+  String get firewallSnat => 'SNAT';
+
+  @override
+  String get firewallAny => '任意';
+
+  @override
+  String get firewallIpv4 => 'IPv4';
+
+  @override
+  String get firewallIpv6 => 'IPv6';
+
+  @override
+  String get firewallZoneWarning => '修改区域名称/覆盖网络/伪装可能断开当前连接；90 秒内未确认会自动回滚。';
+
+  @override
+  String get firewallAtLeastOne => '至少填写一项';
+
+  @override
+  String get firewallDisabled => '已禁用';
+
+  @override
   String get routerChipReady => '可用';
 
   @override

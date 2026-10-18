@@ -82,6 +82,7 @@ class RouterPage extends ConsumerWidget {
                   icon: Icons.shield_outlined,
                   title: l10n.routerEntryFirewall,
                   subtitle: l10n.routerEntryFirewallSub,
+                  route: '/router/firewall',
                 ),
               ]),
             ),

@@ -2635,6 +2635,330 @@ abstract class AppL10n {
   /// **'{n} online'**
   String routerEntryClientsSub(int n);
 
+  /// No description provided for @firewallDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Default policy'**
+  String get firewallDefaults;
+
+  /// No description provided for @firewallZones.
+  ///
+  /// In en, this message translates to:
+  /// **'Zones'**
+  String get firewallZones;
+
+  /// No description provided for @firewallForwards.
+  ///
+  /// In en, this message translates to:
+  /// **'Zone forwarding'**
+  String get firewallForwards;
+
+  /// No description provided for @firewallRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic rules'**
+  String get firewallRules;
+
+  /// No description provided for @firewallRedirects.
+  ///
+  /// In en, this message translates to:
+  /// **'Port forwards'**
+  String get firewallRedirects;
+
+  /// No description provided for @firewallAddZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Add zone'**
+  String get firewallAddZone;
+
+  /// No description provided for @firewallAddForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Add forwarding'**
+  String get firewallAddForward;
+
+  /// No description provided for @firewallAddRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add rule'**
+  String get firewallAddRule;
+
+  /// No description provided for @firewallAddRedirect.
+  ///
+  /// In en, this message translates to:
+  /// **'Add port forward'**
+  String get firewallAddRedirect;
+
+  /// No description provided for @firewallEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get firewallEdit;
+
+  /// No description provided for @firewallDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get firewallDelete;
+
+  /// No description provided for @firewallDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{title}\"? It takes effect immediately; it will auto-rollback if not confirmed within 90 seconds.'**
+  String firewallDeleteBody(String title);
+
+  /// No description provided for @firewallEmptyZones.
+  ///
+  /// In en, this message translates to:
+  /// **'No zones'**
+  String get firewallEmptyZones;
+
+  /// No description provided for @firewallEmptyForwards.
+  ///
+  /// In en, this message translates to:
+  /// **'No zone forwarding'**
+  String get firewallEmptyForwards;
+
+  /// No description provided for @firewallEmptyRules.
+  ///
+  /// In en, this message translates to:
+  /// **'No rules'**
+  String get firewallEmptyRules;
+
+  /// No description provided for @firewallEmptyRedirects.
+  ///
+  /// In en, this message translates to:
+  /// **'No port forwards'**
+  String get firewallEmptyRedirects;
+
+  /// No description provided for @firewallHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Common fields only; ipset, time windows and raw arguments remain in the web UI.'**
+  String get firewallHint;
+
+  /// No description provided for @firewallInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Input'**
+  String get firewallInput;
+
+  /// No description provided for @firewallOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Output'**
+  String get firewallOutput;
+
+  /// No description provided for @firewallForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get firewallForward;
+
+  /// No description provided for @firewallSynFlood.
+  ///
+  /// In en, this message translates to:
+  /// **'SYN-flood protection'**
+  String get firewallSynFlood;
+
+  /// No description provided for @firewallFullcone.
+  ///
+  /// In en, this message translates to:
+  /// **'FullCone NAT'**
+  String get firewallFullcone;
+
+  /// No description provided for @firewallFlowOffloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Software flow offloading'**
+  String get firewallFlowOffloading;
+
+  /// No description provided for @firewallFlowOffloadingHw.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware flow offloading'**
+  String get firewallFlowOffloadingHw;
+
+  /// No description provided for @firewallName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get firewallName;
+
+  /// No description provided for @firewallNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Covered networks'**
+  String get firewallNetwork;
+
+  /// No description provided for @firewallDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Covered devices'**
+  String get firewallDevice;
+
+  /// No description provided for @firewallMasq.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv4 masquerading'**
+  String get firewallMasq;
+
+  /// No description provided for @firewallMtuFix.
+  ///
+  /// In en, this message translates to:
+  /// **'MSS clamping'**
+  String get firewallMtuFix;
+
+  /// No description provided for @firewallEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get firewallEnabled;
+
+  /// No description provided for @firewallLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Log'**
+  String get firewallLog;
+
+  /// No description provided for @firewallFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Address family'**
+  String get firewallFamily;
+
+  /// No description provided for @firewallSrc.
+  ///
+  /// In en, this message translates to:
+  /// **'Source zone'**
+  String get firewallSrc;
+
+  /// No description provided for @firewallDest.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination zone'**
+  String get firewallDest;
+
+  /// No description provided for @firewallProto.
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol'**
+  String get firewallProto;
+
+  /// No description provided for @firewallSrcPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Source port'**
+  String get firewallSrcPort;
+
+  /// No description provided for @firewallDestPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination port'**
+  String get firewallDestPort;
+
+  /// No description provided for @firewallSrcIp.
+  ///
+  /// In en, this message translates to:
+  /// **'Source address'**
+  String get firewallSrcIp;
+
+  /// No description provided for @firewallDestIp.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination address'**
+  String get firewallDestIp;
+
+  /// No description provided for @firewallDport.
+  ///
+  /// In en, this message translates to:
+  /// **'External port'**
+  String get firewallDport;
+
+  /// No description provided for @firewallTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get firewallTarget;
+
+  /// No description provided for @firewallReflection.
+  ///
+  /// In en, this message translates to:
+  /// **'NAT reflection'**
+  String get firewallReflection;
+
+  /// No description provided for @firewallAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get firewallAccept;
+
+  /// No description provided for @firewallReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get firewallReject;
+
+  /// No description provided for @firewallDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop'**
+  String get firewallDrop;
+
+  /// No description provided for @firewallMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark'**
+  String get firewallMark;
+
+  /// No description provided for @firewallDnat.
+  ///
+  /// In en, this message translates to:
+  /// **'DNAT'**
+  String get firewallDnat;
+
+  /// No description provided for @firewallSnat.
+  ///
+  /// In en, this message translates to:
+  /// **'SNAT'**
+  String get firewallSnat;
+
+  /// No description provided for @firewallAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get firewallAny;
+
+  /// No description provided for @firewallIpv4.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv4'**
+  String get firewallIpv4;
+
+  /// No description provided for @firewallIpv6.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6'**
+  String get firewallIpv6;
+
+  /// No description provided for @firewallZoneWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing a zone name/network/masquerading may disconnect the current session; unconfirmed changes auto-rollback within 90 seconds.'**
+  String get firewallZoneWarning;
+
+  /// No description provided for @firewallAtLeastOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in at least one field'**
+  String get firewallAtLeastOne;
+
+  /// No description provided for @firewallDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get firewallDisabled;
+
   /// No description provided for @routerChipReady.
   ///
   /// In en, this message translates to:
