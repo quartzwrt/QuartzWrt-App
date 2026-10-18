@@ -1,6 +1,8 @@
 # 交接说明（2026-10-19 第三轮；路由器 tab W6.9–W6.11 已落地）
 
-> **2026-10-19 W6.11 收尾**：管理权（root 密码 + dropbear SSH）、防火墙（defaults/zone/forwarding/rule/redirect）、挂载（fstab）、LED（system @led）、计划任务（cron）五页已实现；Packages app-api r13、App v0.5.2 build 12；真机 e2e **32/32 ALL PASS**。剩余：App UI 真机/模拟器走查、W6.7 真机验收、Tailscale 真 tailnet 复核；镜像仍未重编（用户明确暂不需要）。
+> **2026-10-19 W6.11 收尾**：管理权（root 密码 + dropbear SSH）、防火墙（defaults/zone/forwarding/rule/redirect）、挂载（fstab）、LED（system @led）、计划任务（cron）五页已实现；Packages app-api r13、App v0.5.2 build 12；真机 e2e **32/32 ALL PASS**。
+>
+> **2026-10-19 UI 走查（模拟器 AVD 配对 FNet3399）**：五页 + 区域编辑 + 中英切换逐页截图，证据 `docs/shots/w6.11/`；发现并修复 ①UCI 未设置 `enabled` 时开关误显示 OFF（zone/rule/forward/redirect/mount/swap/dropbear 统一按默认启用回显）、②wan 摘要/挂载 UUID 长文本换行、③计划任务无改动仍可保存。剩余：W6.7 真机验收、Tailscale 真 tailnet 复核；镜像/APK 仍未作为发布件构建（用户明确暂不需要）。
 
 **读者**：接手 WP-6 后续工作的新对话。
 **先读**：`/home/nrxboat/WORKPLAN.md`（§1 快照 / §2 状态表 / §4 文件所有权）→
