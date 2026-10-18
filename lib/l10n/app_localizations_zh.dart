@@ -1558,6 +1558,26 @@ class AppL10nZh extends AppL10n {
   String get routerEntryCronSub => '定时执行命令';
 
   @override
+  String get cronHint => '每行一条 cron 任务（分 时 日 月 周 命令）；保存后自动重载 cron。';
+
+  @override
+  String get cronSave => '保存并重启计划任务';
+
+  @override
+  String get cronSaved => '计划任务已保存并重载';
+
+  @override
+  String get cronReloadFailed => '计划任务已保存，但 cron 重载失败';
+
+  @override
+  String get cronDanger => '计划任务会以 root 身份执行命令；写错可能影响系统。确定保存吗？';
+
+  @override
+  String cronLines(int n) {
+    return '非空行：$n';
+  }
+
+  @override
   String get routerEntryLed => 'LED 配置';
 
   @override

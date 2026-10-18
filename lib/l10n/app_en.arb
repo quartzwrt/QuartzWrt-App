@@ -813,6 +813,15 @@
   "routerEntryMountsSub": "Disks and swap",
   "routerEntryCron": "Scheduled tasks",
   "routerEntryCronSub": "Run commands on a schedule",
+  "cronHint": "One cron job per line (minute hour day month weekday command); cron reloads after saving.",
+  "cronSave": "Save and reload cron",
+  "cronSaved": "Crontab saved and reloaded",
+  "cronReloadFailed": "Crontab saved, but cron reload failed",
+  "cronDanger": "Scheduled tasks run as root; a bad line can affect the system. Save anyway?",
+  "cronLines": "Non-empty lines: {n}",
+  "@cronLines": {
+    "placeholders": {"n": {"type": "int"}}
+  },
   "routerEntryLed": "LED configuration",
   "routerEntryLedSub": "Indicators and triggers",
   "mountsCurrent": "Current mounts",

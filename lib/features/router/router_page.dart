@@ -119,6 +119,12 @@ class RouterPage extends ConsumerWidget {
                   route: '/router/mounts',
                 ),
                 _Entry(
+                  icon: Icons.schedule_outlined,
+                  title: l10n.routerEntryCron,
+                  subtitle: l10n.routerEntryCronSub,
+                  route: '/router/cron',
+                ),
+                _Entry(
                   icon: Icons.lightbulb_outline,
                   title: l10n.routerEntryLed,
                   subtitle: l10n.routerEntryLedSub,

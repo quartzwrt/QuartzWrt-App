@@ -258,6 +258,15 @@ Future<void> main(List<String> args) async {
   check('luci.leds（${ledMap is Map ? ledMap.length : '-'} 个 LED）',
       leds.ok && ledMap is Map && ledMap.isNotEmpty);
 
+  // ---- W6.11 计划任务（cron.read / cron.write；只读 + 负例，不改 crontab）----
+  final cr = await c.call('cron.read', {'access_token': tok});
+  check('cron.read（path=${cr.data['path'] ?? '-'}, exists=${cr.data['exists'] ?? '-'}）',
+      cr.ok && cr.data['path'] == '/etc/crontabs/root');
+  // 注意：NUL 会在 rpcd JSON 层被截断，无法作为负例；用 SOH(\u0001)。
+  final badCron = await c.call('cron.write', {'access_token': tok, 'content': 'a\u0001b'});
+  check('cron.write 负例：控制字符被拒（${badCron.error?.code}）',
+      badCron.error?.code == 'bad_request');
+
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);
 

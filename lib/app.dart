@@ -23,6 +23,7 @@ import 'features/discover/discover_page.dart';
 import 'features/network/clients_page.dart';
 import 'features/overview/overview_page.dart';
 import 'features/router/admin_page.dart';
+import 'features/router/cron_page.dart';
 import 'features/router/dhcp_page.dart';
 import 'features/router/firewall_page.dart';
 import 'features/router/init_page.dart';
@@ -116,6 +117,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/router/firewall', pageBuilder: (_, s) => _fadeUpPage(s, const FirewallPage())),
       GoRoute(path: '/router/mounts', pageBuilder: (_, s) => _fadeUpPage(s, const MountsPage())),
       GoRoute(path: '/router/led', pageBuilder: (_, s) => _fadeUpPage(s, const LedPage())),
+      GoRoute(path: '/router/cron', pageBuilder: (_, s) => _fadeUpPage(s, const CronPage())),
       GoRoute(path: '/router/init', pageBuilder: (_, s) => _fadeUpPage(s, const InitPage())),
       GoRoute(
         path: '/apps/detail/:id',

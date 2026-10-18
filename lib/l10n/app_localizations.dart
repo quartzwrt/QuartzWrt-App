@@ -2989,6 +2989,42 @@ abstract class AppL10n {
   /// **'Run commands on a schedule'**
   String get routerEntryCronSub;
 
+  /// No description provided for @cronHint.
+  ///
+  /// In en, this message translates to:
+  /// **'One cron job per line (minute hour day month weekday command); cron reloads after saving.'**
+  String get cronHint;
+
+  /// No description provided for @cronSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and reload cron'**
+  String get cronSave;
+
+  /// No description provided for @cronSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Crontab saved and reloaded'**
+  String get cronSaved;
+
+  /// No description provided for @cronReloadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Crontab saved, but cron reload failed'**
+  String get cronReloadFailed;
+
+  /// No description provided for @cronDanger.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled tasks run as root; a bad line can affect the system. Save anyway?'**
+  String get cronDanger;
+
+  /// No description provided for @cronLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-empty lines: {n}'**
+  String cronLines(int n);
+
   /// No description provided for @routerEntryLed.
   ///
   /// In en, this message translates to:

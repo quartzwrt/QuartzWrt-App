@@ -1615,6 +1615,28 @@ class AppL10nEn extends AppL10n {
   String get routerEntryCronSub => 'Run commands on a schedule';
 
   @override
+  String get cronHint =>
+      'One cron job per line (minute hour day month weekday command); cron reloads after saving.';
+
+  @override
+  String get cronSave => 'Save and reload cron';
+
+  @override
+  String get cronSaved => 'Crontab saved and reloaded';
+
+  @override
+  String get cronReloadFailed => 'Crontab saved, but cron reload failed';
+
+  @override
+  String get cronDanger =>
+      'Scheduled tasks run as root; a bad line can affect the system. Save anyway?';
+
+  @override
+  String cronLines(int n) {
+    return 'Non-empty lines: $n';
+  }
+
+  @override
   String get routerEntryLed => 'LED configuration';
 
   @override
