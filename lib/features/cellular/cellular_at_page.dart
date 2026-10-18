@@ -56,7 +56,12 @@ class _CellularAtPageState extends ConsumerState<CellularAtPage> {
     var using = '';
     final cmds = <(String, String)>[];
     if (r.ok) {
-      final m = r.map;
+      // 上游 `get_at_cfg` 返回 `{at_cfg:{ports,using_port,cmds}}`；兼容旧/新形态
+      // （app-api 某些版本可能已解包为顶层）。
+      final raw = r.map;
+      final m = raw['at_cfg'] is Map<String, dynamic>
+          ? raw['at_cfg'] as Map<String, dynamic>
+          : raw;
       for (final p in (m['ports'] as List? ?? const [])) {
         if (p is String && p.isNotEmpty) ports.add(p);
       }

@@ -82,21 +82,45 @@ Future<void> main(List<String> args) async {
       srch.ok && names.any((n) => n.contains('tailscale')));
 
   // ---- 蜂窝面（W6.12；读走快照 §3.9，页面级读/动作走 WP-5 转发项）----
-  // VM 无 5G 模组（x86 镜像不预装 qmodem）→ 断言「空态契约」：节存在、
-  // available=false（App 据此隐藏蜂窝 tab），且模型层能正确解析。
+  // 环境自适应：VM（x86）无 5G 模组 → 断言空态；真机（FNet3399）有模组 →
+  // 断言 available/模组 + qmodem.at_cfg 的 `lang` 适配（quartz2）。
   final cellRaw = snapMap['cellular'];
   check('snapshot.cellular 存在（§3.9 节）', cellRaw is Map<String, dynamic>);
   final cell = Snapshot.parse(snapMap)?.cellular;
-  check(
-    'cellular 空态：available=false 且 shown=false（tab 隐藏）',
-    cell != null && cell.available == false && cell.shown == false,
-  );
-  final dial = await c.action(
-      accessToken: tok, action: 'qmodem.dial', args: {'config_section': 'modem1'});
-  check(
-    'qmodem 条目链路可达（未装 qmodem → data_unavailable，非 forbidden；${dial.error?.code}）',
-    dial.error?.code == 'data_unavailable',
-  );
+  if (cell != null && cell.available) {
+    check(
+      'cellular 真机：available=true、shown=${cell.shown}、modems=${cell.modems.length}',
+      cell.shown && cell.modems.isNotEmpty,
+    );
+    final modem = cell.modems.first;
+    final at = await c.action(
+      accessToken: tok,
+      action: 'qmodem.at_cfg',
+      args: {'config_section': modem.id, 'lang': 'en'},
+    );
+    final atResult = at.data['result'];
+    final atData = atResult is Map ? atResult['data'] : null;
+    // 上游返回 `{at_cfg:{...}}`；兼容已解包的顶层形态
+    final atMap = atData is Map ? atData : null;
+    final atInner = atMap != null && atMap['at_cfg'] is Map ? atMap['at_cfg'] as Map : atMap;
+    final cmds = atInner is Map ? atInner['cmds'] : null;
+    check(
+      'qmodem.at_cfg 真机 + lang=en（${at.error?.code ?? 'ok'}，cmds=${cmds is List ? cmds.length : '-'}）',
+      at.ok && cmds is List && cmds.isNotEmpty,
+    );
+    final ports = await c.action(accessToken: tok, action: 'qmodem.tty_ports');
+    check('qmodem.tty_ports 真机可达（${ports.error?.code ?? 'ok'}）', ports.ok);
+  } else {
+    check(
+      'cellular 空态：available=false 且 shown=false（tab 隐藏）',
+      cell != null && cell.available == false && cell.shown == false,
+    );
+    final ports = await c.action(accessToken: tok, action: 'qmodem.tty_ports');
+    check(
+      'qmodem 条目链路可达（未装 qmodem → data_unavailable；${ports.error?.code}）',
+      ports.ok || ports.error?.code == 'data_unavailable',
+    );
+  }
   final unreg = await c.action(accessToken: tok, action: 'qmodem.scan_all');
   check('qmodem 未注册条目被拒（${unreg.error?.code}）', unreg.error?.code == 'forbidden_action');
 
