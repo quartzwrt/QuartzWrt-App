@@ -2,4 +2,4 @@
 library;
 
 const String kAppVersion = '0.4.0';
-const String kAppBuild = '4';
+const String kAppBuild = '5';

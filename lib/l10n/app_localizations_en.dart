@@ -900,9 +900,56 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get bandixTopNote =>
-      'Sorted by cumulative traffic (top 8); share = cumulative bytes share.';
+      'Rate = device-side WAN; Total = all traffic; share = cumulative; sorted by total (top 8); policy = whitelist/schedule/quota.';
 
   @override
   String get bandixSummaryNote =>
-      'Values come from bandix statistics (device-side WAN totals); pull to refresh.';
+      'The default rate limit applies to devices without an individual limit; whitelisted devices are exempt (full rules on the web Bandix page).';
+
+  @override
+  String get bandixDefaultLimitLabel => 'Default rate limit';
+
+  @override
+  String get bandixWhitelistState => 'Whitelist';
+
+  @override
+  String get bandixUnlimited => 'unlimited';
+
+  @override
+  String get bandixOn => 'On';
+
+  @override
+  String get bandixOff => 'Off';
+
+  @override
+  String bandixRulesCount(int n) {
+    return 'rules $n';
+  }
+
+  @override
+  String bandixQuotasCount(int n) {
+    return 'quotas $n';
+  }
+
+  @override
+  String bandixWlDevicesCount(int n) {
+    return 'devices $n';
+  }
+
+  @override
+  String get bandixPolicyWhitelisted => 'Whitelisted';
+
+  @override
+  String bandixPolicyLimits(int n) {
+    return 'Limits $n';
+  }
+
+  @override
+  String get bandixPolicyQuota => 'Quota';
+
+  @override
+  String get bandixPolicyDefault => 'Default';
+
+  @override
+  String get bandixTotalLabel => 'Total';
 }

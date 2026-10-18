@@ -869,8 +869,56 @@ class AppL10nZh extends AppL10n {
   String get bandixTopTitle => '设备流量 Top';
 
   @override
-  String get bandixTopNote => '按累计流量降序（前 8 台）；占比 = 累计流量份额。';
+  String get bandixTopNote =>
+      '速率 = 设备侧 WAN；累计 = 总流量；占比 = 累计份额；按累计降序（前 8 台）；策略 = 白名单/时段限速/配额。';
 
   @override
-  String get bandixSummaryNote => '数值来自 bandix 统计（设备侧 WAN 合计）；下拉刷新。';
+  String get bandixSummaryNote => '默认限速对未单独限速的设备生效；白名单豁免限速（完整规则见网页 Bandix 页）。';
+
+  @override
+  String get bandixDefaultLimitLabel => '默认限速';
+
+  @override
+  String get bandixWhitelistState => '白名单';
+
+  @override
+  String get bandixUnlimited => '不限';
+
+  @override
+  String get bandixOn => '开';
+
+  @override
+  String get bandixOff => '关';
+
+  @override
+  String bandixRulesCount(int n) {
+    return '规则 $n';
+  }
+
+  @override
+  String bandixQuotasCount(int n) {
+    return '配额 $n';
+  }
+
+  @override
+  String bandixWlDevicesCount(int n) {
+    return '设备 $n';
+  }
+
+  @override
+  String get bandixPolicyWhitelisted => '白名单';
+
+  @override
+  String bandixPolicyLimits(int n) {
+    return '限速 $n';
+  }
+
+  @override
+  String get bandixPolicyQuota => '配额';
+
+  @override
+  String get bandixPolicyDefault => '默认';
+
+  @override
+  String get bandixTotalLabel => '累计';
 }

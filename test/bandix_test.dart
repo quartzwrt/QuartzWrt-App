@@ -32,9 +32,17 @@ Snapshot _snapFull() => Snapshot({
         'devices': 12,
         'online': 9,
         'wan': {'rx_bps': 3481600, 'tx_bps': 522240},
+        'limits': {
+          'default_rx_bps': 131072,
+          'default_tx_bps': 0,
+          'whitelist_enabled': true,
+          'whitelist_count': 1,
+          'schedule_count': 3,
+          'quota_count': 1,
+        },
         'top': [
-          {'mac': '00:11:32:7d:55:60', 'host': 'NAS', 'ip': '192.168.1.10', 'rx_b': 823456789, 'tx_b': 123456789, 'pct': 38.6},
-          {'mac': 'aa:bb:cc:dd:ee:ff', 'host': 'laptop', 'ip': '192.168.1.20', 'rx_b': 456789012, 'tx_b': 78901234, 'pct': 21.9},
+          {'mac': '00:11:32:7d:55:60', 'host': 'NAS', 'ip': '192.168.1.10', 'rx_b': 823456789, 'tx_b': 123456789, 'pct': 38.6, 'rx_r': 1250000, 'tx_r': 240000, 'q': true},
+          {'mac': 'aa:bb:cc:dd:ee:ff', 'host': 'laptop', 'ip': '192.168.1.20', 'rx_b': 456789012, 'tx_b': 78901234, 'pct': 21.9, 'rx_r': 410000, 'tx_r': 96000, 'sch': 1},
         ],
         'conn': {'total': 128, 'tcp': 96, 'udp': 32},
         'dns': {'queries': 45231},
@@ -111,9 +119,14 @@ void main() {
     expect(find.text('在线设备'), findsOneWidget);
     expect(find.text('9 / 12'), findsOneWidget);
     expect(find.text('流量明细'), findsOneWidget);
-    expect(find.text('默认限速'), findsOneWidget);
+    expect(find.text('默认限速'), findsWidgets);   // 总体限速行 + 动作入口同名
     expect(find.text('限速白名单'), findsOneWidget);
     expect(find.text('主机名绑定'), findsOneWidget);
+    // 总体限速策略值（默认限速 128 KB/s · 白名单 开 · 规则 3 · 配额 1 · 设备 1）
+    expect(find.textContaining('128 KB/s'), findsOneWidget);
+    expect(find.textContaining('规则 3'), findsOneWidget);
+    // 原 WAN 速率行已删（与概览网络卡重复）
+    expect(find.text('WAN 速率'), findsNothing);
     expect(find.textContaining('↓'), findsWidgets);
 
   });
@@ -132,9 +145,17 @@ void main() {
     expect(find.text('9 / 12'), findsOneWidget);
     expect(find.text('NAS'), findsOneWidget);
     expect(find.text('laptop'), findsOneWidget);
-    expect(find.text('38.6%'), findsOneWidget);
     expect(find.text('设备流量 Top'), findsOneWidget);
-    expect(find.text('38.6%'), findsOneWidget);
+    // 设备速率与限速策略徽标
+    expect(find.textContaining('↓ 1.19 MB/s'), findsOneWidget);   // NAS 设备侧 WAN 速率（App 用 B/s 口径）
+    expect(find.text('配额'), findsWidgets);                       // NAS 有配额
+    expect(find.textContaining('限速 1'), findsOneWidget);         // laptop 1 条时段规则
+    // 累计行保留，占比随行显示（同一行文本）
+    expect(find.textContaining('累计'), findsWidgets);
+    expect(find.textContaining('38.6%'), findsOneWidget);
+    // 汇总卡的 下行/上行 行已删（改用总体限速）
+    expect(find.text('默认限速'), findsWidgets);
+    expect(find.textContaining('规则 3'), findsOneWidget);
   });
 
   testWidgets('流量明细页：不可用态说明（无崩溃）', (tester) async {

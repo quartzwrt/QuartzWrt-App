@@ -508,6 +508,47 @@
   "bandixMacRequired": "Enter or pick a device MAC first.",
   "bandixPanelNote": "Data comes from the bridge contract quartz.bandix (same source as the web UI); engine params (port/interface/data dir) stay on the web settings page.",
   "bandixTopTitle": "Top devices by traffic",
-  "bandixTopNote": "Sorted by cumulative traffic (top 8); share = cumulative bytes share.",
-  "bandixSummaryNote": "Values come from bandix statistics (device-side WAN totals); pull to refresh."
+  "bandixTopNote": "Rate = device-side WAN; Total = all traffic; share = cumulative; sorted by total (top 8); policy = whitelist/schedule/quota.",
+  "bandixSummaryNote": "The default rate limit applies to devices without an individual limit; whitelisted devices are exempt (full rules on the web Bandix page).",
+  "bandixDefaultLimitLabel": "Default rate limit",
+  "bandixWhitelistState": "Whitelist",
+  "bandixUnlimited": "unlimited",
+  "bandixOn": "On",
+  "bandixOff": "Off",
+  "bandixRulesCount": "rules {n}",
+  "@bandixRulesCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixQuotasCount": "quotas {n}",
+  "@bandixQuotasCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixWlDevicesCount": "devices {n}",
+  "@bandixWlDevicesCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixPolicyWhitelisted": "Whitelisted",
+  "bandixPolicyLimits": "Limits {n}",
+  "@bandixPolicyLimits": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "bandixPolicyQuota": "Quota",
+  "bandixPolicyDefault": "Default",
+  "bandixTotalLabel": "Total"
 }

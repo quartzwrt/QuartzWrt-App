@@ -10,6 +10,7 @@ import '../../format.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
+import 'bandix_format.dart';
 import 'bandix_sheets.dart';
 
 class BandixPage extends ConsumerWidget {
@@ -61,7 +62,7 @@ class BandixPage extends ConsumerWidget {
     final l10n = AppL10n.of(context);
     final online = (b['online'] as num?)?.toInt() ?? 0;
     final devices = (b['devices'] as num?)?.toInt() ?? 0;
-    final wan = (b['wan'] as Map<String, dynamic>?) ?? const {};
+    final lim = b['limits'] as Map<String, dynamic>?;
     final conn = b['conn'] as Map<String, dynamic>?;
     final dns = b['dns'] as Map<String, dynamic>?;
     return QuartzCard(
@@ -70,8 +71,11 @@ class BandixPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           KvRow(l10n.bandixOnlineDevices, '$online / $devices', first: true, valueMono: false),
-          KvRow(l10n.bandixDownload, formatRate((wan['rx_bps'] as num?) ?? 0)),
-          KvRow(l10n.bandixUpload, formatRate((wan['tx_bps'] as num?) ?? 0)),
+          // 总体限速策略（替代原 WAN 速率行——与概览"网络"卡重复，2026-10-17 用户指令）
+          if (lim != null) ...[
+            KvRow(l10n.bandixDefaultLimitLabel, bandixDefaultLimitText(l10n, lim)),
+            KvRow(l10n.bandixWhitelistState, bandixPolicyCountsText(l10n, lim), valueMono: false),
+          ],
           KvRow(
             l10n.connectionsLabel,
             conn == null ? l10n.notEnabled : '${conn['total'] ?? 0} · TCP ${conn['tcp'] ?? 0} · UDP ${conn['udp'] ?? 0}',
@@ -102,35 +106,43 @@ class BandixPage extends ConsumerWidget {
         children: [
           for (final (i, it) in top.indexed)
             Padding(
-              padding: EdgeInsets.only(top: i == 0 ? 0 : 10),
-              child: Row(
+              padding: EdgeInsets.only(top: i == 0 ? 0 : 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      (it['host'] as String?)?.isNotEmpty == true
-                          ? it['host'] as String
-                          : ((it['ip'] as String?)?.isNotEmpty == true
-                              ? it['ip'] as String
-                              : (it['mac'] as String? ?? '—')),
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    '↓ ${formatBytes((it['rx_b'] as num?) ?? 0)}  ↑ ${formatBytes((it['tx_b'] as num?) ?? 0)}',
-                    style: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
-                  ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 52,
-                    child: Text(
-                      formatPct((it['pct'] as num?) ?? 0),
-                      textAlign: TextAlign.right,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: 'monospace',
-                        color: theme.colorScheme.onSurface.withValues(alpha: .6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          (it['host'] as String?)?.isNotEmpty == true
+                              ? it['host'] as String
+                              : ((it['ip'] as String?)?.isNotEmpty == true
+                                  ? it['ip'] as String
+                                  : (it['mac'] as String? ?? '—')),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
+                      Text(
+                        '↓ ${formatRate((it['rx_r'] as num?) ?? 0)}  ↑ ${formatRate((it['tx_r'] as num?) ?? 0)}',
+                        style: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${l10n.bandixTotalLabel} ${formatBytes(((it['rx_b'] as num?) ?? 0) + ((it['tx_b'] as num?) ?? 0))}'
+                          ' · ${formatPct((it['pct'] as num?) ?? 0)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: .6),
+                          ),
+                        ),
+                      ),
+                      bandixPolicyBadge(l10n, theme, it),
+                    ],
                   ),
                 ],
               ),

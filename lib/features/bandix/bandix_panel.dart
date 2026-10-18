@@ -10,6 +10,7 @@ import '../../format.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
+import 'bandix_format.dart';
 import 'bandix_sheets.dart';
 
 class BandixPanel extends ConsumerWidget {
@@ -37,7 +38,7 @@ class BandixPanel extends ConsumerWidget {
 
     final online = (b!['online'] as num?)?.toInt() ?? 0;
     final devices = (b['devices'] as num?)?.toInt() ?? 0;
-    final wan = (b['wan'] as Map<String, dynamic>?) ?? const {};
+    final lim = b['limits'] as Map<String, dynamic>?;
     final conn = b['conn'] as Map<String, dynamic>?;
     final dns = b['dns'] as Map<String, dynamic>?;
 
@@ -47,8 +48,11 @@ class BandixPanel extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           KvRow(l10n.bandixOnlineDevices, '$online / $devices', first: true, valueMono: false),
-          KvRow(l10n.bandixWanRate,
-              '↓ ${formatRate((wan['rx_bps'] as num?) ?? 0)} · ↑ ${formatRate((wan['tx_bps'] as num?) ?? 0)}'),
+          // 总体限速策略（2026-10-17 用户指令：替代原 WAN 速率行——与网络卡重复）
+          if (lim != null) ...[
+            KvRow(l10n.bandixDefaultLimitLabel, bandixDefaultLimitText(l10n, lim)),
+            KvRow(l10n.bandixWhitelistState, bandixPolicyCountsText(l10n, lim), valueMono: false),
+          ],
           KvRow(
             l10n.connectionsLabel,
             conn == null ? l10n.notEnabled : '${conn['total'] ?? 0} · TCP ${conn['tcp'] ?? 0} · UDP ${conn['udp'] ?? 0}',

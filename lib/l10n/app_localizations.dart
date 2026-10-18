@@ -1678,14 +1678,92 @@ abstract class AppL10n {
   /// No description provided for @bandixTopNote.
   ///
   /// In en, this message translates to:
-  /// **'Sorted by cumulative traffic (top 8); share = cumulative bytes share.'**
+  /// **'Rate = device-side WAN; Total = all traffic; share = cumulative; sorted by total (top 8); policy = whitelist/schedule/quota.'**
   String get bandixTopNote;
 
   /// No description provided for @bandixSummaryNote.
   ///
   /// In en, this message translates to:
-  /// **'Values come from bandix statistics (device-side WAN totals); pull to refresh.'**
+  /// **'The default rate limit applies to devices without an individual limit; whitelisted devices are exempt (full rules on the web Bandix page).'**
   String get bandixSummaryNote;
+
+  /// No description provided for @bandixDefaultLimitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default rate limit'**
+  String get bandixDefaultLimitLabel;
+
+  /// No description provided for @bandixWhitelistState.
+  ///
+  /// In en, this message translates to:
+  /// **'Whitelist'**
+  String get bandixWhitelistState;
+
+  /// No description provided for @bandixUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'unlimited'**
+  String get bandixUnlimited;
+
+  /// No description provided for @bandixOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get bandixOn;
+
+  /// No description provided for @bandixOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get bandixOff;
+
+  /// No description provided for @bandixRulesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'rules {n}'**
+  String bandixRulesCount(int n);
+
+  /// No description provided for @bandixQuotasCount.
+  ///
+  /// In en, this message translates to:
+  /// **'quotas {n}'**
+  String bandixQuotasCount(int n);
+
+  /// No description provided for @bandixWlDevicesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'devices {n}'**
+  String bandixWlDevicesCount(int n);
+
+  /// No description provided for @bandixPolicyWhitelisted.
+  ///
+  /// In en, this message translates to:
+  /// **'Whitelisted'**
+  String get bandixPolicyWhitelisted;
+
+  /// No description provided for @bandixPolicyLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Limits {n}'**
+  String bandixPolicyLimits(int n);
+
+  /// No description provided for @bandixPolicyQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'Quota'**
+  String get bandixPolicyQuota;
+
+  /// No description provided for @bandixPolicyDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get bandixPolicyDefault;
+
+  /// No description provided for @bandixTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get bandixTotalLabel;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
