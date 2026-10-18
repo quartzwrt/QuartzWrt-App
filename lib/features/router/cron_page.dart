@@ -157,7 +157,7 @@ class _CronPageState extends ConsumerState<CronPage> {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton(
-                          onPressed: _busy ? null : _save,
+                          onPressed: _busy || _text.text == _original ? null : _save,
                           child: Text(_busy ? l10n.configSaving : l10n.cronSave),
                         ),
                       ),

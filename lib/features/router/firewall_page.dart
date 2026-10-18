@@ -242,9 +242,9 @@ class _FirewallPageState extends ConsumerState<FirewallPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
                     if (sub.isNotEmpty)
-                      Text(sub, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                      Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
                   ],
                 ),
               ),
@@ -321,7 +321,7 @@ class _FirewallPageState extends ConsumerState<FirewallPage> {
           section: key,
           addType: _typeName(kind),
           fields: fields,
-          initial: v,
+          initial: v.containsKey('enabled') ? v : {...v, 'enabled': true},
           danger: danger,
           dangerBody: danger ? l10n.firewallZoneWarning : null,
         ),

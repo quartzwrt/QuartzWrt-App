@@ -267,9 +267,9 @@ class _MountsPageState extends ConsumerState<MountsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
                     if (sub.isNotEmpty)
-                      Text(sub, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                      Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
                   ],
                 ),
               ),
@@ -295,7 +295,7 @@ class _MountsPageState extends ConsumerState<MountsPage> {
       title: swap ? _s(v, 'device') : _s(v, 'target'),
       section: key,
       swap: swap,
-      initial: v,
+      initial: v.containsKey('enabled') ? v : {...v, 'enabled': true},
     );
     if (saved == true && mounted) _load();
   }

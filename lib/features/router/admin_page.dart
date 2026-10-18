@@ -69,7 +69,7 @@ class _AdminPageState extends ConsumerState<AdminPage> {
     }
     setState(() {
       _sshSection = section;
-      _ssh = values;
+      _ssh = values.containsKey('enable') ? values : {...values, 'enable': true};
       _hasSsh = r.map.isNotEmpty;
       _loading = false;
     });
