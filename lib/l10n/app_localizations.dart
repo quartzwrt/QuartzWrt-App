@@ -3349,6 +3349,12 @@ abstract class AppL10n {
   /// **'Saving…'**
   String get configSaving;
 
+  /// No description provided for @configSheetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm within 90 seconds after saving, otherwise changes auto-rollback.'**
+  String get configSheetHint;
+
   /// No description provided for @configUnset.
   ///
   /// In en, this message translates to:

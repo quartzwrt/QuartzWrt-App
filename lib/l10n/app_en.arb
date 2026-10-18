@@ -902,6 +902,7 @@
   "configNoChanges": "No changes to save.",
   "configDirtyChip": "Unsaved",
   "configSaving": "Saving…",
+  "configSheetHint": "Confirm within 90 seconds after saving, otherwise changes auto-rollback.",
   "configUnset": "Not set",
   "configChoose": "Choose",
   "configSensitiveHint": "Set; leave blank to keep",

@@ -1750,6 +1750,9 @@ class AppL10nZh extends AppL10n {
   String get configSaving => '保存中…';
 
   @override
+  String get configSheetHint => '保存后需在 90 秒内确认，否则改动会自动回滚。';
+
+  @override
   String get configUnset => '未设置';
 
   @override

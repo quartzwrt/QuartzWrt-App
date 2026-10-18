@@ -1814,6 +1814,10 @@ class AppL10nEn extends AppL10n {
   String get configSaving => 'Saving…';
 
   @override
+  String get configSheetHint =>
+      'Confirm within 90 seconds after saving, otherwise changes auto-rollback.';
+
+  @override
   String get configUnset => 'Not set';
 
   @override

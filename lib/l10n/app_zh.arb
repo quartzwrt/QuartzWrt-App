@@ -684,6 +684,7 @@
   "configNoChanges": "没有需要保存的更改。",
   "configDirtyChip": "未保存",
   "configSaving": "保存中…",
+  "configSheetHint": "保存后需在 90 秒内确认，否则改动会自动回滚。",
   "configUnset": "未设置",
   "configChoose": "选择",
   "configSensitiveHint": "已设置，留空表示不修改",

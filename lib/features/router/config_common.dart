@@ -985,7 +985,7 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
                     },
                   ),
                 const SizedBox(height: 6),
-                Text(l10n.firewallHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
+                Text(l10n.configSheetHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
               ],
             ),
           ),
