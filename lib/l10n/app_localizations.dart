@@ -2959,6 +2959,294 @@ abstract class AppL10n {
   /// **'disabled'**
   String get firewallDisabled;
 
+  /// No description provided for @routerGroupAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get routerGroupAdvanced;
+
+  /// No description provided for @routerEntryMounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount points'**
+  String get routerEntryMounts;
+
+  /// No description provided for @routerEntryMountsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Disks and swap'**
+  String get routerEntryMountsSub;
+
+  /// No description provided for @routerEntryCron.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled tasks'**
+  String get routerEntryCron;
+
+  /// No description provided for @routerEntryCronSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Run commands on a schedule'**
+  String get routerEntryCronSub;
+
+  /// No description provided for @routerEntryLed.
+  ///
+  /// In en, this message translates to:
+  /// **'LED configuration'**
+  String get routerEntryLed;
+
+  /// No description provided for @routerEntryLedSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Indicators and triggers'**
+  String get routerEntryLedSub;
+
+  /// No description provided for @mountsCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current mounts'**
+  String get mountsCurrent;
+
+  /// No description provided for @mountsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount configuration'**
+  String get mountsConfigured;
+
+  /// No description provided for @mountsSwaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap'**
+  String get mountsSwaps;
+
+  /// No description provided for @mountsGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Global mount options'**
+  String get mountsGlobal;
+
+  /// No description provided for @mountsAddMount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add mount'**
+  String get mountsAddMount;
+
+  /// No description provided for @mountsAddSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Add swap'**
+  String get mountsAddSwap;
+
+  /// No description provided for @mountsEmptyMounts.
+  ///
+  /// In en, this message translates to:
+  /// **'No mount configuration'**
+  String get mountsEmptyMounts;
+
+  /// No description provided for @mountsEmptySwaps.
+  ///
+  /// In en, this message translates to:
+  /// **'No swap'**
+  String get mountsEmptySwaps;
+
+  /// No description provided for @mountsEmptyCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'No mount points to show'**
+  String get mountsEmptyCurrent;
+
+  /// No description provided for @mountsDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get mountsDevice;
+
+  /// No description provided for @mountsTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount point'**
+  String get mountsTarget;
+
+  /// No description provided for @mountsFstype.
+  ///
+  /// In en, this message translates to:
+  /// **'Filesystem'**
+  String get mountsFstype;
+
+  /// No description provided for @mountsOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount options'**
+  String get mountsOptions;
+
+  /// No description provided for @mountsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get mountsEnabled;
+
+  /// No description provided for @mountsFsck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check on boot'**
+  String get mountsFsck;
+
+  /// No description provided for @mountsUuid.
+  ///
+  /// In en, this message translates to:
+  /// **'UUID'**
+  String get mountsUuid;
+
+  /// No description provided for @mountsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get mountsLabel;
+
+  /// No description provided for @mountsGlobalAnonSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-mount anonymous swap'**
+  String get mountsGlobalAnonSwap;
+
+  /// No description provided for @mountsGlobalAnonMount.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-mount anonymous disks'**
+  String get mountsGlobalAnonMount;
+
+  /// No description provided for @mountsGlobalAutoSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-mount swap'**
+  String get mountsGlobalAutoSwap;
+
+  /// No description provided for @mountsGlobalAutoMount.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-mount configured disks'**
+  String get mountsGlobalAutoMount;
+
+  /// No description provided for @mountsGlobalCheckFsck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check filesystems on boot'**
+  String get mountsGlobalCheckFsck;
+
+  /// No description provided for @mountsGlobalDelayRoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Root mount delay (s)'**
+  String get mountsGlobalDelayRoot;
+
+  /// No description provided for @mountsUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'used {used} / {total}'**
+  String mountsUsage(String used, String total);
+
+  /// No description provided for @mountsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mount/swap settings are written to fstab; they take effect on next boot or a manual fstab reload.'**
+  String get mountsHint;
+
+  /// No description provided for @mountsDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the configuration for \"{title}\"? Already-mounted filesystems are not unmounted.'**
+  String mountsDeleteBody(String title);
+
+  /// No description provided for @ledsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'LED configuration'**
+  String get ledsConfigured;
+
+  /// No description provided for @ledsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available LEDs'**
+  String get ledsAvailable;
+
+  /// No description provided for @ledsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add LED'**
+  String get ledsAdd;
+
+  /// No description provided for @ledsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No LED configuration'**
+  String get ledsEmpty;
+
+  /// No description provided for @ledsEmptyAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No LED devices available'**
+  String get ledsEmptyAvailable;
+
+  /// No description provided for @ledsName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get ledsName;
+
+  /// No description provided for @ledsSysfs.
+  ///
+  /// In en, this message translates to:
+  /// **'Device (sysfs)'**
+  String get ledsSysfs;
+
+  /// No description provided for @ledsTrigger.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger'**
+  String get ledsTrigger;
+
+  /// No description provided for @ledsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default on'**
+  String get ledsDefault;
+
+  /// No description provided for @ledsDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger device'**
+  String get ledsDev;
+
+  /// No description provided for @ledsInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval (ms)'**
+  String get ledsInterval;
+
+  /// No description provided for @ledsDelayOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On delay (ms)'**
+  String get ledsDelayOn;
+
+  /// No description provided for @ledsDelayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off delay (ms)'**
+  String get ledsDelayOff;
+
+  /// No description provided for @ledsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'sysfs and triggers come from the current device; apply and confirm after editing.'**
+  String get ledsHint;
+
+  /// No description provided for @ledsDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the LED configuration for \"{title}\"?'**
+  String ledsDeleteBody(String title);
+
   /// No description provided for @routerChipReady.
   ///
   /// In en, this message translates to:

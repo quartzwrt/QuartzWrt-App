@@ -315,7 +315,7 @@ class _FirewallPageState extends ConsumerState<FirewallPage> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => FractionallySizedBox(
         heightFactor: .92,
-        child: _SectionSheet(
+        child: ConfigSectionSheet(
           title: _summary(kind, key, v).$1,
           config: 'firewall',
           section: key,
@@ -339,7 +339,7 @@ class _FirewallPageState extends ConsumerState<FirewallPage> {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) => FractionallySizedBox(
         heightFactor: .92,
-        child: _SectionSheet(
+        child: ConfigSectionSheet(
           title: _addTitle(l10n, kind),
           config: 'firewall',
           section: null,
@@ -486,182 +486,4 @@ class _FirewallPageState extends ConsumerState<FirewallPage> {
         ConfigChoice('ipv4', l10n.firewallIpv4),
         ConfigChoice('ipv6', l10n.firewallIpv6),
       ]);
-}
-
-/// 编辑现有 section 或新增 section 的底部表单。
-class _SectionSheet extends ConsumerStatefulWidget {
-  const _SectionSheet({
-    required this.title,
-    required this.config,
-    required this.section,
-    required this.addType,
-    required this.fields,
-    required this.initial,
-    this.danger = false,
-    this.dangerBody,
-  });
-
-  final String title;
-  final String config;
-  final String? section; // null = 新增
-  final String addType;
-  final List<ConfigField> fields;
-  final Map<String, dynamic> initial;
-  final bool danger;
-  final String? dangerBody;
-
-  @override
-  ConsumerState<_SectionSheet> createState() => _SectionSheetState();
-}
-
-class _SectionSheetState extends ConsumerState<_SectionSheet> {
-  late ConfigDraft _draft;
-  final Map<String, TextEditingController> _controllers = {};
-  bool _busy = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _draft = ConfigDraft(
-      config: widget.config,
-      section: widget.section ?? '',
-      fields: widget.fields,
-      initial: widget.initial,
-    );
-    for (final f in widget.fields) {
-      if (!_textual(f.kind)) continue;
-      _controllers[f.option] = TextEditingController(text: configValueText(widget.initial[f.option]));
-    }
-  }
-
-  @override
-  void dispose() {
-    for (final c in _controllers.values) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  bool _textual(ConfigFieldKind k) =>
-      k == ConfigFieldKind.text ||
-      k == ConfigFieldKind.integer ||
-      k == ConfigFieldKind.list ||
-      k == ConfigFieldKind.secret;
-
-  bool get _dangerous => widget.danger || _draft.visibleFields.any((f) => f.dangerous && _draft.isDirty(f));
-
-  Future<void> _save() async {
-    final l10n = AppL10n.of(context);
-    if (_busy) return;
-    setState(() => _busy = true);
-    ApplyOutcome? outcome;
-    if (widget.section == null) {
-      final values = <String, dynamic>{};
-      for (final f in _draft.visibleFields) {
-        final v = _draft.rawValue(f);
-        if (v == null) continue;
-        if (v is String && v.trim().isEmpty) continue;
-        if (v is List && v.isEmpty) continue;
-        values[f.option] = v;
-      }
-      if (values.isEmpty) {
-        setState(() => _busy = false);
-        showConfigSnack(context, l10n.firewallAtLeastOne);
-        return;
-      }
-      outcome = await applyConfigMutation(
-        context,
-        ref,
-        config: widget.config,
-        danger: _dangerous,
-        dangerBody: widget.dangerBody,
-        mutate: (client) => client.add(widget.config, widget.addType, values),
-      );
-    } else {
-      final edits = _draft.edits();
-      if (edits.isEmpty) {
-        setState(() => _busy = false);
-        showConfigSnack(context, l10n.configNoChanges);
-        return;
-      }
-      outcome = await applyConfigEdits(
-        context,
-        ref,
-        edits: edits,
-        danger: _dangerous,
-        dangerBody: widget.dangerBody,
-      );
-    }
-    if (!mounted) return;
-    setState(() => _busy = false);
-    if (outcome != null) Navigator.of(context).pop(true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
-    final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    return Material(
-      color: theme.colorScheme.surface,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 12, 8, 4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(widget.title,
-                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                ),
-                IconButton(
-                  tooltip: l10n.cancel,
-                  onPressed: _busy ? null : () => Navigator.of(context).pop(false),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-          Divider(height: 1, color: theme.dividerColor),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-              children: [
-                for (final f in _draft.visibleFields)
-                  ConfigFieldTile(
-                    field: f,
-                    value: _draft.rawValue(f),
-                    controller: _controllers[f.option],
-                    enabled: !_busy,
-                    onChanged: (v) {
-                      if (_textual(f.kind) && v is String) {
-                        _draft.setText(f, v);
-                      } else {
-                        _draft.set(f, v);
-                      }
-                      setState(() {});
-                    },
-                  ),
-                const SizedBox(height: 6),
-                Text(l10n.firewallHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
-              ],
-            ),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _busy ? null : _save,
-                  child: Text(_busy ? l10n.configSaving : l10n.save),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

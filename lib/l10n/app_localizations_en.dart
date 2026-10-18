@@ -1600,6 +1600,158 @@ class AppL10nEn extends AppL10n {
   String get firewallDisabled => 'disabled';
 
   @override
+  String get routerGroupAdvanced => 'Advanced';
+
+  @override
+  String get routerEntryMounts => 'Mount points';
+
+  @override
+  String get routerEntryMountsSub => 'Disks and swap';
+
+  @override
+  String get routerEntryCron => 'Scheduled tasks';
+
+  @override
+  String get routerEntryCronSub => 'Run commands on a schedule';
+
+  @override
+  String get routerEntryLed => 'LED configuration';
+
+  @override
+  String get routerEntryLedSub => 'Indicators and triggers';
+
+  @override
+  String get mountsCurrent => 'Current mounts';
+
+  @override
+  String get mountsConfigured => 'Mount configuration';
+
+  @override
+  String get mountsSwaps => 'Swap';
+
+  @override
+  String get mountsGlobal => 'Global mount options';
+
+  @override
+  String get mountsAddMount => 'Add mount';
+
+  @override
+  String get mountsAddSwap => 'Add swap';
+
+  @override
+  String get mountsEmptyMounts => 'No mount configuration';
+
+  @override
+  String get mountsEmptySwaps => 'No swap';
+
+  @override
+  String get mountsEmptyCurrent => 'No mount points to show';
+
+  @override
+  String get mountsDevice => 'Device';
+
+  @override
+  String get mountsTarget => 'Mount point';
+
+  @override
+  String get mountsFstype => 'Filesystem';
+
+  @override
+  String get mountsOptions => 'Mount options';
+
+  @override
+  String get mountsEnabled => 'Enabled';
+
+  @override
+  String get mountsFsck => 'Check on boot';
+
+  @override
+  String get mountsUuid => 'UUID';
+
+  @override
+  String get mountsLabel => 'Label';
+
+  @override
+  String get mountsGlobalAnonSwap => 'Auto-mount anonymous swap';
+
+  @override
+  String get mountsGlobalAnonMount => 'Auto-mount anonymous disks';
+
+  @override
+  String get mountsGlobalAutoSwap => 'Auto-mount swap';
+
+  @override
+  String get mountsGlobalAutoMount => 'Auto-mount configured disks';
+
+  @override
+  String get mountsGlobalCheckFsck => 'Check filesystems on boot';
+
+  @override
+  String get mountsGlobalDelayRoot => 'Root mount delay (s)';
+
+  @override
+  String mountsUsage(String used, String total) {
+    return 'used $used / $total';
+  }
+
+  @override
+  String get mountsHint =>
+      'Mount/swap settings are written to fstab; they take effect on next boot or a manual fstab reload.';
+
+  @override
+  String mountsDeleteBody(String title) {
+    return 'Delete the configuration for \"$title\"? Already-mounted filesystems are not unmounted.';
+  }
+
+  @override
+  String get ledsConfigured => 'LED configuration';
+
+  @override
+  String get ledsAvailable => 'Available LEDs';
+
+  @override
+  String get ledsAdd => 'Add LED';
+
+  @override
+  String get ledsEmpty => 'No LED configuration';
+
+  @override
+  String get ledsEmptyAvailable => 'No LED devices available';
+
+  @override
+  String get ledsName => 'Name';
+
+  @override
+  String get ledsSysfs => 'Device (sysfs)';
+
+  @override
+  String get ledsTrigger => 'Trigger';
+
+  @override
+  String get ledsDefault => 'Default on';
+
+  @override
+  String get ledsDev => 'Trigger device';
+
+  @override
+  String get ledsInterval => 'Interval (ms)';
+
+  @override
+  String get ledsDelayOn => 'On delay (ms)';
+
+  @override
+  String get ledsDelayOff => 'Off delay (ms)';
+
+  @override
+  String get ledsHint =>
+      'sysfs and triggers come from the current device; apply and confirm after editing.';
+
+  @override
+  String ledsDeleteBody(String title) {
+    return 'Delete the LED configuration for \"$title\"?';
+  }
+
+  @override
   String get routerChipReady => 'Ready';
 
   @override

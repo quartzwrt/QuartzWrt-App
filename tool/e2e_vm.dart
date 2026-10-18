@@ -236,6 +236,28 @@ Future<void> main(List<String> args) async {
   check('luci.set_password 负例：空密码被拒（${badPw.error?.code}）',
       badPw.error?.code == 'bad_request');
 
+  // ---- W6.11 挂载 / LED（fstab 注册表 + luci.mounts/leds 条目）----
+  final fs = await c.call('config.read', {'access_token': tok, 'config': 'fstab'});
+  final fsVal = fs.data['value'];
+  final fsMap = fsVal is Map<String, dynamic> ? fsVal : const <String, dynamic>{};
+  check('config.read fstab（${fsMap.length} 节，global=${fsMap.keys.any((k) => k.contains('global'))}）',
+      fs.ok && fsMap.keys.any((k) => k.contains('global')));
+
+  final mp = await c.action(accessToken: tok, action: 'luci.mounts');
+  final mpResult = mp.data['result'];
+  final mpData = mpResult is Map ? mpResult['data'] : null;
+  final mpList = mpData is Map ? mpData['result'] : null;
+  check('luci.mounts（${mpList is List ? mpList.length : '-'} 个挂载点）',
+      mp.ok && mpList is List && mpList.isNotEmpty);
+
+  final leds = await c.action(accessToken: tok, action: 'luci.leds');
+  final ledResult = leds.data['result'];
+  final ledData = ledResult is Map ? ledResult['data'] : null;
+  final ledInner = ledData is Map ? ledData['result'] : null;
+  final ledMap = ledInner is Map ? ledInner : ledData;
+  check('luci.leds（${ledMap is Map ? ledMap.length : '-'} 个 LED）',
+      leds.ok && ledMap is Map && ledMap.isNotEmpty);
+
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);
 

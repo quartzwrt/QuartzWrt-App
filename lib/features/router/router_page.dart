@@ -109,6 +109,23 @@ class RouterPage extends ConsumerWidget {
                 ),
               ]),
             ),
+            SectionLabel(l10n.routerGroupAdvanced),
+            QuartzCard(
+              child: _entryGroup(context, [
+                _Entry(
+                  icon: Icons.storage_outlined,
+                  title: l10n.routerEntryMounts,
+                  subtitle: l10n.routerEntryMountsSub,
+                  route: '/router/mounts',
+                ),
+                _Entry(
+                  icon: Icons.lightbulb_outline,
+                  title: l10n.routerEntryLed,
+                  subtitle: l10n.routerEntryLedSub,
+                  route: '/router/led',
+                ),
+              ]),
+            ),
             SectionLabel(l10n.routerGroupLan),
             QuartzCard(
               child: _entryGroup(context, [

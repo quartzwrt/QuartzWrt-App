@@ -1543,6 +1543,156 @@ class AppL10nZh extends AppL10n {
   String get firewallDisabled => '已禁用';
 
   @override
+  String get routerGroupAdvanced => '高级';
+
+  @override
+  String get routerEntryMounts => '挂载点';
+
+  @override
+  String get routerEntryMountsSub => '磁盘与交换分区';
+
+  @override
+  String get routerEntryCron => '计划任务';
+
+  @override
+  String get routerEntryCronSub => '定时执行命令';
+
+  @override
+  String get routerEntryLed => 'LED 配置';
+
+  @override
+  String get routerEntryLedSub => '指示灯与触发器';
+
+  @override
+  String get mountsCurrent => '当前挂载';
+
+  @override
+  String get mountsConfigured => '挂载配置';
+
+  @override
+  String get mountsSwaps => '交换分区';
+
+  @override
+  String get mountsGlobal => '挂载全局选项';
+
+  @override
+  String get mountsAddMount => '新增挂载';
+
+  @override
+  String get mountsAddSwap => '新增交换分区';
+
+  @override
+  String get mountsEmptyMounts => '暂无挂载配置';
+
+  @override
+  String get mountsEmptySwaps => '暂无交换分区';
+
+  @override
+  String get mountsEmptyCurrent => '没有可显示的挂载点';
+
+  @override
+  String get mountsDevice => '设备';
+
+  @override
+  String get mountsTarget => '挂载点';
+
+  @override
+  String get mountsFstype => '文件系统';
+
+  @override
+  String get mountsOptions => '挂载选项';
+
+  @override
+  String get mountsEnabled => '启用';
+
+  @override
+  String get mountsFsck => '启动时检查';
+
+  @override
+  String get mountsUuid => 'UUID';
+
+  @override
+  String get mountsLabel => '卷标';
+
+  @override
+  String get mountsGlobalAnonSwap => '自动挂载匿名交换分区';
+
+  @override
+  String get mountsGlobalAnonMount => '自动挂载匿名分区';
+
+  @override
+  String get mountsGlobalAutoSwap => '自动挂载交换分区';
+
+  @override
+  String get mountsGlobalAutoMount => '自动挂载已配置分区';
+
+  @override
+  String get mountsGlobalCheckFsck => '启动时检查文件系统';
+
+  @override
+  String get mountsGlobalDelayRoot => '根挂载延迟（秒）';
+
+  @override
+  String mountsUsage(String used, String total) {
+    return '已用 $used / $total';
+  }
+
+  @override
+  String get mountsHint => '挂载/交换配置写入 fstab；修改后由 fstab 服务在下次启动或手动重载时生效。';
+
+  @override
+  String mountsDeleteBody(String title) {
+    return '删除「$title」的配置吗？不会立即卸载已挂载的文件系统。';
+  }
+
+  @override
+  String get ledsConfigured => 'LED 配置';
+
+  @override
+  String get ledsAvailable => '可用 LED';
+
+  @override
+  String get ledsAdd => '新增 LED';
+
+  @override
+  String get ledsEmpty => '暂无 LED 配置';
+
+  @override
+  String get ledsEmptyAvailable => '没有可用的 LED 设备';
+
+  @override
+  String get ledsName => '名称';
+
+  @override
+  String get ledsSysfs => '设备（sysfs）';
+
+  @override
+  String get ledsTrigger => '触发器';
+
+  @override
+  String get ledsDefault => '默认点亮';
+
+  @override
+  String get ledsDev => '触发设备';
+
+  @override
+  String get ledsInterval => '间隔（ms）';
+
+  @override
+  String get ledsDelayOn => '点亮延迟（ms）';
+
+  @override
+  String get ledsDelayOff => '熄灭延迟（ms）';
+
+  @override
+  String get ledsHint => 'sysfs 与触发器来自当前设备；修改后应用并确认。';
+
+  @override
+  String ledsDeleteBody(String title) {
+    return '删除 LED「$title」的配置吗？';
+  }
+
+  @override
   String get routerChipReady => '可用';
 
   @override

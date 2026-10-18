@@ -45,6 +45,15 @@ class LuciClient {
   /// 管理权·改密（危险动作；App 侧二次确认）。上游返回 `{result: true|false}`。
   Future<LuciResult> setPassword(String username, String password) =>
       _call('luci.set_password', {'username': username, 'password': password});
+
+  /// 当前挂载点（/proc/mounts + statvfs）。
+  Future<LuciResult> mounts() => _call('luci.mounts');
+
+  /// 块设备（block info + /proc/swaps）。
+  Future<LuciResult> blockDevices() => _call('luci.block_devices');
+
+  /// 物理 LED / 触发器（sysfs）。
+  Future<LuciResult> leds() => _call('luci.leds');
 }
 
 final luciClientProvider = Provider<LuciClient?>((ref) {
