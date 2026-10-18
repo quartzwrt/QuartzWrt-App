@@ -1,4 +1,6 @@
-# 交接说明（2026-10-19 第二轮；路由器 tab W6.9/W6.10 已落地）
+# 交接说明（2026-10-19 第三轮；路由器 tab W6.9–W6.11 已落地）
+
+> **2026-10-19 W6.11 收尾**：管理权（root 密码 + dropbear SSH）、防火墙（defaults/zone/forwarding/rule/redirect）、挂载（fstab）、LED（system @led）、计划任务（cron）五页已实现；Packages app-api r13、App v0.5.2 build 12；真机 e2e **32/32 ALL PASS**。剩余：App UI 真机/模拟器走查、W6.7 真机验收、Tailscale 真 tailnet 复核；镜像仍未重编（用户明确暂不需要）。
 
 **读者**：接手 WP-6 后续工作的新对话。
 **先读**：`/home/nrxboat/WORKPLAN.md`（§1 快照 / §2 状态表 / §4 文件所有权）→
@@ -17,7 +19,7 @@
 | QuartzWrt-ThirdParty | `9924cba` | qmodem `lang` 适配（**fork `quartz` 分支仍待推送**；推送前勿单独 `sync-mirrors.sh qmodem`） |
 | QuartzWrt-Builder | `52d1227` | TDD §5 模式 A/B 实践判据 |
 
-四仓工作树干净（本轮提交后），`git push` 等用户指令。App 版本 **v0.5.0（构建 10）**。
+四仓工作树干净（本轮提交后），`git push` 等用户指令。App 版本 **v0.5.2（构建 12）**；Packages app-api **r13**。
 
 **本轮完成的能力**：
 - **路由器 tab**：`/router`（旧 `/network` 深链重定向）；分组入口页（已实现页「可用」/未实现「待后续版本」chip）。
@@ -30,16 +32,16 @@
 
 ## 2. 下一步任务
 
-### 2.1 W6.11：路由器 tab 剩余页面（按优先级）
+### 2.1 W6.11：路由器 tab 剩余页面（**已全部落地，2026-10-19**）
 
-| # | 项 | 需要补的后端 |
+| # | 项 | 状态 / 实现 |
 | :-- | :--- | :--- |
-| 1 | 防火墙（zone/forward/rule/redirect） | `uciconf` 注册表扩 `firewall`；规则子表需 `config.add/delete` |
-| 2 | 静态路由（route/rule） | 注册表扩 `network.route`/`network.rule` + `config.add/delete` |
-| 3 | 静态租约（dhcp host） | `config.add/delete`（机制同 write；声明允许的 section 类型 + 字段） |
-| 4 | 管理权（改密/SSH） | `luci.setPassword`（危险动作，需二次确认 + 审计）；SSH 字段走 `dropbear` 配置注册表 |
-| 5 | 计划任务/挂载/LED | 注册表按节扩展；计划任务可能需要 `cron` 文件动作（非 UCI） |
-| 6 | 时区/时间的系统级生效 | 目前写 `system.timezone/zonename` + apply；如真机发现时间未刷新，再补 `luci.setLocaltime`（已核实方法存在） |
+| 1 | 防火墙（zone/forward/rule/redirect） | **✅** `/router/firewall`；`firewall` 注册表（defaults/zone/forwarding/rule/redirect）+ `config.add/delete`；kPorts 校验 |
+| 2 | 静态路由（route/rule） | **✅** `/router/routes`（上一轮） |
+| 3 | 静态租约（dhcp host） | **✅** DHCP·DNS 页内（上一轮） |
+| 4 | 管理权（改密/SSH） | **✅** `/router/admin`；`luci.set_password`（root-only/kindPassword）+ `dropbear` 注册表；保存后可重启 SSH |
+| 5 | 计划任务/挂载/LED | **✅** `/router/cron`（`cron.read/write` 固定 `/etc/crontabs/root` + `cron reload`）、`/router/mounts`（fstab + luci.mounts）、`/router/led`（`system @led` + luci.leds） |
+| 6 | 时区/时间的系统级生效 | **✅** 上一轮；真机时间正常 |
 
 字段清单提取方法见 `docs/IA-V2-DISCUSSION.md` §14（从 LuCI 定义提取；**按节完整注册**，不要散点键白名单）。
 
