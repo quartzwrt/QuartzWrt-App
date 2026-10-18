@@ -1,6 +1,6 @@
 // 应用入口与路由（go_router；DESIGN §2.2 / UI-DESIGN 定案 IA）。
 //
-// 四 tab 用 StatefulShellRoute.indexedStack：切 tab 保留各页滚动位置与状态
+// 4–5 tab（蜂窝条件显示）用 StatefulShellRoute.indexedStack：切 tab 保留各页滚动位置与状态
 // （W6.6 性能/体验打磨）；详情页走轻量上滑淡入过渡。
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
