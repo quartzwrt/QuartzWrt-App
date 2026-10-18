@@ -13,7 +13,7 @@
 | 仓库 | 提交 | 内容 |
 | :--- | :--- | :--- |
 | QuartzWrt-Packages | `ed95016` → **`3b5b2a6`** | 蜂窝 `cellular` + app-api `qmodem.*` + 配置面 `config.*`（r8）；本轮：**`config.rollback`（r9）+ `luci.init_list/init_action/timezones` 转发条目** + DESIGN/验收脚本 |
-| QuartzWrt-App | `ea8a097` → **`cc25739`** | 蜂窝 tab + **路由器 tab W6.9/W6.10**（首页/系统/启动项/接口/无线/DHCP·DNS）+ 配置面客户端/确认条 + 96 项测试 |
+| QuartzWrt-App | `ea8a097` → **`b84e0c5`**（功能提交；文档修正随后） | 蜂窝 tab + **路由器 tab W6.9/W6.10**（首页/系统/启动项/接口/无线/DHCP·DNS）+ 配置面客户端/确认条 + 96 项测试 |
 | QuartzWrt-ThirdParty | `9924cba` | qmodem `lang` 适配（**fork `quartz` 分支仍待推送**；推送前勿单独 `sync-mirrors.sh qmodem`） |
 | QuartzWrt-Builder | `52d1227` | TDD §5 模式 A/B 实践判据 |
 
