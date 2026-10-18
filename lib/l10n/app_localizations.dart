@@ -2431,6 +2431,192 @@ abstract class AppL10n {
   /// **'Password and SSH'**
   String get routerEntryAdminSub;
 
+  /// No description provided for @adminPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Root password'**
+  String get adminPasswordTitle;
+
+  /// No description provided for @adminPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After changing, SSH and web login use the new password immediately; the current App session is unaffected.'**
+  String get adminPasswordHint;
+
+  /// No description provided for @adminNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get adminNewPassword;
+
+  /// No description provided for @adminConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get adminConfirmPassword;
+
+  /// No description provided for @adminChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get adminChangePassword;
+
+  /// No description provided for @adminPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get adminPasswordTooShort;
+
+  /// No description provided for @adminPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The two passwords do not match'**
+  String get adminPasswordMismatch;
+
+  /// No description provided for @adminPasswordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password updated'**
+  String get adminPasswordChanged;
+
+  /// No description provided for @adminPasswordFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Password update failed'**
+  String get adminPasswordFailed;
+
+  /// No description provided for @adminPasswordWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Change the root password? Verify SSH/web login with the new password immediately; a forgotten password requires a reset or reflash.'**
+  String get adminPasswordWarning;
+
+  /// No description provided for @adminShowPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get adminShowPassword;
+
+  /// No description provided for @adminHidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get adminHidePassword;
+
+  /// No description provided for @adminSshTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH access'**
+  String get adminSshTitle;
+
+  /// No description provided for @adminSshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'dropbear settings; restart the SSH service after saving.'**
+  String get adminSshHint;
+
+  /// No description provided for @adminSshEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable SSH'**
+  String get adminSshEnable;
+
+  /// No description provided for @adminSshEnableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabling makes SSH unavailable (web/App still work).'**
+  String get adminSshEnableHint;
+
+  /// No description provided for @adminSshInterface.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen interface'**
+  String get adminSshInterface;
+
+  /// No description provided for @adminSshInterfaceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty = all interfaces; e.g. lan'**
+  String get adminSshInterfaceHint;
+
+  /// No description provided for @adminSshPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get adminSshPort;
+
+  /// No description provided for @adminPasswordAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Password authentication'**
+  String get adminPasswordAuth;
+
+  /// No description provided for @adminRootPasswordAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow root password login'**
+  String get adminRootPasswordAuth;
+
+  /// No description provided for @adminGatewayPorts.
+  ///
+  /// In en, this message translates to:
+  /// **'GatewayPorts'**
+  String get adminGatewayPorts;
+
+  /// No description provided for @adminOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get adminOn;
+
+  /// No description provided for @adminOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get adminOff;
+
+  /// No description provided for @adminSshService.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH service'**
+  String get adminSshService;
+
+  /// No description provided for @adminSshRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart SSH service'**
+  String get adminSshRestart;
+
+  /// No description provided for @adminSshRestartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart after changing the port/authentication; current SSH sessions drop, the App is unaffected.'**
+  String get adminSshRestartHint;
+
+  /// No description provided for @adminSshRestartWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Restarting dropbear disconnects current SSH sessions. Verify the port/password settings first or you may lock yourself out of SSH.'**
+  String get adminSshRestartWarning;
+
+  /// No description provided for @adminSshRestarted.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH service restarted'**
+  String get adminSshRestarted;
+
+  /// No description provided for @adminSshUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No dropbear configuration found (SSH not installed).'**
+  String get adminSshUnavailable;
+
+  /// No description provided for @adminNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A forgotten root password requires a factory reset or reflash; keep a working SSH key or backup login method.'**
+  String get adminNote;
+
   /// No description provided for @routerEntryInit.
   ///
   /// In en, this message translates to:

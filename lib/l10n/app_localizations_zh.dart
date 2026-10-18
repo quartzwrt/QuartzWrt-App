@@ -1273,6 +1273,101 @@ class AppL10nZh extends AppL10n {
   String get routerEntryAdminSub => '密码与 SSH';
 
   @override
+  String get adminPasswordTitle => 'root 密码';
+
+  @override
+  String get adminPasswordHint => '修改后 SSH 与网页登录立即使用新密码；当前 App 登录不受影响。';
+
+  @override
+  String get adminNewPassword => '新密码';
+
+  @override
+  String get adminConfirmPassword => '确认新密码';
+
+  @override
+  String get adminChangePassword => '修改密码';
+
+  @override
+  String get adminPasswordTooShort => '密码至少 6 位';
+
+  @override
+  String get adminPasswordMismatch => '两次输入的密码不一致';
+
+  @override
+  String get adminPasswordChanged => '密码已更新';
+
+  @override
+  String get adminPasswordFailed => '密码更新失败';
+
+  @override
+  String get adminPasswordWarning =>
+      '确定修改 root 密码吗？修改后请立即用新密码确认 SSH/网页登录；忘记密码需要重新刷机或恢复。';
+
+  @override
+  String get adminShowPassword => '显示密码';
+
+  @override
+  String get adminHidePassword => '隐藏密码';
+
+  @override
+  String get adminSshTitle => 'SSH 访问';
+
+  @override
+  String get adminSshHint => 'dropbear 配置；保存后需重启 SSH 服务才生效。';
+
+  @override
+  String get adminSshEnable => '启用 SSH';
+
+  @override
+  String get adminSshEnableHint => '关闭后 SSH 将不可用（网页/App 仍可用）。';
+
+  @override
+  String get adminSshInterface => '监听接口';
+
+  @override
+  String get adminSshInterfaceHint => '留空表示所有接口；例如 lan';
+
+  @override
+  String get adminSshPort => '端口';
+
+  @override
+  String get adminPasswordAuth => '密码认证';
+
+  @override
+  String get adminRootPasswordAuth => '允许 root 密码登录';
+
+  @override
+  String get adminGatewayPorts => 'GatewayPorts';
+
+  @override
+  String get adminOn => '开启';
+
+  @override
+  String get adminOff => '关闭';
+
+  @override
+  String get adminSshService => 'SSH 服务';
+
+  @override
+  String get adminSshRestart => '重启 SSH 服务';
+
+  @override
+  String get adminSshRestartHint => '修改端口/认证方式后重启；当前 SSH 会话会断开，App 不受影响。';
+
+  @override
+  String get adminSshRestartWarning =>
+      '重启 dropbear 会断开当前 SSH 会话；请确认端口/密码设置正确，否则可能无法再通过 SSH 登录。';
+
+  @override
+  String get adminSshRestarted => 'SSH 服务已重启';
+
+  @override
+  String get adminSshUnavailable => '未检测到 dropbear 配置（SSH 未安装）。';
+
+  @override
+  String get adminNote => '忘记 root 密码需要恢复出厂或重新刷机；建议同时保留一个可用的 SSH 密钥或备用登录方式。';
+
+  @override
   String get routerEntryInit => '启动项';
 
   @override

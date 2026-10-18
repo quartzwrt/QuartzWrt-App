@@ -22,6 +22,7 @@ import 'features/cellular/cellular_sms_page.dart';
 import 'features/discover/discover_page.dart';
 import 'features/network/clients_page.dart';
 import 'features/overview/overview_page.dart';
+import 'features/router/admin_page.dart';
 import 'features/router/dhcp_page.dart';
 import 'features/router/init_page.dart';
 import 'features/router/interfaces_page.dart';
@@ -108,6 +109,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/router/dhcp', pageBuilder: (_, s) => _fadeUpPage(s, const DhcpPage())),
       GoRoute(path: '/router/routes', pageBuilder: (_, s) => _fadeUpPage(s, const RoutesPage())),
       GoRoute(path: '/router/system', pageBuilder: (_, s) => _fadeUpPage(s, const SystemPage())),
+      GoRoute(path: '/router/admin', pageBuilder: (_, s) => _fadeUpPage(s, const AdminPage())),
       GoRoute(path: '/router/init', pageBuilder: (_, s) => _fadeUpPage(s, const InitPage())),
       GoRoute(
         path: '/apps/detail/:id',

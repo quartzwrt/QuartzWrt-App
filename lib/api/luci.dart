@@ -41,6 +41,10 @@ class LuciClient {
       _call('luci.init_action', {'name': name, 'action': action});
 
   Future<LuciResult> timezones() => _call('luci.timezones');
+
+  /// 管理权·改密（危险动作；App 侧二次确认）。上游返回 `{result: true|false}`。
+  Future<LuciResult> setPassword(String username, String password) =>
+      _call('luci.set_password', {'username': username, 'password': password});
 }
 
 final luciClientProvider = Provider<LuciClient?>((ref) {

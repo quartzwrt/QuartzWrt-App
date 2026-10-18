@@ -1322,6 +1322,107 @@ class AppL10nEn extends AppL10n {
   String get routerEntryAdminSub => 'Password and SSH';
 
   @override
+  String get adminPasswordTitle => 'Root password';
+
+  @override
+  String get adminPasswordHint =>
+      'After changing, SSH and web login use the new password immediately; the current App session is unaffected.';
+
+  @override
+  String get adminNewPassword => 'New password';
+
+  @override
+  String get adminConfirmPassword => 'Confirm new password';
+
+  @override
+  String get adminChangePassword => 'Change password';
+
+  @override
+  String get adminPasswordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get adminPasswordMismatch => 'The two passwords do not match';
+
+  @override
+  String get adminPasswordChanged => 'Password updated';
+
+  @override
+  String get adminPasswordFailed => 'Password update failed';
+
+  @override
+  String get adminPasswordWarning =>
+      'Change the root password? Verify SSH/web login with the new password immediately; a forgotten password requires a reset or reflash.';
+
+  @override
+  String get adminShowPassword => 'Show password';
+
+  @override
+  String get adminHidePassword => 'Hide password';
+
+  @override
+  String get adminSshTitle => 'SSH access';
+
+  @override
+  String get adminSshHint =>
+      'dropbear settings; restart the SSH service after saving.';
+
+  @override
+  String get adminSshEnable => 'Enable SSH';
+
+  @override
+  String get adminSshEnableHint =>
+      'Disabling makes SSH unavailable (web/App still work).';
+
+  @override
+  String get adminSshInterface => 'Listen interface';
+
+  @override
+  String get adminSshInterfaceHint => 'Empty = all interfaces; e.g. lan';
+
+  @override
+  String get adminSshPort => 'Port';
+
+  @override
+  String get adminPasswordAuth => 'Password authentication';
+
+  @override
+  String get adminRootPasswordAuth => 'Allow root password login';
+
+  @override
+  String get adminGatewayPorts => 'GatewayPorts';
+
+  @override
+  String get adminOn => 'On';
+
+  @override
+  String get adminOff => 'Off';
+
+  @override
+  String get adminSshService => 'SSH service';
+
+  @override
+  String get adminSshRestart => 'Restart SSH service';
+
+  @override
+  String get adminSshRestartHint =>
+      'Restart after changing the port/authentication; current SSH sessions drop, the App is unaffected.';
+
+  @override
+  String get adminSshRestartWarning =>
+      'Restarting dropbear disconnects current SSH sessions. Verify the port/password settings first or you may lock yourself out of SSH.';
+
+  @override
+  String get adminSshRestarted => 'SSH service restarted';
+
+  @override
+  String get adminSshUnavailable =>
+      'No dropbear configuration found (SSH not installed).';
+
+  @override
+  String get adminNote =>
+      'A forgotten root password requires a factory reset or reflash; keep a working SSH key or backup login method.';
+
+  @override
   String get routerEntryInit => 'Startup';
 
   @override

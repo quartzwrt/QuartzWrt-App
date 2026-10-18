@@ -98,6 +98,7 @@ class RouterPage extends ConsumerWidget {
                   icon: Icons.admin_panel_settings_outlined,
                   title: l10n.routerEntryAdmin,
                   subtitle: l10n.routerEntryAdminSub,
+                  route: '/router/admin',
                 ),
                 _Entry(
                   icon: Icons.play_circle_outline,
