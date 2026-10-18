@@ -26,6 +26,7 @@ import 'features/router/dhcp_page.dart';
 import 'features/router/init_page.dart';
 import 'features/router/interfaces_page.dart';
 import 'features/router/router_page.dart';
+import 'features/router/routes_page.dart';
 import 'features/router/system_page.dart';
 import 'features/router/wireless_page.dart';
 import 'features/settings/devices_page.dart';
@@ -105,6 +106,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/router/interfaces', pageBuilder: (_, s) => _fadeUpPage(s, const InterfacesPage())),
       GoRoute(path: '/router/wireless', pageBuilder: (_, s) => _fadeUpPage(s, const WirelessPage())),
       GoRoute(path: '/router/dhcp', pageBuilder: (_, s) => _fadeUpPage(s, const DhcpPage())),
+      GoRoute(path: '/router/routes', pageBuilder: (_, s) => _fadeUpPage(s, const RoutesPage())),
       GoRoute(path: '/router/system', pageBuilder: (_, s) => _fadeUpPage(s, const SystemPage())),
       GoRoute(path: '/router/init', pageBuilder: (_, s) => _fadeUpPage(s, const InitPage())),
       GoRoute(

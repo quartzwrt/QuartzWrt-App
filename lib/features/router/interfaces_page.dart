@@ -58,7 +58,11 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
   }
 
   List<String> get _ordered {
-    final keys = _sections.keys.toList();
+    // network 配置现在还注册了 route/rule 节；接口页只显示接口节（lan/wan/带 proto）。
+    final keys = _sections.keys.where((k) {
+      final v = _sections[k]!;
+      return k == 'lan' || k == 'wan' || v.containsKey('proto');
+    }).toList();
     keys.sort((a, b) {
       int rank(String k) => k == 'lan' ? 0 : (k == 'wan' ? 1 : 2);
       final d = rank(a) - rank(b);

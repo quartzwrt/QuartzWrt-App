@@ -1681,4 +1681,63 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get dhcpLeaseInvalidMac => 'MAC 地址格式无效';
+
+  @override
+  String get routesStatic => '静态路由';
+
+  @override
+  String get routesRules => '路由规则';
+
+  @override
+  String get routesAddRoute => '添加静态路由';
+
+  @override
+  String get routesAddRule => '添加路由规则';
+
+  @override
+  String get routesTarget => '目标网络';
+
+  @override
+  String get routesNetmask => '子网掩码';
+
+  @override
+  String get routesGateway => '网关';
+
+  @override
+  String get routesInterface => '接口';
+
+  @override
+  String get routesMetric => '跃点';
+
+  @override
+  String get routesRuleIn => '入接口';
+
+  @override
+  String get routesRuleSrc => '源地址';
+
+  @override
+  String get routesRuleDest => '目标地址';
+
+  @override
+  String get routesRuleLookup => '路由表';
+
+  @override
+  String get routesRulePriority => '优先级';
+
+  @override
+  String get routesNone => '暂无条目';
+
+  @override
+  String get routesDelete => '删除条目';
+
+  @override
+  String get routesDeleteBody => '删除后立即生效；90 秒内可在确认条中回滚。';
+
+  @override
+  String get routesHint => '静态路由/规则修改后会立即应用；若改错，可在 90 秒确认条中回滚。';
+
+  @override
+  String routesRequiredField(String field) {
+    return '$field 不能为空';
+  }
 }

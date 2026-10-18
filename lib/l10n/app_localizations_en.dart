@@ -1743,4 +1743,65 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get dhcpLeaseInvalidMac => 'Invalid MAC address';
+
+  @override
+  String get routesStatic => 'Static routes';
+
+  @override
+  String get routesRules => 'Routing rules';
+
+  @override
+  String get routesAddRoute => 'Add static route';
+
+  @override
+  String get routesAddRule => 'Add routing rule';
+
+  @override
+  String get routesTarget => 'Target network';
+
+  @override
+  String get routesNetmask => 'Netmask';
+
+  @override
+  String get routesGateway => 'Gateway';
+
+  @override
+  String get routesInterface => 'Interface';
+
+  @override
+  String get routesMetric => 'Metric';
+
+  @override
+  String get routesRuleIn => 'In interface';
+
+  @override
+  String get routesRuleSrc => 'Source';
+
+  @override
+  String get routesRuleDest => 'Destination';
+
+  @override
+  String get routesRuleLookup => 'Table';
+
+  @override
+  String get routesRulePriority => 'Priority';
+
+  @override
+  String get routesNone => 'No entries';
+
+  @override
+  String get routesDelete => 'Delete entry';
+
+  @override
+  String get routesDeleteBody =>
+      'Takes effect immediately; you can roll back from the 90s confirmation bar.';
+
+  @override
+  String get routesHint =>
+      'Static routes/rules apply immediately; use the 90s confirmation bar to roll back.';
+
+  @override
+  String routesRequiredField(String field) {
+    return '$field is required';
+  }
 }

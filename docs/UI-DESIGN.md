@@ -128,3 +128,4 @@
 *v0.4 2026-10-13 —— 用户评审「应用 tab = 软件包管理 + 应用控制，希望预览具体化」：新增 §5 应用 tab 细化（双子段；WP-5 `packages` 扩展项）；预览重绘 ⑤/⑤b，⑪ 增「软件包」卡。*
 *v1.0 2026-10-13 —— **用户确认（可以）**：§5 并入定案（双子段结构、安装浏览 v1 后置、**新增「操作记录」页**〔⑫：升级/卸载/刷新结果 + 失败原因，近 30 条，`packages` 读方法 `scope=history`〕）；WP-5 扩展项**正式登记**（读方法 `packages` + 动作 `packages.refresh/upgrade/remove`）。预览十二屏定稿。*
 *v1.5 2026-10-19 —— **FNet3399 真机复验**：App e2e 24/24（真实 5G 模组 + `qmodem.at_cfg lang=en`）；修复 AT 页 `{at_cfg:{cmds}}` 顶层读取 bug（兼容旧形态）；构建号 7。Dashboard 侧同轮由 WP-3 修 Docker/蜂窝卡（见其 DESIGN v1.6）。*
+*v1.6 2026-10-19 —— **W6.11 首切片**：DHCP 页静态租约（config.add/delete + host 注册表）与独立静态路由页（route/rule，增删 + apply/confirm）；App build 10；路由器首页「静态路由」入口由「待后续版本」转为可用。*

@@ -71,6 +71,7 @@ class RouterPage extends ConsumerWidget {
                   icon: Icons.alt_route_outlined,
                   title: l10n.routerEntryRoutes,
                   subtitle: l10n.routerEntryRoutesSub,
+                  route: '/router/routes',
                 ),
               ]),
             ),

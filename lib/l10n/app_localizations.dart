@@ -3222,6 +3222,120 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Invalid MAC address'**
   String get dhcpLeaseInvalidMac;
+
+  /// No description provided for @routesStatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Static routes'**
+  String get routesStatic;
+
+  /// No description provided for @routesRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Routing rules'**
+  String get routesRules;
+
+  /// No description provided for @routesAddRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Add static route'**
+  String get routesAddRoute;
+
+  /// No description provided for @routesAddRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add routing rule'**
+  String get routesAddRule;
+
+  /// No description provided for @routesTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target network'**
+  String get routesTarget;
+
+  /// No description provided for @routesNetmask.
+  ///
+  /// In en, this message translates to:
+  /// **'Netmask'**
+  String get routesNetmask;
+
+  /// No description provided for @routesGateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway'**
+  String get routesGateway;
+
+  /// No description provided for @routesInterface.
+  ///
+  /// In en, this message translates to:
+  /// **'Interface'**
+  String get routesInterface;
+
+  /// No description provided for @routesMetric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get routesMetric;
+
+  /// No description provided for @routesRuleIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In interface'**
+  String get routesRuleIn;
+
+  /// No description provided for @routesRuleSrc.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get routesRuleSrc;
+
+  /// No description provided for @routesRuleDest.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get routesRuleDest;
+
+  /// No description provided for @routesRuleLookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get routesRuleLookup;
+
+  /// No description provided for @routesRulePriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get routesRulePriority;
+
+  /// No description provided for @routesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No entries'**
+  String get routesNone;
+
+  /// No description provided for @routesDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete entry'**
+  String get routesDelete;
+
+  /// No description provided for @routesDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes effect immediately; you can roll back from the 90s confirmation bar.'**
+  String get routesDeleteBody;
+
+  /// No description provided for @routesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Static routes/rules apply immediately; use the 90s confirmation bar to roll back.'**
+  String get routesHint;
+
+  /// No description provided for @routesRequiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} is required'**
+  String routesRequiredField(String field);
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {
