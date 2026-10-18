@@ -133,6 +133,46 @@ Future<void> main(List<String> args) async {
   final unknown = await c.action(accessToken: tok, action: 'bandix.installUpdate');
   check('bandix 负例：未注册动作被拒（${unknown.error?.code}）', unknown.error?.code == 'forbidden_action');
 
+  // ---- 路由器 tab（W6.10；配置面 + luci 启动项/时区；只读 + 负例）----
+  final sysCfg = await c.call('config.read', {'access_token': tok, 'config': 'system'});
+  final sysVal = sysCfg.data['value'];
+  final sysMap = sysVal is Map<String, dynamic> ? sysVal : const <String, dynamic>{};
+  String sysSection = '';
+  Map<String, dynamic> sysValues = const {};
+  for (final e in sysMap.entries) {
+    if (e.key.contains('system') && e.value is Map<String, dynamic>) {
+      sysSection = e.key;
+      sysValues = e.value as Map<String, dynamic>;
+      break;
+    }
+  }
+  check(
+    'config.read system（${sysSection.isEmpty ? '-' : sysSection} hostname=${sysValues['hostname'] ?? '-'}）',
+    sysCfg.ok && sysSection.isNotEmpty && sysValues['hostname'] is String,
+  );
+
+  final initList = await c.action(accessToken: tok, action: 'luci.init_list');
+  final initData = initList.data['result'];
+  final initInner = initData is Map ? initData['data'] : null;
+  final initMap = initInner is Map ? initInner : const {};
+  check('luci.init_list（${initMap.length} 个启动项，含 cron/uhttpd）',
+      initList.ok && initMap.containsKey('cron') && initMap.containsKey('uhttpd'));
+
+  final tz = await c.action(accessToken: tok, action: 'luci.timezones');
+  final tzData = tz.data['result'];
+  final tzInner = tzData is Map ? tzData['data'] : null;
+  final tzMap = tzInner is Map ? tzInner : const {};
+  check('luci.timezones（${tzMap.length} 个时区，含 Asia/Shanghai）',
+      tz.ok && tzMap.containsKey('Asia/Shanghai'));
+
+  final badInit = await c.action(
+    accessToken: tok,
+    action: 'luci.init_action',
+    args: {'name': '../etc/passwd', 'action': 'start'},
+  );
+  check('luci.init_action 负例：路径注入被拒（${badInit.error?.code}）',
+      badInit.error?.code == 'bad_request');
+
   final lo = await c.logout(deviceId: out.router.deviceId, refreshToken: out.tokens.refreshToken);
   check('cleanup logout', lo.ok);
 

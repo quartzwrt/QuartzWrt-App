@@ -691,5 +691,196 @@
         "type": "String"
       }
     }
-  }
+  },
+  "routerGroupNetwork": "Network",
+  "routerGroupSecurity": "Security",
+  "routerGroupSystem": "System",
+  "routerGroupLan": "LAN",
+  "routerEntryInterfaces": "Interfaces",
+  "routerEntryInterfacesSub": "Manage LAN/WAN interfaces and protocols",
+  "routerEntryWireless": "Wireless",
+  "routerEntryWirelessSub": "Radios and SSID settings",
+  "routerEntryDhcp": "DHCP & DNS",
+  "routerEntryDhcpSub": "Address pool, leases and dnsmasq",
+  "routerEntryRoutes": "Static routes",
+  "routerEntryRoutesSub": "Routes and rules",
+  "routerEntryFirewall": "Firewall",
+  "routerEntryFirewallSub": "Zones, rules and port forwarding",
+  "routerEntrySystem": "System",
+  "routerEntrySystemSub": "Hostname, time and logs",
+  "routerEntryAdmin": "Administration",
+  "routerEntryAdminSub": "Password and SSH",
+  "routerEntryInit": "Startup",
+  "routerEntryInitSub": "Boot services and control",
+  "routerEntryClientsSub": "{n} online",
+  "@routerEntryClientsSub": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "routerChipReady": "Ready",
+  "routerChipSoon": "Coming soon",
+  "routerMoreHint": "More router settings are coming in a later version.",
+  "configSessionUnavailable": "Configuration session unavailable. Sign in to the router again to enable configuration.",
+  "configForbidden": "This setting is not exposed.",
+  "configBadValue": "Invalid value: {detail}",
+  "@configBadValue": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "configApplyFailed": "Apply failed: {detail}",
+  "@configApplyFailed": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "configWebPending": "The web UI has unconfirmed changes. Confirm or roll them back there first.",
+  "configNoChanges": "No changes to save.",
+  "configDirtyChip": "Unsaved",
+  "configSaving": "Saving…",
+  "configUnset": "Not set",
+  "configChoose": "Choose",
+  "configSensitiveHint": "Set; leave blank to keep",
+  "configSaved": "Saved and confirmed.",
+  "configRollbackDone": "Rolled back.",
+  "configAutoRolledBack": "Not confirmed; rolled back automatically.",
+  "configDangerTitle": "Confirm changes",
+  "configDangerBody": "This change may interrupt this device's connection to the router; unconfirmed changes roll back after 90 seconds.",
+  "configApplyTitle": "Confirm changes",
+  "configApplyCountdown": "Auto rollback in {sec}s",
+  "@configApplyCountdown": {
+    "placeholders": {
+      "sec": {
+        "type": "int"
+      }
+    }
+  },
+  "configApplyBody": "If you changed IP or wireless settings, this device may disconnect; the router will roll back automatically when the countdown ends.",
+  "configRollbackNow": "Roll back now",
+  "configKeepChanges": "Keep changes",
+  "configLoadFailedTitle": "Failed to load configuration",
+  "configSectionUnavailable": "This configuration section is unavailable.",
+  "systemGeneral": "General",
+  "systemHostname": "Hostname",
+  "systemDescription": "Description",
+  "systemTimezone": "Time zone",
+  "systemTimezoneHint": "Times are interpreted by the router using the selected zone.",
+  "systemTimezonePicker": "Choose time zone",
+  "systemTimezoneSearch": "Search time zones",
+  "systemLogging": "Logging",
+  "systemLogSize": "Log size (KB)",
+  "systemLogProto": "Log protocol",
+  "systemLogIp": "Remote log server",
+  "systemLogIpHint": "Leave blank to disable remote logging",
+  "systemLogPort": "Remote log port",
+  "systemAdvanced": "Advanced",
+  "systemConsoleLogLevel": "Console log level",
+  "systemCronLogLevel": "Cron log level",
+  "systemTtyLogin": "Serial console login",
+  "initSearch": "Search services",
+  "initEmpty": "No startup services found.",
+  "initIndex": "Start order {n}",
+  "@initIndex": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "initStopIndex": "Stop order {n}",
+  "@initStopIndex": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "initEnabled": "Enabled",
+  "initDisabled": "Disabled",
+  "initEnable": "Enable",
+  "initDisable": "Disable",
+  "initStart": "Start",
+  "initStop": "Stop",
+  "initRestart": "Restart",
+  "initActionDone": "{action} done: {name}",
+  "@initActionDone": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "initToggleWarning": "If disabled, this service will not start automatically on next boot.",
+  "initStopWarning": "Stopping or restarting this service may interrupt router functions or this device's connection.",
+  "interfaceProto": "Protocol",
+  "interfaceDevice": "Device",
+  "interfaceDisabled": "Disable",
+  "interfaceAuto": "Enable on boot",
+  "interfaceIpaddr": "IP address",
+  "interfaceNetmask": "Netmask",
+  "interfaceGateway": "Gateway",
+  "interfaceDns": "DNS servers",
+  "interfaceDnsHint": "Separate multiple addresses with spaces",
+  "interfaceIp6addr": "IPv6 address",
+  "interfaceIp6Hint": "May be left blank",
+  "interfaceIp6assign": "IPv6 prefix size",
+  "interfaceUsername": "PPPoE username",
+  "interfacePassword": "PPPoE password",
+  "interfaceStatic": "Static address",
+  "interfaceDhcpClient": "DHCP client",
+  "interfaceNone": "None",
+  "interfacePppoe": "PPPoE",
+  "wirelessEmpty": "No wireless radios detected (or wireless is disabled).",
+  "wirelessIface": "Wireless interface",
+  "wirelessDevice": "Radio",
+  "wirelessMode": "Mode",
+  "wirelessEncryption": "Encryption",
+  "wirelessBand": "Band",
+  "wirelessChannel": "Channel",
+  "wirelessSsid": "SSID",
+  "wirelessKey": "Password",
+  "wirelessNetwork": "Network",
+  "wirelessHidden": "Hide SSID",
+  "wirelessIsolate": "Client isolation",
+  "wirelessWmm": "WMM",
+  "wirelessHtmode": "HT mode",
+  "wirelessTxpower": "TX power (dBm)",
+  "wirelessCountry": "Country code",
+  "wirelessCellDensity": "Cell density",
+  "wirelessDistance": "Distance (m)",
+  "dhcpEmpty": "No DHCP configuration found.",
+  "dhcpDnsmasq": "DNS & DHCP (dnsmasq)",
+  "dhcpServer": "DHCP server",
+  "dhcpServerHint": "Address pool and leases",
+  "dhcpDomain": "Domain",
+  "dhcpLocal": "Local domain",
+  "dhcpDomainNeeded": "Domain required",
+  "dhcpBogusPriv": "Filter private domains",
+  "dhcpAuthoritative": "Authoritative",
+  "dhcpLocalService": "Local service only",
+  "dhcpRebindProtection": "Rebind protection",
+  "dhcpExpandHosts": "Expand hosts",
+  "dhcpCacheSize": "Cache size",
+  "dhcpLogQueries": "Log queries",
+  "dhcpStart": "Start address (last octet)",
+  "dhcpLimit": "Pool size",
+  "dhcpLeasetime": "Lease time",
+  "dhcpIgnore": "Disable DHCP",
+  "dhcpDynamicDhcp": "Dynamic DHCP",
+  "dhcpForce": "Force",
+  "dhcpRa": "IPv6 RA",
+  "dhcpRaManagement": "RA management",
+  "dhcpDhcpv6": "DHCPv6",
+  "dhcpMaster": "Master",
+  "dhcpDnsService": "Advertise DNS"
 }

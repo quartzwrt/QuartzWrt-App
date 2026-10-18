@@ -1217,4 +1217,435 @@ class AppL10nZh extends AppL10n {
   String cellularDisabledFeatures(String list) {
     return '本模组禁用特性：$list';
   }
+
+  @override
+  String get routerGroupNetwork => '网络';
+
+  @override
+  String get routerGroupSecurity => '安全';
+
+  @override
+  String get routerGroupSystem => '系统';
+
+  @override
+  String get routerGroupLan => '局域网';
+
+  @override
+  String get routerEntryInterfaces => '接口';
+
+  @override
+  String get routerEntryInterfacesSub => '管理 LAN/WAN 接口与协议';
+
+  @override
+  String get routerEntryWireless => '无线';
+
+  @override
+  String get routerEntryWirelessSub => '无线电与 SSID 配置';
+
+  @override
+  String get routerEntryDhcp => 'DHCP 与 DNS';
+
+  @override
+  String get routerEntryDhcpSub => '地址池、租期与 dnsmasq';
+
+  @override
+  String get routerEntryRoutes => '静态路由';
+
+  @override
+  String get routerEntryRoutesSub => '路由与规则';
+
+  @override
+  String get routerEntryFirewall => '防火墙';
+
+  @override
+  String get routerEntryFirewallSub => '区域、规则与端口转发';
+
+  @override
+  String get routerEntrySystem => '系统';
+
+  @override
+  String get routerEntrySystemSub => '主机名、时间与日志';
+
+  @override
+  String get routerEntryAdmin => '管理权';
+
+  @override
+  String get routerEntryAdminSub => '密码与 SSH';
+
+  @override
+  String get routerEntryInit => '启动项';
+
+  @override
+  String get routerEntryInitSub => '开机自启与服务控制';
+
+  @override
+  String routerEntryClientsSub(int n) {
+    return '$n 台在线';
+  }
+
+  @override
+  String get routerChipReady => '可用';
+
+  @override
+  String get routerChipSoon => '待后续版本';
+
+  @override
+  String get routerMoreHint => '更多路由器设置将在后续版本提供。';
+
+  @override
+  String get configSessionUnavailable => '配置会话不可用，请重新登录路由器以启用配置功能。';
+
+  @override
+  String get configForbidden => '该配置项未开放。';
+
+  @override
+  String configBadValue(String detail) {
+    return '值不合法：$detail';
+  }
+
+  @override
+  String configApplyFailed(String detail) {
+    return '应用失败：$detail';
+  }
+
+  @override
+  String get configWebPending => '网页端有未确认的更改，请先在网页端确认或回滚。';
+
+  @override
+  String get configNoChanges => '没有需要保存的更改。';
+
+  @override
+  String get configDirtyChip => '未保存';
+
+  @override
+  String get configSaving => '保存中…';
+
+  @override
+  String get configUnset => '未设置';
+
+  @override
+  String get configChoose => '选择';
+
+  @override
+  String get configSensitiveHint => '已设置，留空表示不修改';
+
+  @override
+  String get configSaved => '已保存并确认。';
+
+  @override
+  String get configRollbackDone => '已回滚。';
+
+  @override
+  String get configAutoRolledBack => '未确认，已自动回滚。';
+
+  @override
+  String get configDangerTitle => '确认更改';
+
+  @override
+  String get configDangerBody => '该更改可能中断本机与路由器的连接；未确认会在 90 秒后自动回滚。';
+
+  @override
+  String get configApplyTitle => '确认应用更改';
+
+  @override
+  String configApplyCountdown(int sec) {
+    return '$sec 秒后自动回滚';
+  }
+
+  @override
+  String get configApplyBody => '若修改了 IP 或无线设置，本机连接可能断开；路由器会在倒计时结束时自动回滚。';
+
+  @override
+  String get configRollbackNow => '立即回滚';
+
+  @override
+  String get configKeepChanges => '保留更改';
+
+  @override
+  String get configLoadFailedTitle => '读取配置失败';
+
+  @override
+  String get configSectionUnavailable => '该配置节不可用。';
+
+  @override
+  String get systemGeneral => '常规';
+
+  @override
+  String get systemHostname => '主机名';
+
+  @override
+  String get systemDescription => '描述';
+
+  @override
+  String get systemTimezone => '时区';
+
+  @override
+  String get systemTimezoneHint => '时间由路由器按所选时区解释。';
+
+  @override
+  String get systemTimezonePicker => '选择时区';
+
+  @override
+  String get systemTimezoneSearch => '搜索时区';
+
+  @override
+  String get systemLogging => '日志';
+
+  @override
+  String get systemLogSize => '日志大小（KB）';
+
+  @override
+  String get systemLogProto => '日志协议';
+
+  @override
+  String get systemLogIp => '远程日志地址';
+
+  @override
+  String get systemLogIpHint => '留空表示不发送远程日志';
+
+  @override
+  String get systemLogPort => '远程日志端口';
+
+  @override
+  String get systemAdvanced => '高级';
+
+  @override
+  String get systemConsoleLogLevel => '控制台日志级别';
+
+  @override
+  String get systemCronLogLevel => '计划任务日志级别';
+
+  @override
+  String get systemTtyLogin => '串口终端登录';
+
+  @override
+  String get initSearch => '搜索服务';
+
+  @override
+  String get initEmpty => '未找到启动项。';
+
+  @override
+  String initIndex(int n) {
+    return '启动顺序 $n';
+  }
+
+  @override
+  String initStopIndex(int n) {
+    return '停止顺序 $n';
+  }
+
+  @override
+  String get initEnabled => '已启用';
+
+  @override
+  String get initDisabled => '已禁用';
+
+  @override
+  String get initEnable => '启用';
+
+  @override
+  String get initDisable => '禁用';
+
+  @override
+  String get initStart => '启动';
+
+  @override
+  String get initStop => '停止';
+
+  @override
+  String get initRestart => '重启';
+
+  @override
+  String initActionDone(String action, String name) {
+    return '已执行$action：$name';
+  }
+
+  @override
+  String get initToggleWarning => '禁用该服务后，下次开机将不会自动启动。';
+
+  @override
+  String get initStopWarning => '停止或重启该服务可能中断路由器功能或本机连接。';
+
+  @override
+  String get interfaceProto => '协议';
+
+  @override
+  String get interfaceDevice => '设备';
+
+  @override
+  String get interfaceDisabled => '禁用';
+
+  @override
+  String get interfaceAuto => '开机自动启用';
+
+  @override
+  String get interfaceIpaddr => 'IP 地址';
+
+  @override
+  String get interfaceNetmask => '子网掩码';
+
+  @override
+  String get interfaceGateway => '网关';
+
+  @override
+  String get interfaceDns => 'DNS 服务器';
+
+  @override
+  String get interfaceDnsHint => '多个地址用空格分隔';
+
+  @override
+  String get interfaceIp6addr => 'IPv6 地址';
+
+  @override
+  String get interfaceIp6Hint => '可留空';
+
+  @override
+  String get interfaceIp6assign => 'IPv6 前缀长度';
+
+  @override
+  String get interfaceUsername => 'PPPoE 用户名';
+
+  @override
+  String get interfacePassword => 'PPPoE 密码';
+
+  @override
+  String get interfaceStatic => '静态地址';
+
+  @override
+  String get interfaceDhcpClient => 'DHCP 客户端';
+
+  @override
+  String get interfaceNone => '无';
+
+  @override
+  String get interfacePppoe => 'PPPoE';
+
+  @override
+  String get wirelessEmpty => '未检测到无线设备（或无线未启用）。';
+
+  @override
+  String get wirelessIface => '无线接口';
+
+  @override
+  String get wirelessDevice => '无线电';
+
+  @override
+  String get wirelessMode => '模式';
+
+  @override
+  String get wirelessEncryption => '加密';
+
+  @override
+  String get wirelessBand => '频段';
+
+  @override
+  String get wirelessChannel => '信道';
+
+  @override
+  String get wirelessSsid => 'SSID';
+
+  @override
+  String get wirelessKey => '密码';
+
+  @override
+  String get wirelessNetwork => '绑定网络';
+
+  @override
+  String get wirelessHidden => '隐藏 SSID';
+
+  @override
+  String get wirelessIsolate => '客户端隔离';
+
+  @override
+  String get wirelessWmm => 'WMM';
+
+  @override
+  String get wirelessHtmode => '频宽模式';
+
+  @override
+  String get wirelessTxpower => '发射功率（dBm）';
+
+  @override
+  String get wirelessCountry => '国家代码';
+
+  @override
+  String get wirelessCellDensity => '小区密度';
+
+  @override
+  String get wirelessDistance => '距离（米）';
+
+  @override
+  String get dhcpEmpty => '未检测到 DHCP 配置。';
+
+  @override
+  String get dhcpDnsmasq => 'DNS 与 DHCP（dnsmasq）';
+
+  @override
+  String get dhcpServer => 'DHCP 服务器';
+
+  @override
+  String get dhcpServerHint => '地址池与租期';
+
+  @override
+  String get dhcpDomain => '域名';
+
+  @override
+  String get dhcpLocal => '本地域';
+
+  @override
+  String get dhcpDomainNeeded => '强制本地域名';
+
+  @override
+  String get dhcpBogusPriv => '过滤私有域';
+
+  @override
+  String get dhcpAuthoritative => '权威模式';
+
+  @override
+  String get dhcpLocalService => '仅本地服务';
+
+  @override
+  String get dhcpRebindProtection => '重绑定保护';
+
+  @override
+  String get dhcpExpandHosts => '展开主机名';
+
+  @override
+  String get dhcpCacheSize => '缓存大小';
+
+  @override
+  String get dhcpLogQueries => '记录查询';
+
+  @override
+  String get dhcpStart => '起始地址（末段）';
+
+  @override
+  String get dhcpLimit => '地址池大小';
+
+  @override
+  String get dhcpLeasetime => '租期';
+
+  @override
+  String get dhcpIgnore => '禁用 DHCP';
+
+  @override
+  String get dhcpDynamicDhcp => '动态 DHCP';
+
+  @override
+  String get dhcpForce => '强制';
+
+  @override
+  String get dhcpRa => 'IPv6 RA';
+
+  @override
+  String get dhcpRaManagement => 'RA 管理级别';
+
+  @override
+  String get dhcpDhcpv6 => 'DHCPv6';
+
+  @override
+  String get dhcpMaster => '主服务器';
+
+  @override
+  String get dhcpDnsService => '通告 DNS';
 }

@@ -1265,4 +1265,447 @@ class AppL10nEn extends AppL10n {
   String cellularDisabledFeatures(String list) {
     return 'Disabled features: $list';
   }
+
+  @override
+  String get routerGroupNetwork => 'Network';
+
+  @override
+  String get routerGroupSecurity => 'Security';
+
+  @override
+  String get routerGroupSystem => 'System';
+
+  @override
+  String get routerGroupLan => 'LAN';
+
+  @override
+  String get routerEntryInterfaces => 'Interfaces';
+
+  @override
+  String get routerEntryInterfacesSub =>
+      'Manage LAN/WAN interfaces and protocols';
+
+  @override
+  String get routerEntryWireless => 'Wireless';
+
+  @override
+  String get routerEntryWirelessSub => 'Radios and SSID settings';
+
+  @override
+  String get routerEntryDhcp => 'DHCP & DNS';
+
+  @override
+  String get routerEntryDhcpSub => 'Address pool, leases and dnsmasq';
+
+  @override
+  String get routerEntryRoutes => 'Static routes';
+
+  @override
+  String get routerEntryRoutesSub => 'Routes and rules';
+
+  @override
+  String get routerEntryFirewall => 'Firewall';
+
+  @override
+  String get routerEntryFirewallSub => 'Zones, rules and port forwarding';
+
+  @override
+  String get routerEntrySystem => 'System';
+
+  @override
+  String get routerEntrySystemSub => 'Hostname, time and logs';
+
+  @override
+  String get routerEntryAdmin => 'Administration';
+
+  @override
+  String get routerEntryAdminSub => 'Password and SSH';
+
+  @override
+  String get routerEntryInit => 'Startup';
+
+  @override
+  String get routerEntryInitSub => 'Boot services and control';
+
+  @override
+  String routerEntryClientsSub(int n) {
+    return '$n online';
+  }
+
+  @override
+  String get routerChipReady => 'Ready';
+
+  @override
+  String get routerChipSoon => 'Coming soon';
+
+  @override
+  String get routerMoreHint =>
+      'More router settings are coming in a later version.';
+
+  @override
+  String get configSessionUnavailable =>
+      'Configuration session unavailable. Sign in to the router again to enable configuration.';
+
+  @override
+  String get configForbidden => 'This setting is not exposed.';
+
+  @override
+  String configBadValue(String detail) {
+    return 'Invalid value: $detail';
+  }
+
+  @override
+  String configApplyFailed(String detail) {
+    return 'Apply failed: $detail';
+  }
+
+  @override
+  String get configWebPending =>
+      'The web UI has unconfirmed changes. Confirm or roll them back there first.';
+
+  @override
+  String get configNoChanges => 'No changes to save.';
+
+  @override
+  String get configDirtyChip => 'Unsaved';
+
+  @override
+  String get configSaving => 'Saving…';
+
+  @override
+  String get configUnset => 'Not set';
+
+  @override
+  String get configChoose => 'Choose';
+
+  @override
+  String get configSensitiveHint => 'Set; leave blank to keep';
+
+  @override
+  String get configSaved => 'Saved and confirmed.';
+
+  @override
+  String get configRollbackDone => 'Rolled back.';
+
+  @override
+  String get configAutoRolledBack =>
+      'Not confirmed; rolled back automatically.';
+
+  @override
+  String get configDangerTitle => 'Confirm changes';
+
+  @override
+  String get configDangerBody =>
+      'This change may interrupt this device\'s connection to the router; unconfirmed changes roll back after 90 seconds.';
+
+  @override
+  String get configApplyTitle => 'Confirm changes';
+
+  @override
+  String configApplyCountdown(int sec) {
+    return 'Auto rollback in ${sec}s';
+  }
+
+  @override
+  String get configApplyBody =>
+      'If you changed IP or wireless settings, this device may disconnect; the router will roll back automatically when the countdown ends.';
+
+  @override
+  String get configRollbackNow => 'Roll back now';
+
+  @override
+  String get configKeepChanges => 'Keep changes';
+
+  @override
+  String get configLoadFailedTitle => 'Failed to load configuration';
+
+  @override
+  String get configSectionUnavailable =>
+      'This configuration section is unavailable.';
+
+  @override
+  String get systemGeneral => 'General';
+
+  @override
+  String get systemHostname => 'Hostname';
+
+  @override
+  String get systemDescription => 'Description';
+
+  @override
+  String get systemTimezone => 'Time zone';
+
+  @override
+  String get systemTimezoneHint =>
+      'Times are interpreted by the router using the selected zone.';
+
+  @override
+  String get systemTimezonePicker => 'Choose time zone';
+
+  @override
+  String get systemTimezoneSearch => 'Search time zones';
+
+  @override
+  String get systemLogging => 'Logging';
+
+  @override
+  String get systemLogSize => 'Log size (KB)';
+
+  @override
+  String get systemLogProto => 'Log protocol';
+
+  @override
+  String get systemLogIp => 'Remote log server';
+
+  @override
+  String get systemLogIpHint => 'Leave blank to disable remote logging';
+
+  @override
+  String get systemLogPort => 'Remote log port';
+
+  @override
+  String get systemAdvanced => 'Advanced';
+
+  @override
+  String get systemConsoleLogLevel => 'Console log level';
+
+  @override
+  String get systemCronLogLevel => 'Cron log level';
+
+  @override
+  String get systemTtyLogin => 'Serial console login';
+
+  @override
+  String get initSearch => 'Search services';
+
+  @override
+  String get initEmpty => 'No startup services found.';
+
+  @override
+  String initIndex(int n) {
+    return 'Start order $n';
+  }
+
+  @override
+  String initStopIndex(int n) {
+    return 'Stop order $n';
+  }
+
+  @override
+  String get initEnabled => 'Enabled';
+
+  @override
+  String get initDisabled => 'Disabled';
+
+  @override
+  String get initEnable => 'Enable';
+
+  @override
+  String get initDisable => 'Disable';
+
+  @override
+  String get initStart => 'Start';
+
+  @override
+  String get initStop => 'Stop';
+
+  @override
+  String get initRestart => 'Restart';
+
+  @override
+  String initActionDone(String action, String name) {
+    return '$action done: $name';
+  }
+
+  @override
+  String get initToggleWarning =>
+      'If disabled, this service will not start automatically on next boot.';
+
+  @override
+  String get initStopWarning =>
+      'Stopping or restarting this service may interrupt router functions or this device\'s connection.';
+
+  @override
+  String get interfaceProto => 'Protocol';
+
+  @override
+  String get interfaceDevice => 'Device';
+
+  @override
+  String get interfaceDisabled => 'Disable';
+
+  @override
+  String get interfaceAuto => 'Enable on boot';
+
+  @override
+  String get interfaceIpaddr => 'IP address';
+
+  @override
+  String get interfaceNetmask => 'Netmask';
+
+  @override
+  String get interfaceGateway => 'Gateway';
+
+  @override
+  String get interfaceDns => 'DNS servers';
+
+  @override
+  String get interfaceDnsHint => 'Separate multiple addresses with spaces';
+
+  @override
+  String get interfaceIp6addr => 'IPv6 address';
+
+  @override
+  String get interfaceIp6Hint => 'May be left blank';
+
+  @override
+  String get interfaceIp6assign => 'IPv6 prefix size';
+
+  @override
+  String get interfaceUsername => 'PPPoE username';
+
+  @override
+  String get interfacePassword => 'PPPoE password';
+
+  @override
+  String get interfaceStatic => 'Static address';
+
+  @override
+  String get interfaceDhcpClient => 'DHCP client';
+
+  @override
+  String get interfaceNone => 'None';
+
+  @override
+  String get interfacePppoe => 'PPPoE';
+
+  @override
+  String get wirelessEmpty =>
+      'No wireless radios detected (or wireless is disabled).';
+
+  @override
+  String get wirelessIface => 'Wireless interface';
+
+  @override
+  String get wirelessDevice => 'Radio';
+
+  @override
+  String get wirelessMode => 'Mode';
+
+  @override
+  String get wirelessEncryption => 'Encryption';
+
+  @override
+  String get wirelessBand => 'Band';
+
+  @override
+  String get wirelessChannel => 'Channel';
+
+  @override
+  String get wirelessSsid => 'SSID';
+
+  @override
+  String get wirelessKey => 'Password';
+
+  @override
+  String get wirelessNetwork => 'Network';
+
+  @override
+  String get wirelessHidden => 'Hide SSID';
+
+  @override
+  String get wirelessIsolate => 'Client isolation';
+
+  @override
+  String get wirelessWmm => 'WMM';
+
+  @override
+  String get wirelessHtmode => 'HT mode';
+
+  @override
+  String get wirelessTxpower => 'TX power (dBm)';
+
+  @override
+  String get wirelessCountry => 'Country code';
+
+  @override
+  String get wirelessCellDensity => 'Cell density';
+
+  @override
+  String get wirelessDistance => 'Distance (m)';
+
+  @override
+  String get dhcpEmpty => 'No DHCP configuration found.';
+
+  @override
+  String get dhcpDnsmasq => 'DNS & DHCP (dnsmasq)';
+
+  @override
+  String get dhcpServer => 'DHCP server';
+
+  @override
+  String get dhcpServerHint => 'Address pool and leases';
+
+  @override
+  String get dhcpDomain => 'Domain';
+
+  @override
+  String get dhcpLocal => 'Local domain';
+
+  @override
+  String get dhcpDomainNeeded => 'Domain required';
+
+  @override
+  String get dhcpBogusPriv => 'Filter private domains';
+
+  @override
+  String get dhcpAuthoritative => 'Authoritative';
+
+  @override
+  String get dhcpLocalService => 'Local service only';
+
+  @override
+  String get dhcpRebindProtection => 'Rebind protection';
+
+  @override
+  String get dhcpExpandHosts => 'Expand hosts';
+
+  @override
+  String get dhcpCacheSize => 'Cache size';
+
+  @override
+  String get dhcpLogQueries => 'Log queries';
+
+  @override
+  String get dhcpStart => 'Start address (last octet)';
+
+  @override
+  String get dhcpLimit => 'Pool size';
+
+  @override
+  String get dhcpLeasetime => 'Lease time';
+
+  @override
+  String get dhcpIgnore => 'Disable DHCP';
+
+  @override
+  String get dhcpDynamicDhcp => 'Dynamic DHCP';
+
+  @override
+  String get dhcpForce => 'Force';
+
+  @override
+  String get dhcpRa => 'IPv6 RA';
+
+  @override
+  String get dhcpRaManagement => 'RA management';
+
+  @override
+  String get dhcpDhcpv6 => 'DHCPv6';
+
+  @override
+  String get dhcpMaster => 'Master';
+
+  @override
+  String get dhcpDnsService => 'Advertise DNS';
 }

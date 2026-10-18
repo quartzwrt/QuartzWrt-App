@@ -2322,6 +2322,840 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Disabled features: {list}'**
   String cellularDisabledFeatures(String list);
+
+  /// No description provided for @routerGroupNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get routerGroupNetwork;
+
+  /// No description provided for @routerGroupSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get routerGroupSecurity;
+
+  /// No description provided for @routerGroupSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get routerGroupSystem;
+
+  /// No description provided for @routerGroupLan.
+  ///
+  /// In en, this message translates to:
+  /// **'LAN'**
+  String get routerGroupLan;
+
+  /// No description provided for @routerEntryInterfaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Interfaces'**
+  String get routerEntryInterfaces;
+
+  /// No description provided for @routerEntryInterfacesSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage LAN/WAN interfaces and protocols'**
+  String get routerEntryInterfacesSub;
+
+  /// No description provided for @routerEntryWireless.
+  ///
+  /// In en, this message translates to:
+  /// **'Wireless'**
+  String get routerEntryWireless;
+
+  /// No description provided for @routerEntryWirelessSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Radios and SSID settings'**
+  String get routerEntryWirelessSub;
+
+  /// No description provided for @routerEntryDhcp.
+  ///
+  /// In en, this message translates to:
+  /// **'DHCP & DNS'**
+  String get routerEntryDhcp;
+
+  /// No description provided for @routerEntryDhcpSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Address pool, leases and dnsmasq'**
+  String get routerEntryDhcpSub;
+
+  /// No description provided for @routerEntryRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Static routes'**
+  String get routerEntryRoutes;
+
+  /// No description provided for @routerEntryRoutesSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Routes and rules'**
+  String get routerEntryRoutesSub;
+
+  /// No description provided for @routerEntryFirewall.
+  ///
+  /// In en, this message translates to:
+  /// **'Firewall'**
+  String get routerEntryFirewall;
+
+  /// No description provided for @routerEntryFirewallSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Zones, rules and port forwarding'**
+  String get routerEntryFirewallSub;
+
+  /// No description provided for @routerEntrySystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get routerEntrySystem;
+
+  /// No description provided for @routerEntrySystemSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname, time and logs'**
+  String get routerEntrySystemSub;
+
+  /// No description provided for @routerEntryAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Administration'**
+  String get routerEntryAdmin;
+
+  /// No description provided for @routerEntryAdminSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Password and SSH'**
+  String get routerEntryAdminSub;
+
+  /// No description provided for @routerEntryInit.
+  ///
+  /// In en, this message translates to:
+  /// **'Startup'**
+  String get routerEntryInit;
+
+  /// No description provided for @routerEntryInitSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Boot services and control'**
+  String get routerEntryInitSub;
+
+  /// No description provided for @routerEntryClientsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} online'**
+  String routerEntryClientsSub(int n);
+
+  /// No description provided for @routerChipReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get routerChipReady;
+
+  /// No description provided for @routerChipSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get routerChipSoon;
+
+  /// No description provided for @routerMoreHint.
+  ///
+  /// In en, this message translates to:
+  /// **'More router settings are coming in a later version.'**
+  String get routerMoreHint;
+
+  /// No description provided for @configSessionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration session unavailable. Sign in to the router again to enable configuration.'**
+  String get configSessionUnavailable;
+
+  /// No description provided for @configForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'This setting is not exposed.'**
+  String get configForbidden;
+
+  /// No description provided for @configBadValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value: {detail}'**
+  String configBadValue(String detail);
+
+  /// No description provided for @configApplyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply failed: {detail}'**
+  String configApplyFailed(String detail);
+
+  /// No description provided for @configWebPending.
+  ///
+  /// In en, this message translates to:
+  /// **'The web UI has unconfirmed changes. Confirm or roll them back there first.'**
+  String get configWebPending;
+
+  /// No description provided for @configNoChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes to save.'**
+  String get configNoChanges;
+
+  /// No description provided for @configDirtyChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved'**
+  String get configDirtyChip;
+
+  /// No description provided for @configSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get configSaving;
+
+  /// No description provided for @configUnset.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get configUnset;
+
+  /// No description provided for @configChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get configChoose;
+
+  /// No description provided for @configSensitiveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Set; leave blank to keep'**
+  String get configSensitiveHint;
+
+  /// No description provided for @configSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved and confirmed.'**
+  String get configSaved;
+
+  /// No description provided for @configRollbackDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Rolled back.'**
+  String get configRollbackDone;
+
+  /// No description provided for @configAutoRolledBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed; rolled back automatically.'**
+  String get configAutoRolledBack;
+
+  /// No description provided for @configDangerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm changes'**
+  String get configDangerTitle;
+
+  /// No description provided for @configDangerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This change may interrupt this device\'s connection to the router; unconfirmed changes roll back after 90 seconds.'**
+  String get configDangerBody;
+
+  /// No description provided for @configApplyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm changes'**
+  String get configApplyTitle;
+
+  /// No description provided for @configApplyCountdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto rollback in {sec}s'**
+  String configApplyCountdown(int sec);
+
+  /// No description provided for @configApplyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If you changed IP or wireless settings, this device may disconnect; the router will roll back automatically when the countdown ends.'**
+  String get configApplyBody;
+
+  /// No description provided for @configRollbackNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Roll back now'**
+  String get configRollbackNow;
+
+  /// No description provided for @configKeepChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep changes'**
+  String get configKeepChanges;
+
+  /// No description provided for @configLoadFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load configuration'**
+  String get configLoadFailedTitle;
+
+  /// No description provided for @configSectionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This configuration section is unavailable.'**
+  String get configSectionUnavailable;
+
+  /// No description provided for @systemGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get systemGeneral;
+
+  /// No description provided for @systemHostname.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname'**
+  String get systemHostname;
+
+  /// No description provided for @systemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get systemDescription;
+
+  /// No description provided for @systemTimezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get systemTimezone;
+
+  /// No description provided for @systemTimezoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Times are interpreted by the router using the selected zone.'**
+  String get systemTimezoneHint;
+
+  /// No description provided for @systemTimezonePicker.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose time zone'**
+  String get systemTimezonePicker;
+
+  /// No description provided for @systemTimezoneSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search time zones'**
+  String get systemTimezoneSearch;
+
+  /// No description provided for @systemLogging.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging'**
+  String get systemLogging;
+
+  /// No description provided for @systemLogSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Log size (KB)'**
+  String get systemLogSize;
+
+  /// No description provided for @systemLogProto.
+  ///
+  /// In en, this message translates to:
+  /// **'Log protocol'**
+  String get systemLogProto;
+
+  /// No description provided for @systemLogIp.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote log server'**
+  String get systemLogIp;
+
+  /// No description provided for @systemLogIpHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank to disable remote logging'**
+  String get systemLogIpHint;
+
+  /// No description provided for @systemLogPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote log port'**
+  String get systemLogPort;
+
+  /// No description provided for @systemAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get systemAdvanced;
+
+  /// No description provided for @systemConsoleLogLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Console log level'**
+  String get systemConsoleLogLevel;
+
+  /// No description provided for @systemCronLogLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cron log level'**
+  String get systemCronLogLevel;
+
+  /// No description provided for @systemTtyLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Serial console login'**
+  String get systemTtyLogin;
+
+  /// No description provided for @initSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search services'**
+  String get initSearch;
+
+  /// No description provided for @initEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No startup services found.'**
+  String get initEmpty;
+
+  /// No description provided for @initIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Start order {n}'**
+  String initIndex(int n);
+
+  /// No description provided for @initStopIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop order {n}'**
+  String initStopIndex(int n);
+
+  /// No description provided for @initEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get initEnabled;
+
+  /// No description provided for @initDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get initDisabled;
+
+  /// No description provided for @initEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get initEnable;
+
+  /// No description provided for @initDisable.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get initDisable;
+
+  /// No description provided for @initStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get initStart;
+
+  /// No description provided for @initStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get initStop;
+
+  /// No description provided for @initRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart'**
+  String get initRestart;
+
+  /// No description provided for @initActionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{action} done: {name}'**
+  String initActionDone(String action, String name);
+
+  /// No description provided for @initToggleWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'If disabled, this service will not start automatically on next boot.'**
+  String get initToggleWarning;
+
+  /// No description provided for @initStopWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping or restarting this service may interrupt router functions or this device\'s connection.'**
+  String get initStopWarning;
+
+  /// No description provided for @interfaceProto.
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol'**
+  String get interfaceProto;
+
+  /// No description provided for @interfaceDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get interfaceDevice;
+
+  /// No description provided for @interfaceDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get interfaceDisabled;
+
+  /// No description provided for @interfaceAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable on boot'**
+  String get interfaceAuto;
+
+  /// No description provided for @interfaceIpaddr.
+  ///
+  /// In en, this message translates to:
+  /// **'IP address'**
+  String get interfaceIpaddr;
+
+  /// No description provided for @interfaceNetmask.
+  ///
+  /// In en, this message translates to:
+  /// **'Netmask'**
+  String get interfaceNetmask;
+
+  /// No description provided for @interfaceGateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway'**
+  String get interfaceGateway;
+
+  /// No description provided for @interfaceDns.
+  ///
+  /// In en, this message translates to:
+  /// **'DNS servers'**
+  String get interfaceDns;
+
+  /// No description provided for @interfaceDnsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate multiple addresses with spaces'**
+  String get interfaceDnsHint;
+
+  /// No description provided for @interfaceIp6addr.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6 address'**
+  String get interfaceIp6addr;
+
+  /// No description provided for @interfaceIp6Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'May be left blank'**
+  String get interfaceIp6Hint;
+
+  /// No description provided for @interfaceIp6assign.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6 prefix size'**
+  String get interfaceIp6assign;
+
+  /// No description provided for @interfaceUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'PPPoE username'**
+  String get interfaceUsername;
+
+  /// No description provided for @interfacePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'PPPoE password'**
+  String get interfacePassword;
+
+  /// No description provided for @interfaceStatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Static address'**
+  String get interfaceStatic;
+
+  /// No description provided for @interfaceDhcpClient.
+  ///
+  /// In en, this message translates to:
+  /// **'DHCP client'**
+  String get interfaceDhcpClient;
+
+  /// No description provided for @interfaceNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get interfaceNone;
+
+  /// No description provided for @interfacePppoe.
+  ///
+  /// In en, this message translates to:
+  /// **'PPPoE'**
+  String get interfacePppoe;
+
+  /// No description provided for @wirelessEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No wireless radios detected (or wireless is disabled).'**
+  String get wirelessEmpty;
+
+  /// No description provided for @wirelessIface.
+  ///
+  /// In en, this message translates to:
+  /// **'Wireless interface'**
+  String get wirelessIface;
+
+  /// No description provided for @wirelessDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get wirelessDevice;
+
+  /// No description provided for @wirelessMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get wirelessMode;
+
+  /// No description provided for @wirelessEncryption.
+  ///
+  /// In en, this message translates to:
+  /// **'Encryption'**
+  String get wirelessEncryption;
+
+  /// No description provided for @wirelessBand.
+  ///
+  /// In en, this message translates to:
+  /// **'Band'**
+  String get wirelessBand;
+
+  /// No description provided for @wirelessChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel'**
+  String get wirelessChannel;
+
+  /// No description provided for @wirelessSsid.
+  ///
+  /// In en, this message translates to:
+  /// **'SSID'**
+  String get wirelessSsid;
+
+  /// No description provided for @wirelessKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get wirelessKey;
+
+  /// No description provided for @wirelessNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get wirelessNetwork;
+
+  /// No description provided for @wirelessHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide SSID'**
+  String get wirelessHidden;
+
+  /// No description provided for @wirelessIsolate.
+  ///
+  /// In en, this message translates to:
+  /// **'Client isolation'**
+  String get wirelessIsolate;
+
+  /// No description provided for @wirelessWmm.
+  ///
+  /// In en, this message translates to:
+  /// **'WMM'**
+  String get wirelessWmm;
+
+  /// No description provided for @wirelessHtmode.
+  ///
+  /// In en, this message translates to:
+  /// **'HT mode'**
+  String get wirelessHtmode;
+
+  /// No description provided for @wirelessTxpower.
+  ///
+  /// In en, this message translates to:
+  /// **'TX power (dBm)'**
+  String get wirelessTxpower;
+
+  /// No description provided for @wirelessCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country code'**
+  String get wirelessCountry;
+
+  /// No description provided for @wirelessCellDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Cell density'**
+  String get wirelessCellDensity;
+
+  /// No description provided for @wirelessDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance (m)'**
+  String get wirelessDistance;
+
+  /// No description provided for @dhcpEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No DHCP configuration found.'**
+  String get dhcpEmpty;
+
+  /// No description provided for @dhcpDnsmasq.
+  ///
+  /// In en, this message translates to:
+  /// **'DNS & DHCP (dnsmasq)'**
+  String get dhcpDnsmasq;
+
+  /// No description provided for @dhcpServer.
+  ///
+  /// In en, this message translates to:
+  /// **'DHCP server'**
+  String get dhcpServer;
+
+  /// No description provided for @dhcpServerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Address pool and leases'**
+  String get dhcpServerHint;
+
+  /// No description provided for @dhcpDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain'**
+  String get dhcpDomain;
+
+  /// No description provided for @dhcpLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local domain'**
+  String get dhcpLocal;
+
+  /// No description provided for @dhcpDomainNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain required'**
+  String get dhcpDomainNeeded;
+
+  /// No description provided for @dhcpBogusPriv.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter private domains'**
+  String get dhcpBogusPriv;
+
+  /// No description provided for @dhcpAuthoritative.
+  ///
+  /// In en, this message translates to:
+  /// **'Authoritative'**
+  String get dhcpAuthoritative;
+
+  /// No description provided for @dhcpLocalService.
+  ///
+  /// In en, this message translates to:
+  /// **'Local service only'**
+  String get dhcpLocalService;
+
+  /// No description provided for @dhcpRebindProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'Rebind protection'**
+  String get dhcpRebindProtection;
+
+  /// No description provided for @dhcpExpandHosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand hosts'**
+  String get dhcpExpandHosts;
+
+  /// No description provided for @dhcpCacheSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache size'**
+  String get dhcpCacheSize;
+
+  /// No description provided for @dhcpLogQueries.
+  ///
+  /// In en, this message translates to:
+  /// **'Log queries'**
+  String get dhcpLogQueries;
+
+  /// No description provided for @dhcpStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start address (last octet)'**
+  String get dhcpStart;
+
+  /// No description provided for @dhcpLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool size'**
+  String get dhcpLimit;
+
+  /// No description provided for @dhcpLeasetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lease time'**
+  String get dhcpLeasetime;
+
+  /// No description provided for @dhcpIgnore.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable DHCP'**
+  String get dhcpIgnore;
+
+  /// No description provided for @dhcpDynamicDhcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic DHCP'**
+  String get dhcpDynamicDhcp;
+
+  /// No description provided for @dhcpForce.
+  ///
+  /// In en, this message translates to:
+  /// **'Force'**
+  String get dhcpForce;
+
+  /// No description provided for @dhcpRa.
+  ///
+  /// In en, this message translates to:
+  /// **'IPv6 RA'**
+  String get dhcpRa;
+
+  /// No description provided for @dhcpRaManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'RA management'**
+  String get dhcpRaManagement;
+
+  /// No description provided for @dhcpDhcpv6.
+  ///
+  /// In en, this message translates to:
+  /// **'DHCPv6'**
+  String get dhcpDhcpv6;
+
+  /// No description provided for @dhcpMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Master'**
+  String get dhcpMaster;
+
+  /// No description provided for @dhcpDnsService.
+  ///
+  /// In en, this message translates to:
+  /// **'Advertise DNS'**
+  String get dhcpDnsService;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

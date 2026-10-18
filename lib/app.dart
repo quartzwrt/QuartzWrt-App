@@ -21,8 +21,13 @@ import 'features/cellular/cellular_sim_page.dart';
 import 'features/cellular/cellular_sms_page.dart';
 import 'features/discover/discover_page.dart';
 import 'features/network/clients_page.dart';
-import 'features/network/network_page.dart';
 import 'features/overview/overview_page.dart';
+import 'features/router/dhcp_page.dart';
+import 'features/router/init_page.dart';
+import 'features/router/interfaces_page.dart';
+import 'features/router/router_page.dart';
+import 'features/router/system_page.dart';
+import 'features/router/wireless_page.dart';
 import 'features/settings/devices_page.dart';
 import 'features/settings/remote_page.dart';
 import 'features/settings/settings_page.dart';
@@ -67,6 +72,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final hasRouter = registry.active != null;
       final path = state.uri.path;
+      // IA v2 D1′：tab 改名「网络 → 路由器」；旧深链保持兼容。
+      if (path == '/network') return '/router';
+      if (path == '/network/clients') return '/router/clients';
       if (path == '/') return hasRouter ? '/overview' : '/discover';
       if (!hasRouter && path != '/discover') return '/discover';
       return null;
@@ -80,7 +88,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             GoRoute(path: '/overview', builder: (_, _) => const OverviewPage()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/network', builder: (_, _) => const NetworkPage()),
+            GoRoute(path: '/router', builder: (_, _) => const RouterPage()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
@@ -93,7 +101,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
         ],
       ),
-      GoRoute(path: '/network/clients', pageBuilder: (_, s) => _fadeUpPage(s, const ClientsPage())),
+      GoRoute(path: '/router/clients', pageBuilder: (_, s) => _fadeUpPage(s, const ClientsPage())),
+      GoRoute(path: '/router/interfaces', pageBuilder: (_, s) => _fadeUpPage(s, const InterfacesPage())),
+      GoRoute(path: '/router/wireless', pageBuilder: (_, s) => _fadeUpPage(s, const WirelessPage())),
+      GoRoute(path: '/router/dhcp', pageBuilder: (_, s) => _fadeUpPage(s, const DhcpPage())),
+      GoRoute(path: '/router/system', pageBuilder: (_, s) => _fadeUpPage(s, const SystemPage())),
+      GoRoute(path: '/router/init', pageBuilder: (_, s) => _fadeUpPage(s, const InitPage())),
       GoRoute(
         path: '/apps/detail/:id',
         pageBuilder: (_, s) => _fadeUpPage(s, AppDetailPage(appId: s.pathParameters['id']!)),
