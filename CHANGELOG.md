@@ -1,5 +1,17 @@
 # Changelog
 
+## 已知问题（2026-10-21）
+
+- **Docker（H5000M / FNet3399）**：docker 变体默认数据目录 `/opt/docker` 位于
+  squashfs+overlay 根分区上，`docker run` 会报
+  `overlay ... invalid argument`（overlay-on-overlay）。请在网页端
+  LuCI → 服务 → Docker 重新选择 Docker 数据目录到非 overlay 文件系统，或在
+  `/etc/docker/daemon.json` 设 `"storage-driver": "vfs"` 后重启 dockerd。
+  Dashboard 的 Docker 卡在引擎正常时显示“运行中”（0 个运行容器不再被误判为 stopped，
+  2026-10-21 修复）。
+- **App 概览 Docker 卡同步修复（2026-10-21）**：引擎状态改按 `available` 判定，
+  0 个运行容器不再显示 stopped；`flutter analyze` 0 告警、99 测试全绿。
+
 ## 0.7.1 — 2026-10-19
 
 - **蜂窝首页中文化**：射频参数 / 小区与 SIM / 连接 / 硬件四栏的字段名全部改为中文

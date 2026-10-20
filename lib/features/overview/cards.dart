@@ -853,6 +853,7 @@ Widget dockerCard(BuildContext context, Snapshot s) {
   final l10n = AppL10n.of(context);
   final t = QuartzTokens.of(context);
   final d = s.docker!;
+  final available = d['available'] == true;
   final running = (d['running'] as num?)?.toInt() ?? 0;
   final total = (d['total'] as num?)?.toInt() ?? 0;
   final unhealthy =
@@ -968,11 +969,11 @@ Widget dockerCard(BuildContext context, Snapshot s) {
         Row(
           children: [
             StatusDot(
-              running > 0 ? DotKind.ok : DotKind.warn,
+              available ? DotKind.ok : DotKind.warn,
               margin: const EdgeInsets.only(right: 7),
             ),
             Text(
-              running > 0 ? l10n.running : l10n.stopped2,
+              available ? l10n.running : l10n.stopped2,
               style: QuartzType.body.copyWith(color: t.text),
             ),
             if (engineBits.isNotEmpty) ...[

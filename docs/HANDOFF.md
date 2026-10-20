@@ -58,7 +58,10 @@
 ### 2.2 其它待办
 
 - **`net.wan.ipv6`**：✅ 已完成（2026-10-19，daemon r6；首个公网 GUA，跳过 fe80::/ULA/临时地址）。
-- **真机验收**（FNet3399）：W6.11 五页真机 e2e **32/32 ALL PASS**；剩 App UI 真机走查（AVD 已走查，证据 `docs/shots/w6.11/` 与 `docs/shots/ui-v6/`）、无线页真实 radio/iface、改 LAN IP 的「断开 → 自动回滚」路径。
+- **真机验收**（2026-10-21 起主设备改为 **H5000M**；FNet3399 仅保留硬件专属项）：H5000M
+  真机 e2e **32/32 ALL PASS**（RG520N-EU / 5G SA n78 / WiFi7 / 风扇均已验）；剩 App UI
+  真机走查（AVD 已走查，证据 `docs/shots/w6.11/` 与 `docs/shots/ui-v6/`）、无线页真实
+  radio/iface、改 LAN IP 的「断开 → 自动回滚」路径。
 - **推送**：四仓与 qmodem fork 均已推送；本次 UI 轮按提交后状态复核。
 - **W6.7 真机验收**（含远程客户端过 tailnet 防火墙链）。
 - **Tailscale 真 tailnet 字段复核**（Dashboard TailscaleCard 探针）。
@@ -127,7 +130,7 @@ cd QuartzWrt-App && dart run tool/e2e_vm.dart   # 32 项 ALL PASS（真机，W6.
 1. Go：`go test ./...` 全绿、`gofmt -l` 干净、arm64/mipsle 交叉编译通过。
 2. App：`flutter analyze` 零告警 + `flutter test` 全绿 + `dart run tool/e2e_vm.dart` ALL PASS。
 3. 配置面改动：VM 跑 `vm-accept-config.sh` + `vm-accept-router.sh`，**改动必须现场复原**（`description` 等无害字段）。
-4. 真机（带无线/模组）是无线/蜂窝真数据的唯一门槛（FNet3399）。
+4. 真机（带无线/模组）是无线/蜂窝真数据的唯一门槛（**H5000M 为主**；FNet3399 仅硬件专属项）。
 
 ## 6. 协作约定
 
