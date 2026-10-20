@@ -1286,6 +1286,9 @@ class AppL10nZh extends AppL10n {
   String get cellularUsbMode => 'USB 拨号模式';
 
   @override
+  String get cellularUsbSpeed => 'USB 速率';
+
+  @override
   String get cellularTemp => '模组温度';
 
   @override

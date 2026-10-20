@@ -1328,6 +1328,9 @@ class AppL10nEn extends AppL10n {
   String get cellularUsbMode => 'USB dial mode';
 
   @override
+  String get cellularUsbSpeed => 'USB speed';
+
+  @override
   String get cellularTemp => 'Modem temperature';
 
   @override

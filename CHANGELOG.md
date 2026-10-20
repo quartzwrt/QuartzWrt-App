@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- **QModem/蜂窝卡修正（2026-10-21，非 H5000M 验收项）**：累计流量按宿主视角归一
+  （Quectel 上游 `get_stats` 为模组视角，修复上下行流量显示反转）；USB 拨号模式
+  解析 `get_mode` 的对象形态（`{"qmi":"1",...}`）；新增 USB 链路速率/版本显示
+  （`usb_speed_mbps`/`usb_version`）。`flutter analyze` 0 告警、**100 测试全绿**。
+
 ## 已知问题（2026-10-21）
 
 - **Docker（H5000M / FNet3399）**：docker 变体默认数据目录 `/opt/docker` 位于

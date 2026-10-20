@@ -410,6 +410,7 @@ class _CellularPageState extends ConsumerState<CellularPage> {
             kv(l10n.cellularCqiLabel, cellularCqiText(m)),
             kv(l10n.cellularAmbrLabel, cellularAmbrText(m)),
             kv(l10n.cellularUsbMode, settings?.usbMode ?? ''),
+            kv(l10n.cellularUsbSpeed, cellularUsbSpeedText(m)),
             kv(l10n.cellularPreferenceLabel, settings?.prefer ?? ''),
           ]),
           section(l10n.cellularHardwareSection, [

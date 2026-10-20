@@ -710,6 +710,7 @@
   "cellularLockbandUnlock": "Unlock bands",
   "cellularAdvanced": "Advanced",
   "cellularUsbMode": "USB dial mode",
+  "cellularUsbSpeed": "USB speed",
   "cellularTemp": "Modem temperature",
   "cellularSettingsHint": "Failed to read current settings; pull to refresh and retry.",
   "cellularDangerWarning": "This rewrites modem configuration and may interrupt connectivity.",

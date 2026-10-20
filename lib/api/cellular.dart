@@ -307,6 +307,8 @@ class CellularModem {
     this.atPort = '',
     this.voltageMv,
     this.connectStatus = '',
+    this.usbSpeedMbps,
+    this.usbVersion = '',
     this.networkType = '',
     this.cqiUl,
     this.cqiDl,
@@ -335,6 +337,10 @@ class CellularModem {
   final String atPort;
   final int? voltageMv;
   final String connectStatus;
+
+  /// USB 链路速率/版本（2026-10-21 加法；PCIe 模组为空）。
+  final int? usbSpeedMbps;
+  final String usbVersion;
   final String networkType;
   final int? cqiUl;
   final int? cqiDl;
@@ -372,6 +378,8 @@ class CellularModem {
     atPort: (j['at_port'] as String?) ?? '',
     voltageMv: (j['voltage_mv'] as num?)?.toInt(),
     connectStatus: (j['connect_status'] as String?) ?? '',
+    usbSpeedMbps: (j['usb_speed_mbps'] as num?)?.toInt(),
+    usbVersion: (j['usb_version'] as String?) ?? '',
     networkType: (j['network_type'] as String?) ?? '',
     cqiUl: (j['cqi_ul'] as num?)?.toInt(),
     cqiDl: (j['cqi_dl'] as num?)?.toInt(),

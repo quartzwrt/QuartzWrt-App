@@ -447,4 +447,21 @@ void main() {
       expect(reg.list().length, 1);
     });
   });
+
+  group('USB fields', () {
+    test('parses USB speed/version and formats', () {
+      final m = CellularModem.fromJson({
+        'id': '2_1',
+        'usb_speed_mbps': 5000,
+        'usb_version': '3.20',
+      });
+      expect(m.usbSpeedMbps, 5000);
+      expect(m.usbVersion, '3.20');
+      expect(cellularUsbSpeedText(m), 'USB 3.20 · 5000 Mbps');
+      expect(cellularUsbSpeedText(const CellularModem(id: 'x')), '—');
+      expect(cellularUsbModeFromRaw({'qmi': '1', 'mbim': '0'}), 'qmi');
+      expect(cellularUsbModeFromRaw('ecm'), 'ecm');
+      expect(cellularUsbModeFromRaw({'qmi': '0'}), '');
+    });
+  });
 }

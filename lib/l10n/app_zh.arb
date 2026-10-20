@@ -544,6 +544,7 @@
   "cellularLockbandUnlock": "解除锁定",
   "cellularAdvanced": "高级",
   "cellularUsbMode": "USB 拨号模式",
+  "cellularUsbSpeed": "USB 速率",
   "cellularTemp": "模组温度",
   "cellularSettingsHint": "读取当前设置失败，可下拉刷新后重试。",
   "cellularDangerWarning": "该操作会改写模组配置，可能导致连接中断。",

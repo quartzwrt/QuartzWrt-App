@@ -8,6 +8,7 @@ import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
 import '../../widgets/quartz.dart';
 import 'qmodem_client.dart';
+import 'cellular_display.dart';
 
 class CellularAdvancedPage extends ConsumerStatefulWidget {
   const CellularAdvancedPage({super.key, required this.section});
@@ -76,7 +77,8 @@ class _CellularAdvancedPageState extends ConsumerState<CellularAdvancedPage> {
         for (final f in (disabled.data as List? ?? const []))
           if (f is String) f,
       ];
-      _usbMode = (mode.map['mode'] as String?) ?? (m?.settings?.usbMode ?? '');
+      final rawMode = cellularUsbModeFromRaw(mode.map['mode']);
+      _usbMode = rawMode.isNotEmpty ? rawMode : (m?.settings?.usbMode ?? '');
       if (reset.ok) {
         _resetEnabled = resetEnabled;
         _resetType = resetType;
@@ -129,6 +131,10 @@ class _CellularAdvancedPageState extends ConsumerState<CellularAdvancedPage> {
                       KvRow(
                         l10n.cellularUsbMode,
                         _usbMode.isEmpty ? l10n.unknownValue : _usbMode,
+                      ),
+                      KvRow(
+                        l10n.cellularUsbSpeed,
+                        m == null ? l10n.unknownValue : cellularUsbSpeedText(m),
                       ),
                     ],
                   ),

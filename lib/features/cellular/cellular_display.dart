@@ -56,3 +56,23 @@ String cellularAmbrText(CellularModem m) {
   if (m.ambrUl == null && m.ambrDl == null) return '—';
   return '${m.ambrUl ?? '—'} / ${m.ambrDl ?? '—'} Mbps';
 }
+
+/// USB 链路速率（`null`/0 → "—"；版本存在时带 USB 版本）。
+String cellularUsbSpeedText(CellularModem m) {
+  final mbps = m.usbSpeedMbps;
+  if (mbps == null || mbps <= 0) return '—';
+  final ver = m.usbVersion.isEmpty ? '' : 'USB ${m.usbVersion} · ';
+  return '$ver$mbps Mbps';
+}
+
+/// `get_mode` 的两种形态归一：字符串，或 `{"qmi":"1",...}` 对象。
+String cellularUsbModeFromRaw(dynamic raw) {
+  if (raw is String) return raw.trim();
+  if (raw is Map) {
+    for (final k in const ['qmi', 'mbim', 'ecm', 'rndis', 'ncm', 'gobinet']) {
+      final v = raw[k];
+      if (v == '1' || v == 1 || v == true) return k;
+    }
+  }
+  return '';
+}

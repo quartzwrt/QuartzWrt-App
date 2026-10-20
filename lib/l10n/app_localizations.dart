@@ -2461,6 +2461,12 @@ abstract class AppL10n {
   /// **'USB dial mode'**
   String get cellularUsbMode;
 
+  /// No description provided for @cellularUsbSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'USB speed'**
+  String get cellularUsbSpeed;
+
   /// No description provided for @cellularTemp.
   ///
   /// In en, this message translates to:
