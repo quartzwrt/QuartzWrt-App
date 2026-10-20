@@ -25,11 +25,11 @@
 | 仓库 | 最近提交 | 内容 |
 | :--- | :--- | :--- |
 | QuartzWrt-Packages | **`66f1cef`** | app-api r13（配置面 `config.*` / `luci.*` / 防火墙/挂载/LED/计划任务）+ daemon r7 + Dashboard 蜂窝卡 v4 |
-| QuartzWrt-App | **本轮 UI 提交**（v0.7.1 build 17） | Dashboard 卡面 UI 基座 + 本机外观 + 蜂窝 QModem 补全 + 路由器 tab W6.9–W6.11 + 99 项测试 |
+| QuartzWrt-App | **`ab45851`**（v0.7.1 build 17） | Dashboard 卡面 UI 基座 + 本机外观 + 蜂窝 QModem 补全 + 路由器 tab W6.9–W6.11 + 99 项测试 |
 | QuartzWrt-ThirdParty | **`6f3604e`** | qmodem 受控 Fork `quartz2`（`a2c34f1`，tag `v3.4.0_rc3-quartz2`）+ FORKS 登记 |
 | QuartzWrt-Builder | **`73a71ae`** | feed 锁定 quartz `66f1cef`；TDD §5 模式 A/B 实践判据 |
 
-四仓已推送至 `origin/main`；本轮审核提交 App UI 轮 / Packages `4a02cc4` / Builder `c9bb287` **未推送**。App 版本 **v0.7.1（构建 17）**；Packages app-api **r13**、daemon **r7**。
+四仓已推送至 `origin/main`；本轮审核提交 App `ab45851` / Packages `4a02cc4` / Builder `c9bb287` 均已推送。App 版本 **v0.7.1（构建 17）**；Packages app-api **r13**、daemon **r7**。
 
 **本轮完成的能力**：
 - **路由器 tab**：`/router`（旧 `/network` 深链重定向）；分组入口页（已实现页「可用」/未实现「待后续版本」chip）。
