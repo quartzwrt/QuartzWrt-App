@@ -29,9 +29,10 @@ class BandixPanel extends ConsumerWidget {
         child: Text(
           b == null ? l10n.bandixUnavailable : l10n.bandixNotEnabled,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .6),
-                height: 1.5,
-              ),
+            color: Theme.of(context).colorScheme.onSurface
+                .withValues(alpha: .6),
+            height: 1.5,
+          ),
         ),
       );
     }
@@ -47,32 +48,67 @@ class BandixPanel extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          KvRow(l10n.bandixOnlineDevices, '$online / $devices', first: true, valueMono: false),
+          KvRow(
+            l10n.bandixOnlineDevices,
+            '$online / $devices',
+            first: true,
+            valueMono: false,
+          ),
           // 总体限速策略（2026-10-17 用户指令：替代原 WAN 速率行——与网络卡重复）
           if (lim != null) ...[
-            KvRow(l10n.bandixDefaultLimitLabel, bandixDefaultLimitText(l10n, lim)),
-            KvRow(l10n.bandixWhitelistState, bandixPolicyCountsText(l10n, lim), valueMono: false),
+            KvRow(
+              l10n.bandixDefaultLimitLabel,
+              bandixDefaultLimitText(l10n, lim),
+            ),
+            KvRow(
+              l10n.bandixWhitelistState,
+              bandixPolicyCountsText(l10n, lim),
+              valueMono: false,
+            ),
           ],
           KvRow(
             l10n.connectionsLabel,
-            conn == null ? l10n.notEnabled : '${conn['total'] ?? 0} · TCP ${conn['tcp'] ?? 0} · UDP ${conn['udp'] ?? 0}',
+            conn == null
+                ? l10n.notEnabled
+                : '${conn['total'] ?? 0} · TCP ${conn['tcp'] ?? 0} · UDP ${conn['udp'] ?? 0}',
             valueMono: conn != null,
           ),
-          KvRow(l10n.bandixDnsQueriesLabel,
-              dns == null ? l10n.notEnabled : formatCount((dns['queries'] as num?) ?? 0),
-              valueMono: dns != null),
+          KvRow(
+            l10n.bandixDnsQueriesLabel,
+            dns == null
+                ? l10n.notEnabled
+                : formatCount((dns['queries'] as num?) ?? 0),
+            valueMono: dns != null,
+          ),
           const SizedBox(height: 10),
-          _row(context, l10n.bandixTrafficTitle, () => context.push('/apps/bandix')),
-          _row(context, l10n.bandixLimitTitle, () => showBandixLimitSheet(context, ref)),
-          _row(context, l10n.bandixWhitelistTitle, () => showBandixWhitelistSheet(context, ref)),
-          _row(context, l10n.bandixHostnameTitle, () => showBandixHostnameSheet(context, ref)),
+          _row(
+            context,
+            l10n.bandixTrafficTitle,
+            () => context.push('/apps/bandix'),
+          ),
+          _row(
+            context,
+            l10n.bandixLimitTitle,
+            () => showBandixLimitSheet(context, ref),
+          ),
+          _row(
+            context,
+            l10n.bandixWhitelistTitle,
+            () => showBandixWhitelistSheet(context, ref),
+          ),
+          _row(
+            context,
+            l10n.bandixHostnameTitle,
+            () => showBandixHostnameSheet(context, ref),
+          ),
           const SizedBox(height: 6),
           Text(
             l10n.bandixPanelNote,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
-                  height: 1.5,
-                ),
+              color: Theme.of(context).colorScheme.onSurface
+                  .withValues(alpha: .5),
+              height: 1.5,
+            ),
           ),
         ],
       ),
@@ -80,15 +116,21 @@ class BandixPanel extends ConsumerWidget {
   }
 
   Widget _row(BuildContext context, String label, VoidCallback onTap) {
-    return InkWell(
+    return QzPressable(
+      highlight: true,
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
             Expanded(child: Text(label)),
-            Text('›',
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .35))),
+            Text(
+              '›',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface
+                    .withValues(alpha: .35),
+              ),
+            ),
           ],
         ),
       ),

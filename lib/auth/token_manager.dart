@@ -27,8 +27,8 @@ class TokenManager {
     this._store, {
     required this.routerId,
     DateTime Function()? now,
-  })  : _transportOf = transportOf,
-        _now = now ?? DateTime.now;
+  }) : _transportOf = transportOf,
+       _now = now ?? DateTime.now;
 
   /// 传输以闭包按调用取（端点失败切换会换传输实例；本管理器实例保持稳定，
   /// 从而 `_inflight` 单飞与内存 access 在端点切换前后连续）。
@@ -39,7 +39,9 @@ class TokenManager {
 
   ApiTransport get _t {
     final t = _transportOf();
-    if (t == null) throw ApiException(const ApiError('transport', 'no endpoint'));
+    if (t == null) {
+      throw ApiException(const ApiError('transport', 'no endpoint'));
+    }
     return t;
   }
 
@@ -105,10 +107,14 @@ class TokenManager {
     if (refresh == null || refresh.isEmpty) {
       throw ApiAuthException('no_session', 'not paired');
     }
-    final r = await _t.call('refresh', {'device_id': routerId, 'refresh_token': refresh});
+    final r = await _t.call('refresh', {
+      'device_id': routerId,
+      'refresh_token': refresh,
+    });
     if (!r.ok) {
       final code = r.error?.code ?? 'transport';
-      final fatal = code == 'device_revoked' ||
+      final fatal =
+          code == 'device_revoked' ||
           code == 'token_invalid' ||
           code == 'device_unknown';
       if (fatal) {
@@ -133,7 +139,10 @@ class TokenManager {
     final refresh = await _store.readRefresh(routerId);
     if (refresh != null) {
       try {
-        await _t.call('logout', {'device_id': routerId, 'refresh_token': refresh});
+        await _t.call('logout', {
+          'device_id': routerId,
+          'refresh_token': refresh,
+        });
       } catch (_) {}
     }
     _access = null;

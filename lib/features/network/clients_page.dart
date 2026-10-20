@@ -16,7 +16,7 @@ class ClientsPage extends ConsumerWidget {
     final snap = ref.watch(snapshotProvider).data;
     final items = snap?.clientItems ?? const [];
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.clientsPageTitle)),
+      appBar: QzAppBar(title: Text(l10n.clientsPageTitle)),
       body: items.isEmpty
           ? Center(child: Text(l10n.clientsEmpty))
           : ListView.separated(
@@ -36,7 +36,7 @@ class ClientsPage extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                   child: Row(
                     children: [
-                      const Icon(Icons.devices_other_outlined, size: 20),
+                      const QzIcon(QzIcons.clients, size: 20),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -46,13 +46,19 @@ class ClientsPage extends ConsumerWidget {
                               (c['host'] as String?)?.isNotEmpty == true
                                   ? c['host'] as String
                                   : ((c['mac'] as String?) ?? ''),
-                              style: const TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             Text(
                               '${(c['ip'] as String?) ?? ''} · ${(c['mac'] as String?) ?? ''}',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .55),
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: .55),
+                                  ),
                             ),
                           ],
                         ),
@@ -60,12 +66,17 @@ class ClientsPage extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(seen, style: Theme.of(context).textTheme.bodySmall),
+                          Text(
+                            seen,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                           Text(
                             (c['iface'] as String?) ?? '',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .45),
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: .45),
+                                ),
                           ),
                         ],
                       ),

@@ -10,12 +10,16 @@ import 'package:quartzwrt_app/state/app_state.dart' as st;
 class _FakeSnapshot extends st.SnapshotController {
   @override
   st.SnapshotState build() => st.SnapshotState(
-        kind: st.SnapKind.ok,
-        data: Snapshot({
-          'host': {'hostname': 'router', 'model': 'FNet3399', 'release': 'QuartzWrt test'},
-          'clients': {'total': 2, 'items': []},
-        }),
-      );
+    kind: st.SnapKind.ok,
+    data: Snapshot({
+      'host': {
+        'hostname': 'router',
+        'model': 'FNet3399',
+        'release': 'QuartzWrt test',
+      },
+      'clients': {'total': 2, 'items': []},
+    }),
+  );
 }
 
 class _NoRouter extends st.ActiveRouterNotifier {
@@ -24,7 +28,9 @@ class _NoRouter extends st.ActiveRouterNotifier {
 }
 
 void main() {
-  testWidgets('router page groups entries and marks implemented pages', (tester) async {
+  testWidgets('router page groups entries and marks implemented pages', (
+    tester,
+  ) async {
     tester.platformDispatcher.localesTestValue = const [Locale('zh')];
     addTearDown(tester.platformDispatcher.clearLocalesTestValue);
     await tester.pumpWidget(
@@ -44,7 +50,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('路由器'), findsWidgets);
-    expect(find.text('FNet3399 · QuartzWrt test'), findsOneWidget);
+    expect(find.text('router'), findsWidgets); // 顶栏右侧路由器名（设计稿：不再放身份卡）
     expect(find.text('接口'), findsOneWidget);
     expect(find.text('无线'), findsOneWidget);
     expect(find.text('DHCP 与 DNS'), findsOneWidget);
@@ -52,7 +58,7 @@ void main() {
     expect(find.text('防火墙'), findsOneWidget);
     expect(find.text('管理权'), findsOneWidget);
     expect(find.text('待后续版本'), findsNothing);
-    expect(find.text('可用'), findsWidgets);
-    expect(find.text('2 在线'), findsOneWidget);
+    expect(find.text('原生'), findsWidgets);
+    expect(find.text('通用表单'), findsWidgets);
   });
 }

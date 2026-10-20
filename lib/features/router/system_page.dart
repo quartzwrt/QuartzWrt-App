@@ -76,7 +76,10 @@ class _SystemPageState extends ConsumerState<SystemPage> {
     String section = '@system[0]';
     Map<String, dynamic> values = const {};
     if (map.isNotEmpty) {
-      section = map.keys.firstWhere((k) => k.contains('system'), orElse: () => map.keys.first);
+      section = map.keys.firstWhere(
+        (k) => k.contains('system'),
+        orElse: () => map.keys.first,
+      );
       final v = map[section];
       if (v is Map<String, dynamic>) values = v;
     }
@@ -165,7 +168,9 @@ class _SystemPageState extends ConsumerState<SystemPage> {
     }
     if (_zoneName.isNotEmpty && _zoneName != '${_original['zonename'] ?? ''}') {
       out.add(ConfigEdit('system', _section, 'zonename', _zoneName));
-      if (_tzString.isNotEmpty) out.add(ConfigEdit('system', _section, 'timezone', _tzString));
+      if (_tzString.isNotEmpty) {
+        out.add(ConfigEdit('system', _section, 'timezone', _tzString));
+      }
     }
     return out;
   }
@@ -201,9 +206,14 @@ class _SystemPageState extends ConsumerState<SystemPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.routerEntrySystem, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntrySystem,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
+      ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QzSpinner(size: 22))
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
@@ -224,7 +234,10 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                         onChanged: (_) => setState(() {}),
                       ),
                       ConfigFieldTile(
-                        field: ConfigField('description', l10n.systemDescription),
+                        field: ConfigField(
+                          'description',
+                          l10n.systemDescription,
+                        ),
                         value: _original['description'],
                         controller: _text['description'],
                         enabled: !_busy,
@@ -238,7 +251,8 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
+                      QzPressable(
+                        highlight: true,
                         borderRadius: BorderRadius.circular(QuartzRadii.sm),
                         onTap: _busy ? null : _pickZone,
                         child: Padding(
@@ -250,24 +264,41 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      _zoneName.isEmpty ? l10n.configUnset : _zoneName,
-                                      style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                                      _zoneName.isEmpty
+                                          ? l10n.configUnset
+                                          : _zoneName,
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                     if (_tzString.isNotEmpty) ...[
                                       const SizedBox(height: 2),
                                       Text(
                                         _tzString,
-                                        style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: .45),
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: theme.colorScheme.onSurface
+                                                  .withValues(alpha: .45),
+                                            ),
                                       ),
                                     ],
                                   ],
                                 ),
                               ),
-                              Text(l10n.configChoose, style: const TextStyle(color: QuartzColors.accent, fontWeight: FontWeight.w600)),
+                              Text(
+                                l10n.configChoose,
+                                style: const TextStyle(
+                                  color: QuartzColors.accent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                               const SizedBox(width: 2),
-                              const Icon(Icons.chevron_right, size: 18, color: QuartzColors.accent),
+                              const QzIcon(
+                                QzIcons.chevronRight,
+                                size: 18,
+                                color: QuartzColors.accent,
+                              ),
                             ],
                           ),
                         ),
@@ -275,7 +306,9 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                       Text(
                         l10n.systemTimezoneHint,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: .45),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: .45,
+                          ),
                           fontSize: 11,
                         ),
                       ),
@@ -288,7 +321,11 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ConfigFieldTile(
-                        field: ConfigField('log_size', l10n.systemLogSize, kind: ConfigFieldKind.integer),
+                        field: ConfigField(
+                          'log_size',
+                          l10n.systemLogSize,
+                          kind: ConfigFieldKind.integer,
+                        ),
                         value: _original['log_size'],
                         controller: _text['log_size'],
                         enabled: !_busy,
@@ -310,14 +347,22 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                         onChanged: (v) => setState(() => _logProto = '$v'),
                       ),
                       ConfigFieldTile(
-                        field: ConfigField('log_ip', l10n.systemLogIp, hint: l10n.systemLogIpHint),
+                        field: ConfigField(
+                          'log_ip',
+                          l10n.systemLogIp,
+                          hint: l10n.systemLogIpHint,
+                        ),
                         value: _original['log_ip'],
                         controller: _text['log_ip'],
                         enabled: !_busy,
                         onChanged: (_) => setState(() {}),
                       ),
                       ConfigFieldTile(
-                        field: ConfigField('log_port', l10n.systemLogPort, kind: ConfigFieldKind.integer),
+                        field: ConfigField(
+                          'log_port',
+                          l10n.systemLogPort,
+                          kind: ConfigFieldKind.integer,
+                        ),
                         value: _original['log_port'],
                         controller: _text['log_port'],
                         enabled: !_busy,
@@ -332,32 +377,45 @@ class _SystemPageState extends ConsumerState<SystemPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ConfigFieldTile(
-                        field: ConfigField('conloglevel', l10n.systemConsoleLogLevel, kind: ConfigFieldKind.integer),
+                        field: ConfigField(
+                          'conloglevel',
+                          l10n.systemConsoleLogLevel,
+                          kind: ConfigFieldKind.integer,
+                        ),
                         value: _original['conloglevel'],
                         controller: _text['conloglevel'],
                         enabled: !_busy,
                         onChanged: (_) => setState(() {}),
                       ),
                       ConfigFieldTile(
-                        field: ConfigField('cronloglevel', l10n.systemCronLogLevel, kind: ConfigFieldKind.integer),
+                        field: ConfigField(
+                          'cronloglevel',
+                          l10n.systemCronLogLevel,
+                          kind: ConfigFieldKind.integer,
+                        ),
                         value: _original['cronloglevel'],
                         controller: _text['cronloglevel'],
                         enabled: !_busy,
                         onChanged: (_) => setState(() {}),
                       ),
                       ConfigFieldTile(
-                        field: ConfigField('ttylogin', l10n.systemTtyLogin, kind: ConfigFieldKind.boolean),
+                        field: ConfigField(
+                          'ttylogin',
+                          l10n.systemTtyLogin,
+                          kind: ConfigFieldKind.boolean,
+                        ),
                         value: _ttyLogin,
                         controller: null,
                         enabled: !_busy,
-                        onChanged: (v) => setState(() => _ttyLogin = configBool(v)),
+                        onChanged: (v) =>
+                            setState(() => _ttyLogin = configBool(v)),
                       ),
                     ],
                   ),
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: FilledButton(
+                  child: QzLegacyButton(
                     onPressed: _busy || !_dirty ? null : _save,
                     child: Text(_busy ? l10n.configSaving : l10n.save),
                   ),
@@ -370,19 +428,32 @@ class _SystemPageState extends ConsumerState<SystemPage> {
 }
 
 /// 时区选择器（带搜索；数据源 `luci.timezones`）。
-Future<String?> showTimezonePicker(BuildContext context, Map<String, String> zones, String current) async {
+Future<String?> showTimezonePicker(
+  BuildContext context,
+  Map<String, String> zones,
+  String current,
+) async {
   final l10n = AppL10n.of(context);
-  return showModalBottomSheet<String>(
-    context: context,
+  return showQzSheet<String>(
+    context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).brightness == Brightness.dark ? QuartzColors.darkRaised : Colors.white,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-    builder: (ctx) => _TimezoneSheet(zones: zones, current: current, l10n: l10n),
+    backgroundColor: Theme.of(context).brightness == Brightness.dark
+        ? QuartzColors.darkRaised
+        : Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (ctx) =>
+        _TimezoneSheet(zones: zones, current: current, l10n: l10n),
   );
 }
 
 class _TimezoneSheet extends StatefulWidget {
-  const _TimezoneSheet({required this.zones, required this.current, required this.l10n});
+  const _TimezoneSheet({
+    required this.zones,
+    required this.current,
+    required this.l10n,
+  });
 
   final Map<String, String> zones;
   final String current;
@@ -399,7 +470,15 @@ class _TimezoneSheetState extends State<_TimezoneSheet> {
   Widget build(BuildContext context) {
     final all = widget.zones.keys.toList()..sort();
     final q = _query.trim().toLowerCase();
-    final list = q.isEmpty ? all : all.where((z) => z.toLowerCase().contains(q) || widget.zones[z]!.toLowerCase().contains(q)).toList();
+    final list = q.isEmpty
+        ? all
+        : all
+              .where(
+                (z) =>
+                    z.toLowerCase().contains(q) ||
+                    widget.zones[z]!.toLowerCase().contains(q),
+              )
+              .toList();
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * .78,
       child: SafeArea(
@@ -407,17 +486,16 @@ class _TimezoneSheetState extends State<_TimezoneSheet> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            Text(widget.l10n.systemTimezonePicker, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              widget.l10n.systemTimezonePicker,
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-              child: TextField(
-                autofocus: false,
-                decoration: InputDecoration(
-                  isDense: true,
-                  prefixIcon: const Icon(Icons.search, size: 19),
-                  hintText: widget.l10n.systemTimezoneSearch,
-                  border: const OutlineInputBorder(),
-                ),
+              child: QzField(
+                prefix: const QzIcon(QzIcons.search, size: 18),
+                hint: widget.l10n.systemTimezoneSearch,
                 onChanged: (v) => setState(() => _query = v),
               ),
             ),
@@ -427,11 +505,17 @@ class _TimezoneSheetState extends State<_TimezoneSheet> {
                 itemBuilder: (_, i) {
                   final z = list[i];
                   final selected = z == widget.current;
-                  return ListTile(
-                    dense: true,
-                    title: Text(z, style: const TextStyle(fontSize: 13.5)),
-                    subtitle: Text(widget.zones[z]!, style: const TextStyle(fontSize: 11)),
-                    trailing: selected ? const Icon(Icons.check, size: 18, color: QuartzColors.accent) : null,
+                  return QzListRow(
+                    title: z,
+                    subtitle: widget.zones[z]!,
+                    trailing: selected
+                        ? const QzIcon(
+                            QzIcons.check,
+                            size: 18,
+                            color: QuartzColors.accent,
+                          )
+                        : null,
+                    showChevron: false,
                     onTap: () => Navigator.of(context).pop(z),
                   );
                 },

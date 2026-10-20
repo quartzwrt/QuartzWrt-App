@@ -5,7 +5,12 @@ import 'package:quartzwrt_app/features/router/config_common.dart';
 void main() {
   group('ConfigDraft', () {
     test('敏感字段掩码未修改不算 dirty，改写后 dirty，清空恢复掩码', () {
-      const f = ConfigField('key', 'Key', kind: ConfigFieldKind.secret, sensitive: true);
+      const f = ConfigField(
+        'key',
+        'Key',
+        kind: ConfigFieldKind.secret,
+        sensitive: true,
+      );
       final d = ConfigDraft(
         config: 'wireless',
         section: '@wifi-iface[0]',

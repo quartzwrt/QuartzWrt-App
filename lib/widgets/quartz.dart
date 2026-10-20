@@ -1,10 +1,31 @@
-// Quartz 通用组件（与 design/preview.html 的视觉规格一致）。
+// Quartz 通用组件（设计稿 ia-v2-preview.html 规格）。
+//
+// 这里保留旧 API（QuartzCard/StatusDot/KvRow/InfoBanner/SegmentBar/showConfirmSheet），
+// 新组件在 quartz/ 子库中；页面统一从本文件导入。
 import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
+import '../format.dart';
+import 'quartz/quartz_controls.dart';
+import 'quartz/quartz_icons.dart';
+import 'quartz/quartz_layout.dart';
+import 'quartz/quartz_sheets.dart';
+
+export 'quartz/quartz_controls.dart';
+export 'quartz/quartz_icons.dart';
+export 'quartz/quartz_layout.dart';
+export 'quartz/quartz_refresh.dart';
+export 'quartz/quartz_sheets.dart';
+export 'quartz/quartz_tab_bar.dart';
 
 class QuartzCard extends StatelessWidget {
-  const QuartzCard({super.key, this.title, this.trailing, required this.child, this.padding});
+  const QuartzCard({
+    super.key,
+    this.title,
+    this.trailing,
+    required this.child,
+    this.padding,
+  });
 
   final String? title;
   final Widget? trailing;
@@ -13,18 +34,10 @@ class QuartzCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final dark = theme.brightness == Brightness.dark;
-    return Container(
+    final t = QuartzTokens.of(context);
+    return QzPanel(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: padding ?? const EdgeInsets.fromLTRB(15, 13, 15, 13),
-      decoration: BoxDecoration(
-        color: dark ? QuartzColors.darkPanel : QuartzColors.lightPanel,
-        borderRadius: BorderRadius.circular(QuartzRadii.md),
-        border: Border.all(
-          color: dark ? const Color(0x17FFFFFF) : const Color(0x14000000),
-        ),
-      ),
+      padding: padding ?? const EdgeInsets.fromLTRB(16, 14, 16, 14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -36,10 +49,9 @@ class QuartzCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title!,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: .55),
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: .35,
+                      style: QuartzType.bodyStrong.copyWith(
+                        color: t.muted,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -57,22 +69,95 @@ class QuartzCard extends StatelessWidget {
 enum DotKind { ok, warn, err, off }
 
 class StatusDot extends StatelessWidget {
-  const StatusDot(this.kind, {super.key, this.margin = const EdgeInsets.only(right: 7)});
+  const StatusDot(
+    this.kind, {
+    super.key,
+    this.margin = const EdgeInsets.only(right: 7),
+  });
 
   final DotKind kind;
   final EdgeInsetsGeometry margin;
 
   @override
   Widget build(BuildContext context) {
+    final t = QuartzTokens.of(context);
     final color = switch (kind) {
-      DotKind.ok => QuartzColors.ok,
-      DotKind.warn => QuartzColors.warn,
-      DotKind.err => QuartzColors.err,
-      DotKind.off => Theme.of(context).colorScheme.onSurface.withValues(alpha: .45),
+      DotKind.ok => t.ok,
+      DotKind.warn => t.warn,
+      DotKind.err => t.err,
+      DotKind.off => t.faint,
     };
     return Padding(
       padding: margin,
-      child: Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+      child: Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
+    );
+  }
+}
+
+/// IP 值（Dashboard `IpValue` 同款交互）：默认显示打码值，点按展开完整地址，
+/// 再点收起；虚线底提示可交互。
+class QzIpValue extends StatefulWidget {
+  const QzIpValue({
+    super.key,
+    required this.value,
+    this.style,
+    this.showLabel = 'Click to reveal',
+    this.hideLabel = 'Click to hide',
+    this.textAlign = TextAlign.right,
+  });
+
+  final String value;
+  final TextStyle? style;
+  final String showLabel;
+  final String hideLabel;
+  final TextAlign textAlign;
+
+  @override
+  State<QzIpValue> createState() => _QzIpValueState();
+}
+
+class _QzIpValueState extends State<QzIpValue> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = QuartzTokens.of(context);
+    final empty = widget.value.isEmpty;
+    final base =
+        widget.style ??
+        TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 12.5,
+          fontWeight: FontWeight.w500,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
+    final text = Text(
+      empty ? '—' : (_open ? widget.value : maskIp(widget.value)),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: widget.textAlign,
+      style: base.copyWith(
+        color: empty ? t.faint : (base.color ?? t.text),
+        decoration: empty ? null : TextDecoration.underline,
+        decorationStyle: TextDecorationStyle.dotted,
+        decorationColor: _open ? t.accent : t.borderStrong,
+        decorationThickness: 1,
+      ),
+    );
+    if (empty) return text;
+    final label = _open ? widget.hideLabel : widget.showLabel;
+    return Tooltip(
+      message: label,
+      child: QzPressable(
+        onTap: () => setState(() => _open = !_open),
+        borderRadius: BorderRadius.circular(4),
+        semanticLabel: label,
+        child: text,
+      ),
     );
   }
 }
@@ -88,6 +173,8 @@ class KvRow extends StatelessWidget {
     this.valueMono = true,
     this.valueWidget,
     this.sub,
+    this.pct,
+    this.barColor,
   });
 
   final String label;
@@ -97,43 +184,88 @@ class KvRow extends StatelessWidget {
   final bool valueMono;
   final Widget? valueWidget;
   final String? sub;
+  final double? pct;
+  final Color? barColor;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final divider = theme.brightness == Brightness.dark
-        ? const Color(0x14FFFFFF)
-        : const Color(0x11000000);
+    final t = QuartzTokens.of(context);
+    final labelText = Text(
+      label,
+      style: QuartzType.body.copyWith(color: t.muted),
+    );
+    final valueStyle = valueMono
+        ? TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 12.5,
+            fontWeight: FontWeight.w500,
+            color: valueColor ?? t.text,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          )
+        : QuartzType.bodyStrong.copyWith(color: valueColor ?? t.text);
+    final valueText =
+        valueWidget ??
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.right,
+          style: valueStyle,
+        );
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
-      padding: const EdgeInsets.symmetric(vertical: 7),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: t.border)),
+            ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
-              if (valueWidget != null)
-                valueWidget!
-              else
-                Text(
-                  value,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: valueColor,
-                    fontFeatures: valueMono ? const [FontFeature.tabularFigures()] : null,
+          if (pct != null)
+            Row(
+              children: [
+                SizedBox(width: 72, child: labelText),
+                Expanded(
+                  child: QzBar(
+                    pct: (pct! / 100).clamp(0, 1),
+                    color: barColor,
+                    height: 6,
                   ),
                 ),
-            ],
-          ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 124,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: valueText,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            Row(
+              children: [
+                labelText,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: valueWidget ?? valueText,
+                  ),
+                ),
+              ],
+            ),
           if (sub != null)
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
                 sub!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: .5),
-                ),
+                style: QuartzType.caption.copyWith(color: t.muted),
               ),
             ),
         ],
@@ -157,36 +289,69 @@ class InfoBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = QuartzTokens.of(context);
     final color = switch (kind) {
-      DotKind.err => QuartzColors.err,
-      _ => QuartzColors.warn,
+      DotKind.err => t.err,
+      DotKind.ok => t.ok,
+      DotKind.off => t.faint,
+      _ => t.warn,
     };
+    final radius = BorderRadius.circular(QuartzRadii.sm);
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: .10),
-        borderRadius: BorderRadius.circular(QuartzRadii.md),
-        border: Border.all(color: color.withValues(alpha: .35)),
+        color: t.panel,
+        borderRadius: radius,
+        // Flutter 不允许带圆角的 Border 使用不同颜色的边；用内层左侧色条代替。
+        border: Border.all(color: t.border),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(kind == DotKind.err ? Icons.error_outline : Icons.warning_amber_outlined,
-              size: 18, color: color),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
-                Text(body, style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .55))),
-              ],
-            ),
+      child: ClipRRect(
+        borderRadius: radius,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(width: 2, color: color),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 11, 16, 11),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      QzIcon(
+                        kind == DotKind.ok ? QzIcons.info : QzIcons.warning,
+                        size: 17,
+                        color: color,
+                      ),
+                      const SizedBox(width: 9),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: QuartzType.bodyStrong.copyWith(
+                                color: color,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              body,
+                              style: QuartzType.sub.copyWith(
+                                color: t.muted,
+                                height: 1.55,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -208,45 +373,12 @@ class SegmentBar<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final dark = theme.brightness == Brightness.dark;
-    return Container(
+    return QzSegmented<T>(
+      values: values,
+      selected: selected,
+      labelOf: labelOf,
+      onChanged: onChanged,
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: dark ? QuartzColors.darkBgBase : const Color(0xFFE6E6EB),
-        borderRadius: BorderRadius.circular(QuartzRadii.sm + 1),
-      ),
-      child: Row(
-        children: [
-          for (final v in values)
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(v),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  decoration: v == selected
-                      ? BoxDecoration(
-                          color: dark ? QuartzColors.darkRaised : Colors.white,
-                          borderRadius: BorderRadius.circular(QuartzRadii.sm),
-                          boxShadow: const [BoxShadow(color: Color(0x2E000000), blurRadius: 3, offset: Offset(0, 1))],
-                        )
-                      : null,
-                  child: Text(
-                    labelOf(v),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: v == selected ? FontWeight.w600 : FontWeight.w400,
-                      color: v == selected
-                          ? theme.colorScheme.onSurface
-                          : theme.colorScheme.onSurface.withValues(alpha: .55),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
@@ -258,17 +390,7 @@ class SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .45),
-          fontWeight: FontWeight.w600,
-          letterSpacing: .35,
-        ),
-      ),
-    );
+    return QzSectionLabel(text);
   }
 }
 
@@ -280,72 +402,13 @@ Future<bool> showConfirmSheet(
   required String confirmLabel,
   String cancelLabel = '',
   bool danger = false,
-}) async {
-  final theme = Theme.of(context);
-  final dark = theme.brightness == Brightness.dark;
-  final r = await showModalBottomSheet<bool>(
-    context: context,
-    backgroundColor: dark ? QuartzColors.darkRaised : Colors.white,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (ctx) => Padding(
-      padding: const EdgeInsets.fromLTRB(18, 10, 18, 30),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4.5,
-              margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: .35),
-                borderRadius: BorderRadius.circular(3),
-              ),
-            ),
-          ),
-          Text(title, textAlign: TextAlign.center, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-          if (body != null) ...[
-            const SizedBox(height: 10),
-            Text(
-              body,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: .6),
-                height: 1.5,
-              ),
-            ),
-          ],
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.of(ctx).pop(false),
-                  child: Text(cancelLabel),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FilledButton(
-                  style: danger
-                      ? FilledButton.styleFrom(
-                          backgroundColor: QuartzColors.err.withValues(alpha: .14),
-                          foregroundColor: QuartzColors.err,
-                          side: BorderSide(color: QuartzColors.err.withValues(alpha: .35)),
-                        )
-                      : null,
-                  onPressed: () => Navigator.of(ctx).pop(true),
-                  child: Text(confirmLabel),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
+}) {
+  return showQzConfirm(
+    context,
+    title: title,
+    body: body,
+    confirmLabel: confirmLabel,
+    cancelLabel: cancelLabel,
+    danger: danger,
   );
-  return r == true;
 }

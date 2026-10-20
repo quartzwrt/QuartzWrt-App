@@ -29,8 +29,9 @@ final registryProvider = Provider<RouterRegistry>(
 final tokenStoreProvider = Provider<TokenStore>((_) => SecureTokenStore());
 
 /// mDNS 发现函数（可注入——widget 测试用固定结果覆盖）。
-final discoverProvider =
-    Provider<Future<List<DiscoveredRouter>> Function()>((_) => discoverRouters);
+final discoverProvider = Provider<Future<List<DiscoveredRouter>> Function()>(
+  (_) => discoverRouters,
+);
 
 /// 活动路由器（null = 未配对）。
 class ActiveRouterNotifier extends Notifier<PairedRouter?> {
@@ -46,7 +47,9 @@ class ActiveRouterNotifier extends Notifier<PairedRouter?> {
 }
 
 final activeRouterProvider =
-    NotifierProvider<ActiveRouterNotifier, PairedRouter?>(ActiveRouterNotifier.new);
+    NotifierProvider<ActiveRouterNotifier, PairedRouter?>(
+      ActiveRouterNotifier.new,
+    );
 
 /// 路由器可用端点（局域网 + 可选远程；W6.5 远程链路，DESIGN §7）。
 final routerEndpointsProvider = Provider<List<Endpoint>>((ref) {
@@ -85,7 +88,10 @@ class EndpointController extends Notifier<Endpoint?> {
     }
     if (local == null) return;
     try {
-      final client = QuartzApiClient.withPolicy(local.baseUrl, PinPolicy(expectedHex: r.fingerprint));
+      final client = QuartzApiClient.withPolicy(
+        local.baseUrl,
+        PinPolicy(expectedHex: r.fingerprint),
+      );
       final res = await client.info();
       if (res.ok && state?.kind == EndpointKind.remote) state = local;
     } on Exception {
@@ -94,7 +100,9 @@ class EndpointController extends Notifier<Endpoint?> {
   }
 }
 
-final endpointProvider = NotifierProvider<EndpointController, Endpoint?>(EndpointController.new);
+final endpointProvider = NotifierProvider<EndpointController, Endpoint?>(
+  EndpointController.new,
+);
 
 /// 活动路由器的 API 传输（端点失败切换；严格 pin 在端点工厂内保证）。
 ///
@@ -143,7 +151,9 @@ class AppVisibleNotifier extends Notifier<bool> {
   }
 }
 
-final appVisibleProvider = NotifierProvider<AppVisibleNotifier, bool>(AppVisibleNotifier.new);
+final appVisibleProvider = NotifierProvider<AppVisibleNotifier, bool>(
+  AppVisibleNotifier.new,
+);
 
 /// 快照轮询状态。
 enum SnapKind { loading, ok, degraded, unavailable, needRepair }
@@ -170,14 +180,13 @@ class SnapshotState {
     String? errorMessage,
     DateTime? lastOkAt,
     bool clearError = false,
-  }) =>
-      SnapshotState(
-        kind: kind ?? this.kind,
-        data: clearError ? data : (data ?? this.data),
-        errorCode: clearError ? null : (errorCode ?? this.errorCode),
-        errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-        lastOkAt: lastOkAt ?? this.lastOkAt,
-      );
+  }) => SnapshotState(
+    kind: kind ?? this.kind,
+    data: clearError ? data : (data ?? this.data),
+    errorCode: clearError ? null : (errorCode ?? this.errorCode),
+    errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+    lastOkAt: lastOkAt ?? this.lastOkAt,
+  );
 }
 
 const kPollInterval = Duration(seconds: 5);
@@ -230,7 +239,10 @@ class SnapshotController extends Notifier<SnapshotState> {
     final tm = ref.read(tokenManagerProvider);
     try {
       if (tm == null) {
-        state = const SnapshotState(kind: SnapKind.needRepair, errorCode: 'no_router');
+        state = const SnapshotState(
+          kind: SnapKind.needRepair,
+          errorCode: 'no_router',
+        );
         return;
       }
       final r = await tm.call('status');
@@ -243,14 +255,20 @@ class SnapshotController extends Notifier<SnapshotState> {
             errorCode: 'corrupt',
           );
         } else {
-          state = SnapshotState(kind: SnapKind.ok, data: snap, lastOkAt: DateTime.now());
+          state = SnapshotState(
+            kind: SnapKind.ok,
+            data: snap,
+            lastOkAt: DateTime.now(),
+          );
         }
         return;
       }
       final code = r.error?.code ?? 'transport';
       final kind = switch (code) {
         // 指纹不符（重刷固件换证书）与设备吊销/令牌失效同义：阻断 + 引导重新配对
-        'device_revoked' || 'token_invalid' || 'bad_certificate' => SnapKind.needRepair,
+        'device_revoked' ||
+        'token_invalid' ||
+        'bad_certificate' => SnapKind.needRepair,
         'data_unavailable' => SnapKind.unavailable,
         _ => state.data == null ? SnapKind.unavailable : SnapKind.degraded,
       };
@@ -276,8 +294,9 @@ class SnapshotController extends Notifier<SnapshotState> {
   }
 }
 
-final snapshotProvider =
-    NotifierProvider<SnapshotController, SnapshotState>(SnapshotController.new);
+final snapshotProvider = NotifierProvider<SnapshotController, SnapshotState>(
+  SnapshotController.new,
+);
 
 // ---- 外观（应用设置；持久化） ----
 
@@ -304,8 +323,9 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
   }
 }
 
-final themeModeProvider =
-    NotifierProvider<ThemeModeNotifier, ThemeMode>(ThemeModeNotifier.new);
+final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(
+  ThemeModeNotifier.new,
+);
 
 class LocaleNotifier extends Notifier<Locale?> {
   static const _k = 'qz.locale';
@@ -327,4 +347,6 @@ class LocaleNotifier extends Notifier<Locale?> {
   }
 }
 
-final localeProvider = NotifierProvider<LocaleNotifier, Locale?>(LocaleNotifier.new);
+final localeProvider = NotifierProvider<LocaleNotifier, Locale?>(
+  LocaleNotifier.new,
+);

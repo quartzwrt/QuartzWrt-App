@@ -37,9 +37,15 @@ class _CellularSimPageState extends ConsumerState<CellularSimPage> {
   Future<void> _load() async {
     final client = ref.read(qmodemClientProvider);
     if (client == null) return;
-    final caps = await client.call('qmodem.sim_switch_capabilities', section: widget.section);
+    final caps = await client.call(
+      'qmodem.sim_switch_capabilities',
+      section: widget.section,
+    );
     final slot = await client.call('qmodem.sim_slot', section: widget.section);
-    final store = await client.call('qmodem.sms_storage_get', section: widget.section);
+    final store = await client.call(
+      'qmodem.sms_storage_get',
+      section: widget.section,
+    );
     final mem = <String, dynamic>{
       if (store.map['SM'] is Map) 'SM': store.map['SM'],
       if (store.map['ME'] is Map) 'ME': store.map['ME'],
@@ -60,12 +66,18 @@ class _CellularSimPageState extends ConsumerState<CellularSimPage> {
     if (!mounted) return;
     setState(() {
       _loaded = true;
-      _switchable = caps.map['supportSwitch'] == '1' || caps.map['supportSwitch'] == true;
-      _slot = (slot.map['slot'] as String?) ?? (slot.map['sim_slot'] as String?) ?? '';
+      _switchable =
+          caps.map['supportSwitch'] == '1' || caps.map['supportSwitch'] == true;
+      _slot =
+          (slot.map['slot'] as String?) ??
+          (slot.map['sim_slot'] as String?) ??
+          '';
       _storeUsed = used;
       _storeTotal = total;
       _storeMem = memName;
-      _error = caps.ok && slot.ok ? '' : (caps.message.isNotEmpty ? caps.message : slot.message);
+      _error = caps.ok && slot.ok
+          ? ''
+          : (caps.message.isNotEmpty ? caps.message : slot.message);
     });
   }
 
@@ -73,27 +85,49 @@ class _CellularSimPageState extends ConsumerState<CellularSimPage> {
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
     final snap = ref.watch(snapshotProvider).data?.cellular;
-    final sim = snap?.modems.where((m) => m.id == widget.section).firstOrNull?.sim;
+    final sim = snap?.modems
+        .where((m) => m.id == widget.section)
+        .firstOrNull
+        ?.sim;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.cellularEntrySim, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.cellularEntrySim,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
       ),
       body: !_loaded
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QzSpinner(size: 22))
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 if (!_switchable)
-                  InfoBanner(title: l10n.cellularSimNoSwitchTitle, body: l10n.cellularSimNoSwitchBody),
+                  InfoBanner(
+                    title: l10n.cellularSimNoSwitchTitle,
+                    body: l10n.cellularSimNoSwitchBody,
+                  ),
                 QuartzCard(
                   title: l10n.cellularSimLabel,
                   child: Column(
                     children: [
-                      KvRow(l10n.cellularSimStatus, sim?.status.isNotEmpty == true ? sim!.status : l10n.unknownValue, first: true, valueMono: false),
-                      KvRow(l10n.cellularSimSlot, _slot.isEmpty ? l10n.unknownValue : _slot),
+                      KvRow(
+                        l10n.cellularSimStatus,
+                        sim?.status.isNotEmpty == true
+                            ? sim!.status
+                            : l10n.unknownValue,
+                        first: true,
+                        valueMono: false,
+                      ),
+                      KvRow(
+                        l10n.cellularSimSlot,
+                        _slot.isEmpty ? l10n.unknownValue : _slot,
+                      ),
                       if (_storeTotal > 0)
-                        KvRow(l10n.cellularSmsStorage, '$_storeMem · $_storeUsed / $_storeTotal'),
+                        KvRow(
+                          l10n.cellularSmsStorage,
+                          '$_storeMem · $_storeUsed / $_storeTotal',
+                        ),
                     ],
                   ),
                 ),
@@ -104,37 +138,46 @@ class _CellularSimPageState extends ConsumerState<CellularSimPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         for (final s in const ['1', '2'])
-                          InkWell(
-                            onTap: _busy ? null : () => setState(() => _slot = s),
+                          QzPressable(
+                            highlight: true,
+                            onTap: _busy
+                                ? null
+                                : () => setState(() => _slot = s),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    _slot == s ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                                  QzIcon(
+                                    _slot == s ? QzIcons.check : QzIcons.dot,
                                     size: 18,
-                                    color: _slot == s ? QuartzColors.accent : null,
+                                    color: _slot == s
+                                        ? QuartzColors.accent
+                                        : null,
                                   ),
                                   const SizedBox(width: 10),
-                                  Text('${l10n.cellularSimSlot} $s', style: const TextStyle(fontSize: 14)),
+                                  Text(
+                                    '${l10n.cellularSimSlot} $s',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                         const SizedBox(height: 6),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: _busy ? null : () => _switchSlot(),
-                            style: FilledButton.styleFrom(backgroundColor: QuartzColors.err.withValues(alpha: .9)),
-                            child: Text(l10n.cellularSimSwitchApply),
-                          ),
+                        QzButton(
+                          label: l10n.cellularSimSwitchApply,
+                          kind: QzButtonKind.danger,
+                          expand: true,
+                          onPressed: _busy ? null : () => _switchSlot(),
                         ),
                       ],
                     ),
                   ),
                 if (_error.isNotEmpty)
-                  InfoBanner(title: l10n.actionFailed(_error), body: l10n.cellularSettingsHint),
+                  InfoBanner(
+                    title: l10n.actionFailed(_error),
+                    body: l10n.cellularSettingsHint,
+                  ),
               ],
             ),
     );
@@ -153,11 +196,17 @@ class _CellularSimPageState extends ConsumerState<CellularSimPage> {
     );
     if (!ok) return;
     setState(() => _busy = true);
-    final r = await client.call('qmodem.set_sim_slot', section: widget.section, args: {'slot': _slot});
+    final r = await client.call(
+      'qmodem.set_sim_slot',
+      section: widget.section,
+      args: {'slot': _slot},
+    );
     if (!mounted) return;
     setState(() => _busy = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     if (r.ok) {
       await _load();

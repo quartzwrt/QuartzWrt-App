@@ -27,14 +27,14 @@ class RouterInfo {
   final List<String> features;
 
   factory RouterInfo.fromPayload(Map<String, dynamic> p) => RouterInfo(
-        name: (p['name'] as String?) ?? '',
-        model: (p['model'] as String?) ?? '',
-        release: (p['release'] as String?) ?? '',
-        kernel: (p['kernel'] as String?) ?? '',
-        api: (p['api'] as int?) ?? 0,
-        passwordSet: (p['password_set'] as bool?) ?? true,
-        features: List<String>.from(p['features'] as List? ?? const []),
-      );
+    name: (p['name'] as String?) ?? '',
+    model: (p['model'] as String?) ?? '',
+    release: (p['release'] as String?) ?? '',
+    kernel: (p['kernel'] as String?) ?? '',
+    api: (p['api'] as int?) ?? 0,
+    passwordSet: (p['password_set'] as bool?) ?? true,
+    features: List<String>.from(p['features'] as List? ?? const []),
+  );
 }
 
 /// login / refresh 返回的双令牌。
@@ -54,12 +54,12 @@ class Tokens {
   final String deviceId;
 
   factory Tokens.fromPayload(Map<String, dynamic> p) => Tokens(
-        accessToken: (p['access_token'] as String?) ?? '',
-        accessExp: (p['access_exp'] as int?) ?? 0,
-        refreshToken: (p['refresh_token'] as String?) ?? '',
-        refreshExp: (p['refresh_exp'] as int?) ?? 0,
-        deviceId: (p['device_id'] as String?) ?? '',
-      );
+    accessToken: (p['access_token'] as String?) ?? '',
+    accessExp: (p['access_exp'] as int?) ?? 0,
+    refreshToken: (p['refresh_token'] as String?) ?? '',
+    refreshExp: (p['refresh_exp'] as int?) ?? 0,
+    deviceId: (p['device_id'] as String?) ?? '',
+  );
 }
 
 /// 已配对路由器（元数据持久在 shared_preferences；refresh 令牌另存安全存储）。
@@ -106,34 +106,33 @@ class PairedRouter {
     int? remotePort,
     bool clearRemote = false,
     bool? cellularSeen,
-  }) =>
-      PairedRouter(
-        id: id,
-        name: name,
-        model: model,
-        host: host,
-        port: port,
-        fingerprint: fingerprint,
-        deviceId: deviceId,
-        addedAt: addedAt,
-        remoteHost: clearRemote ? null : (remoteHost ?? this.remoteHost),
-        remotePort: clearRemote ? null : (remotePort ?? this.remotePort),
-        cellularSeen: cellularSeen ?? this.cellularSeen,
-      );
+  }) => PairedRouter(
+    id: id,
+    name: name,
+    model: model,
+    host: host,
+    port: port,
+    fingerprint: fingerprint,
+    deviceId: deviceId,
+    addedAt: addedAt,
+    remoteHost: clearRemote ? null : (remoteHost ?? this.remoteHost),
+    remotePort: clearRemote ? null : (remotePort ?? this.remotePort),
+    cellularSeen: cellularSeen ?? this.cellularSeen,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'model': model,
-        'host': host,
-        'port': port,
-        'fingerprint': fingerprint,
-        'device_id': deviceId,
-        'added_at': addedAt,
-        if (hasRemote) 'remote_host': remoteHost,
-        if (hasRemote) 'remote_port': remotePort ?? 443,
-        if (cellularSeen) 'cellular_seen': true,
-      };
+    'id': id,
+    'name': name,
+    'model': model,
+    'host': host,
+    'port': port,
+    'fingerprint': fingerprint,
+    'device_id': deviceId,
+    'added_at': addedAt,
+    if (hasRemote) 'remote_host': remoteHost,
+    if (hasRemote) 'remote_port': remotePort ?? 443,
+    if (cellularSeen) 'cellular_seen': true,
+  };
 
   static PairedRouter? fromJson(Map<String, dynamic> j) {
     final id = j['id'] as String?;
@@ -149,7 +148,9 @@ class PairedRouter {
       fingerprint: (j['fingerprint'] as String?) ?? '',
       deviceId: (j['device_id'] as String?) ?? id,
       addedAt: (j['added_at'] as int?) ?? 0,
-      remoteHost: (remoteHost == null || remoteHost.isEmpty) ? null : remoteHost,
+      remoteHost: (remoteHost == null || remoteHost.isEmpty)
+          ? null
+          : remoteHost,
       remotePort: (j['remote_port'] as int?) ?? 443,
       cellularSeen: (j['cellular_seen'] as bool?) ?? false,
     );
@@ -173,12 +174,12 @@ class PairedDevice {
   final bool current;
 
   factory PairedDevice.fromJson(Map<String, dynamic> j) => PairedDevice(
-        id: (j['device_id'] as String?) ?? '',
-        name: (j['name'] as String?) ?? '',
-        lastSeen: (j['last_seen'] as int?) ?? 0,
-        revoked: (j['revoked'] as bool?) ?? false,
-        current: (j['current'] as bool?) ?? false,
-      );
+    id: (j['device_id'] as String?) ?? '',
+    name: (j['name'] as String?) ?? '',
+    lastSeen: (j['last_seen'] as int?) ?? 0,
+    revoked: (j['revoked'] as bool?) ?? false,
+    current: (j['current'] as bool?) ?? false,
+  );
 }
 
 /// 快照（AGGREGATE-API v1）——已知字段强类型 + raw 全量保留。
@@ -190,7 +191,8 @@ class Snapshot {
   int get version => (raw['v'] as int?) ?? 0;
   int get ts => (raw['ts'] as int?) ?? 0;
   int get interval => (raw['interval'] as int?) ?? 5;
-  List<String> get errors => List<String>.from(raw['errors'] as List? ?? const []);
+  List<String> get errors =>
+      List<String>.from(raw['errors'] as List? ?? const []);
 
   Map<String, dynamic>? _sec(String k) {
     final v = raw[k];
@@ -218,7 +220,10 @@ class Snapshot {
     final entries = <(String, Map<String, dynamic>)>[];
     for (final e in svc.entries) {
       final v = e.value;
-      entries.add((e.key, v is Map<String, dynamic> ? v : <String, dynamic>{'running': v == true}));
+      entries.add((
+        e.key,
+        v is Map<String, dynamic> ? v : <String, dynamic>{'running': v == true},
+      ));
     }
     entries.sort((a, b) {
       final ra = a.$2['running'] == true ? 0 : 1;
@@ -278,7 +283,10 @@ class Snapshot {
 /// 通用 KV 抽取：从未知节取展示用标量行（L1 泛化渲染兜底）。
 /// 规则：string/num/bool 直出；短数组 join；嵌套对象展平一层（k: v1/v2）；
 /// 最多 [max] 行（由卡层决定超限进详情）；null 跳过。
-List<MapEntry<String, String>> genericFields(Map<String, dynamic> section, {int max = 6}) {
+List<MapEntry<String, String>> genericFields(
+  Map<String, dynamic> section, {
+  int max = 6,
+}) {
   final out = <MapEntry<String, String>>[];
   for (final e in section.entries) {
     if (out.length >= max) break;
@@ -289,7 +297,10 @@ List<MapEntry<String, String>> genericFields(Map<String, dynamic> section, {int 
     } else if (v is String || v is num || v is bool) {
       text = '$v';
     } else if (v is List) {
-      text = v.where((x) => x is String || x is num).map((x) => '$x').join(' · ');
+      text = v
+          .where((x) => x is String || x is num)
+          .map((x) => '$x')
+          .join(' · ');
       if (text.isEmpty) continue;
     } else if (v is Map<String, dynamic>) {
       final inner = v.entries

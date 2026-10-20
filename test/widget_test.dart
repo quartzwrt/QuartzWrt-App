@@ -14,7 +14,9 @@ Future<void> pumpApp(WidgetTester tester, Locale locale) async {
       overrides: [
         prefsProvider.overrideWithValue(prefs),
         // mDNS 在测试环境不可用：注入固定发现结果
-        discoverProvider.overrideWithValue(() async => const <DiscoveredRouter>[]),
+        discoverProvider.overrideWithValue(
+          () async => const <DiscoveredRouter>[],
+        ),
       ],
       child: const QuartzApp(),
     ),

@@ -39,19 +39,19 @@ class PackageItem {
   final bool upgradable;
 
   factory PackageItem.fromJson(Map<String, dynamic> j) => PackageItem(
-        name: _str(j['name']),
-        version: _str(j['version']),
-        installedVersion: _str(j['installed_version']),
-        targetVersion: _str(j['target_version']),
-        description: _str(j['description']),
-        arch: _str(j['arch']),
-        license: _str(j['license']),
-        origin: _str(j['origin']),
-        installedSize: _int(j['installed_size']),
-        fileSize: _int(j['file_size']),
-        installed: j['installed'] == true,
-        upgradable: j['upgradable'] == true,
-      );
+    name: _str(j['name']),
+    version: _str(j['version']),
+    installedVersion: _str(j['installed_version']),
+    targetVersion: _str(j['target_version']),
+    description: _str(j['description']),
+    arch: _str(j['arch']),
+    license: _str(j['license']),
+    origin: _str(j['origin']),
+    installedSize: _int(j['installed_size']),
+    fileSize: _int(j['file_size']),
+    installed: j['installed'] == true,
+    upgradable: j['upgradable'] == true,
+  );
 }
 
 /// 一条软件包操作记录（history scope）。
@@ -73,28 +73,36 @@ class PackageOp {
   final int durationMs;
 
   /// 动作短名（packages.xyz → xyz；未知原样）。
-  String get op => action.startsWith('packages.') ? action.substring('packages.'.length) : action;
+  String get op => action.startsWith('packages.')
+      ? action.substring('packages.'.length)
+      : action;
 
   factory PackageOp.fromJson(Map<String, dynamic> j) => PackageOp(
-        ts: _int(j['ts']),
-        action: _str(j['action']),
-        target: _str(j['target']),
-        ok: j['ok'] == true,
-        output: _str(j['output']),
-        durationMs: _int(j['duration_ms']),
-      );
+    ts: _int(j['ts']),
+    action: _str(j['action']),
+    target: _str(j['target']),
+    ok: j['ok'] == true,
+    output: _str(j['output']),
+    durationMs: _int(j['duration_ms']),
+  );
 
   /// 兼容旧固件（quartz-app-api < v1.1 末版）：history 条目曾以「统一包条目形态」
   /// 承载（name=动作 id、version=目标、description=输出、file_size=耗时、installed=ok）。
   /// 缺 action 字段时按该映射回退；两侧皆缺则原样（_OpCard 会显示空标题）。
   factory PackageOp.fromLegacyJson(Map<String, dynamic> j) => PackageOp(
-        ts: _int(j['ts']),
-        action: _str(j['action']).isNotEmpty ? _str(j['action']) : _str(j['name']),
-        target: _str(j['target']).isNotEmpty ? _str(j['target']) : _str(j['version']),
-        ok: j['ok'] == true ? true : j['installed'] == true,
-        output: _str(j['output']).isNotEmpty ? _str(j['output']) : _str(j['description']),
-        durationMs: _int(j['duration_ms']) != 0 ? _int(j['duration_ms']) : _int(j['file_size']),
-      );
+    ts: _int(j['ts']),
+    action: _str(j['action']).isNotEmpty ? _str(j['action']) : _str(j['name']),
+    target: _str(j['target']).isNotEmpty
+        ? _str(j['target'])
+        : _str(j['version']),
+    ok: j['ok'] == true ? true : j['installed'] == true,
+    output: _str(j['output']).isNotEmpty
+        ? _str(j['output'])
+        : _str(j['description']),
+    durationMs: _int(j['duration_ms']) != 0
+        ? _int(j['duration_ms'])
+        : _int(j['file_size']),
+  );
 }
 
 /// packages 方法分页回包。
@@ -127,7 +135,11 @@ class PackagesPage {
     if (list is List) {
       for (final e in list) {
         if (e is! Map<String, dynamic>) continue;
-        raw.add(scope == 'history' ? PackageOp.fromLegacyJson(e) : PackageItem.fromJson(e));
+        raw.add(
+          scope == 'history'
+              ? PackageOp.fromLegacyJson(e)
+              : PackageItem.fromJson(e),
+        );
       }
     }
     return PackagesPage(
@@ -142,13 +154,13 @@ class PackagesPage {
 
   /// 追加下一页（分页列表累积）。
   PackagesPage appended(PackagesPage next) => PackagesPage(
-        scope: scope,
-        page: next.page,
-        perPage: next.perPage,
-        total: next.total,
-        pages: next.pages,
-        raw: [...raw, ...next.raw],
-      );
+    scope: scope,
+    page: next.page,
+    perPage: next.perPage,
+    total: next.total,
+    pages: next.pages,
+    raw: [...raw, ...next.raw],
+  );
 }
 
 // ---- 契约容忍取值（错类型/缺字段一律降级，绝不抛穿 UI）----

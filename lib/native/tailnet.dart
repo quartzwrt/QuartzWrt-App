@@ -48,7 +48,10 @@ class TailnetState {
   final String logs;
 
   bool get available => phase != TailnetPhase.unavailable;
-  bool get active => phase == TailnetPhase.starting || phase == TailnetPhase.needsLogin || phase == TailnetPhase.running;
+  bool get active =>
+      phase == TailnetPhase.starting ||
+      phase == TailnetPhase.needsLogin ||
+      phase == TailnetPhase.running;
 
   static const unavailableState = TailnetState(phase: TailnetPhase.unavailable);
 }
@@ -83,13 +86,19 @@ class FfiTailnetEngine implements TailnetEngineApi {
     }
   }
 
-  late final _setIfaces =
-      _lib.lookupFunction<Int32 Function(Pointer<Utf8>), int Function(Pointer<Utf8>)>(
-          'TailnetSetInterfaces');
-  late final _start = _lib.lookupFunction<
-      Int32 Function(Pointer<Utf8>, Pointer<Utf8>),
-      int Function(Pointer<Utf8>, Pointer<Utf8>)>('TailnetStart');
-  late final _stop = _lib.lookupFunction<Void Function(), void Function()>('TailnetStop');
+  late final _setIfaces = _lib
+      .lookupFunction<
+        Int32 Function(Pointer<Utf8>),
+        int Function(Pointer<Utf8>)
+      >('TailnetSetInterfaces');
+  late final _start = _lib
+      .lookupFunction<
+        Int32 Function(Pointer<Utf8>, Pointer<Utf8>),
+        int Function(Pointer<Utf8>, Pointer<Utf8>)
+      >('TailnetStart');
+  late final _stop = _lib.lookupFunction<Void Function(), void Function()>(
+    'TailnetStop',
+  );
   late final _proxy = _str('TailnetProxyAddr');
   late final _login = _str('TailnetLoginURL');
   late final _state = _str('TailnetState');
@@ -99,7 +108,10 @@ class FfiTailnetEngine implements TailnetEngineApi {
   late final _version = _str('TailnetVersion');
 
   String Function() _str(String name) {
-    final f = _lib.lookupFunction<Pointer<Utf8> Function(), Pointer<Utf8> Function()>(name);
+    final f = _lib
+        .lookupFunction<Pointer<Utf8> Function(), Pointer<Utf8> Function()>(
+          name,
+        );
     return () {
       final p = f();
       if (p == nullptr) return '';
@@ -166,7 +178,9 @@ TailnetState deriveState({
 }) {
   if (!enabled) {
     return TailnetState(
-      phase: backendState.isEmpty || backendState == 'Stopped' ? TailnetPhase.stopped : TailnetPhase.error,
+      phase: backendState.isEmpty || backendState == 'Stopped'
+          ? TailnetPhase.stopped
+          : TailnetPhase.error,
       message: lastError,
     );
   }
@@ -174,7 +188,10 @@ TailnetState deriveState({
     'Running' => TailnetPhase.running,
     'NeedsLogin' => TailnetPhase.needsLogin,
     'Starting' || 'Stopped' || '' => TailnetPhase.starting,
-    _ => backendState.startsWith('Error') ? TailnetPhase.error : TailnetPhase.starting,
+    _ =>
+      backendState.startsWith('Error')
+          ? TailnetPhase.error
+          : TailnetPhase.starting,
   };
   return TailnetState(
     phase: phase,
@@ -190,7 +207,10 @@ TailnetState deriveState({
 /// 采集本机接口表（dart:io 走 getifaddrs，Android 应用可用；Go 侧补齐
 /// MTU/MAC/状态与前缀长度）。仅取 name/index/地址（去 zone 与前缀）。
 Future<String> collectInterfacesJson() async {
-  final list = await NetworkInterface.list(includeLinkLocal: true, type: InternetAddressType.any);
+  final list = await NetworkInterface.list(
+    includeLinkLocal: true,
+    type: InternetAddressType.any,
+  );
   final out = <Map<String, Object>>[];
   for (final ni in list) {
     out.add({

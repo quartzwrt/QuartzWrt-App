@@ -25,7 +25,9 @@ class ApiError {
 /// 统一结果：ok=true 时 [data] 为方法载荷；否则 [error] 非空。
 class ApiResult {
   const ApiResult.ok(this.api, this.data) : ok = true, error = null;
-  const ApiResult.fail(this.api, ApiError this.error) : ok = false, data = const {};
+  const ApiResult.fail(this.api, ApiError this.error)
+    : ok = false,
+      data = const {};
 
   final bool ok;
   final int api;
@@ -50,7 +52,10 @@ ApiResult parseUbusResponse(Map<String, dynamic> body) {
 
   final result = body['result'];
   if (result is! List || result.length < 2) {
-    return const ApiResult.fail(0, ApiError('transport', 'malformed ubus result'));
+    return const ApiResult.fail(
+      0,
+      ApiError('transport', 'malformed ubus result'),
+    );
   }
   final status = result[0];
   if (status != 0) {
@@ -79,5 +84,8 @@ ApiResult parseUbusResponse(Map<String, dynamic> body) {
       ),
     );
   }
-  return ApiResult.fail(api, const ApiError('unknown', 'envelope without error'));
+  return ApiResult.fail(
+    api,
+    const ApiError('unknown', 'envelope without error'),
+  );
 }

@@ -50,8 +50,10 @@ class _DevicesPageState extends ConsumerState<DevicesPage> {
     if (!ok) return;
     final r = await tm.call('revoke', {'device_id': deviceId});
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.error?.message ?? ''))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.error?.message ?? ''),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     _load();
   }
@@ -61,15 +63,18 @@ class _DevicesPageState extends ConsumerState<DevicesPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.chevron_left), onPressed: () => context.pop()),
+      appBar: QzAppBar(
+        leading: QzLegacyIconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.pop(),
+        ),
         title: Text(l10n.devicesPageTitle),
       ),
       body: FutureBuilder<ApiResult>(
         future: _future,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: QzSpinner(size: 22));
           }
           final r = snap.data;
           if (r?.ok != true) {
@@ -83,7 +88,10 @@ class _DevicesPageState extends ConsumerState<DevicesPage> {
               ),
             );
           }
-          final list = (r!.data['devices'] as List?)?.whereType<Map<String, dynamic>>().toList() ??
+          final list =
+              (r!.data['devices'] as List?)
+                  ?.whereType<Map<String, dynamic>>()
+                  .toList() ??
               const <Map<String, dynamic>>[];
           return ListView.separated(
             padding: const EdgeInsets.all(16),
@@ -112,19 +120,30 @@ class _DevicesPageState extends ConsumerState<DevicesPage> {
                             children: [
                               Text(
                                 (d['name'] as String?) ?? '',
-                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               if (current) ...[
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: QuartzColors.ok.withValues(alpha: .12),
+                                    color: QuartzColors.ok.withValues(
+                                      alpha: .12,
+                                    ),
                                     borderRadius: BorderRadius.circular(999),
                                   ),
                                   child: Text(
                                     l10n.devicesCurrentBadge,
-                                    style: const TextStyle(fontSize: 11, color: QuartzColors.ok, fontWeight: FontWeight.w600),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: QuartzColors.ok,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -134,22 +153,34 @@ class _DevicesPageState extends ConsumerState<DevicesPage> {
                                   l10n.devicesRevokedBadge,
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: theme.colorScheme.onSurface.withValues(alpha: .45),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: .45),
                                   ),
                                 ),
                               ],
                             ],
                           ),
                           const SizedBox(height: 2),
-                          Text(seen, style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .5))),
+                          Text(
+                            seen,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: .5,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     if (!current && !revoked)
-                      TextButton(
-                        onPressed: () => _revoke((d['device_id'] as String?) ?? ''),
-                        child: Text(l10n.revokeBtn, style: const TextStyle(color: QuartzColors.err)),
+                      QzLegacyButton(
+                        kind: QzButtonKind.ghost,
+                        onPressed: () =>
+                            _revoke((d['device_id'] as String?) ?? ''),
+                        child: Text(
+                          l10n.revokeBtn,
+                          style: const TextStyle(color: QuartzColors.err),
+                        ),
                       ),
                   ],
                 ),

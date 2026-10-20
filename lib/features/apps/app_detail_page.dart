@@ -24,11 +24,13 @@ class AppDetailPage extends ConsumerWidget {
     final entry = snap?.services?[appId];
     final running = entry?['running'] == true;
     final core = (entry?['core'] as String?) ?? '';
-    final display = appId.isEmpty ? appId : appId[0].toUpperCase() + appId.substring(1).replaceAll('_', ' ');
+    final display = appId.isEmpty
+        ? appId
+        : appId[0].toUpperCase() + appId.substring(1).replaceAll('_', ' ');
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
+      appBar: QzAppBar(
+        leading: QzLegacyIconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () => context.pop(),
         ),
@@ -44,10 +46,14 @@ class AppDetailPage extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.shield_outlined, size: 34),
+                    const QzIcon(QzIcons.shield, size: 34),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(display, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                      child: Text(
+                        display,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
                     ),
                   ],
                 ),
@@ -55,14 +61,23 @@ class AppDetailPage extends ConsumerWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
-                        color: (running ? QuartzColors.ok : Theme.of(context).colorScheme.onSurface)
-                            .withValues(alpha: .10),
+                        color:
+                            (running
+                                    ? QuartzColors.ok
+                                    : Theme.of(context).colorScheme.onSurface)
+                                .withValues(alpha: .10),
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(
-                          color: (running ? QuartzColors.ok : Theme.of(context).colorScheme.onSurface)
-                              .withValues(alpha: .35),
+                          color:
+                              (running
+                                      ? QuartzColors.ok
+                                      : Theme.of(context).colorScheme.onSurface)
+                                  .withValues(alpha: .35),
                         ),
                       ),
                       child: Row(
@@ -89,9 +104,18 @@ class AppDetailPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                KvRow(l10n.appDetailStatusRunning, running ? l10n.running : l10n.stopped2, first: true, valueMono: false),
+                KvRow(
+                  l10n.appDetailStatusRunning,
+                  running ? l10n.running : l10n.stopped2,
+                  first: true,
+                  valueMono: false,
+                ),
                 if (core.isNotEmpty) KvRow(l10n.coreLabel, core),
-                KvRow(l10n.statusSourceLabel, l10n.statusSourceProbe, valueMono: false),
+                KvRow(
+                  l10n.statusSourceLabel,
+                  l10n.statusSourceProbe,
+                  valueMono: false,
+                ),
               ],
             ),
           ),
@@ -108,12 +132,19 @@ class AppDetailPage extends ConsumerWidget {
                   danger: false,
                 ),
                 if (running)
-                  _actionRow(context, ref, l10n.actionStop, 'stop', danger: true),
+                  _actionRow(
+                    context,
+                    ref,
+                    l10n.actionStop,
+                    'stop',
+                    danger: true,
+                  ),
                 const SizedBox(height: 6),
                 Text(
                   l10n.actionsNote,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
+                    color: Theme.of(context).colorScheme.onSurface
+                        .withValues(alpha: .5),
                     height: 1.5,
                   ),
                 ),
@@ -131,8 +162,15 @@ class AppDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _actionRow(BuildContext context, WidgetRef ref, String label, String op, {required bool danger}) {
-    return InkWell(
+  Widget _actionRow(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    String op, {
+    required bool danger,
+  }) {
+    return QzPressable(
+      highlight: true,
       onTap: () => _run(context, ref, label, op, danger: danger),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -149,7 +187,10 @@ class AppDetailPage extends ConsumerWidget {
             ),
             Text(
               '›',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .35)),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface
+                    .withValues(alpha: .35),
+              ),
             ),
           ],
         ),
@@ -157,14 +198,21 @@ class AppDetailPage extends ConsumerWidget {
     );
   }
 
-  Future<void> _run(BuildContext context, WidgetRef ref, String label, String op, {required bool danger}) async {
+  Future<void> _run(
+    BuildContext context,
+    WidgetRef ref,
+    String label,
+    String op, {
+    required bool danger,
+  }) async {
     final l10n = AppL10n.of(context);
     final tm = ref.read(tokenManagerProvider);
     if (tm == null) return;
     if (danger) {
       final ok = await showConfirmSheet(
         context,
-        title: '$label · ${appId.isNotEmpty ? appId[0].toUpperCase() + appId.substring(1) : appId}',
+        title:
+            '$label · ${appId.isNotEmpty ? appId[0].toUpperCase() + appId.substring(1) : appId}',
         confirmLabel: l10n.confirm,
         cancelLabel: l10n.cancel,
         danger: true,
@@ -174,8 +222,10 @@ class AppDetailPage extends ConsumerWidget {
     final spec = serviceAction(op: op, label: label, name: appId);
     final r = await runAction(tm, spec);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     ref.read(snapshotProvider.notifier).refreshNow();
   }
@@ -214,7 +264,11 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
       return;
     }
     setState(() => _loading = true);
-    final r = await tm.call('packages', {'scope': 'installed', 'query': widget.appId, 'per_page': 100});
+    final r = await tm.call('packages', {
+      'scope': 'installed',
+      'query': widget.appId,
+      'per_page': 100,
+    });
     if (!mounted) return;
     setState(() {
       _loading = false;
@@ -222,7 +276,8 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
         _apiMissing = false;
         final items = PackagesPage.fromPayload(r.data).items;
         // 名称精确匹配优先，否则取包含关系的第一项（如 openclash → luci-app-openclash）
-        _pkg = items.where((p) => p.name == widget.appId).firstOrNull ??
+        _pkg =
+            items.where((p) => p.name == widget.appId).firstOrNull ??
             items.where((p) => p.name.contains(widget.appId)).firstOrNull;
       } else if (r.error?.code == 'bad_request') {
         _apiMissing = true;
@@ -241,8 +296,12 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
     });
     if (!mounted) return;
     setState(() => _acting = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.pkgUpgraded(p.name) : l10n.actionFailed((r.error?.detail ?? r.error?.message) ?? ''))),
+    showQzToast(
+      context,
+      r.ok
+          ? l10n.pkgUpgraded(p.name)
+          : l10n.actionFailed((r.error?.detail ?? r.error?.message) ?? ''),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     _load();
   }
@@ -255,7 +314,12 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
       color: theme.colorScheme.onSurface.withValues(alpha: .5),
       height: 1.5,
     );
-    if (_loading) return const Padding(padding: EdgeInsets.all(8), child: Center(child: CircularProgressIndicator()));
+    if (_loading) {
+      return const Padding(
+        padding: EdgeInsets.all(8),
+        child: Center(child: QzSpinner(size: 22)),
+      );
+    }
     if (_apiMissing) return Text(l10n.packagesApiMissingBody, style: small);
     final p = _pkg;
     if (p == null) return Text(l10n.pkgCardNotInstalled, style: small);
@@ -264,7 +328,8 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
       children: [
         KvRow(l10n.pkgCardName, p.name, first: true),
         KvRow(l10n.packageVersion, p.version),
-        if (p.installedSize > 0) KvRow(l10n.packageSize, formatBytes(p.installedSize)),
+        if (p.installedSize > 0)
+          KvRow(l10n.packageSize, formatBytes(p.installedSize)),
         if (p.upgradable) ...[
           const SizedBox(height: 8),
           Row(
@@ -272,10 +337,13 @@ class _PackageCardState extends ConsumerState<_PackageCard> {
               Expanded(
                 child: Text(
                   l10n.pkgCardUpgradeTo(p.targetVersion),
-                  style: theme.textTheme.bodySmall?.copyWith(color: QuartzColors.warn, fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: QuartzColors.warn,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              FilledButton.tonal(
+              QzLegacyButton.tonal(
                 onPressed: _acting ? null : () => _upgrade(p),
                 child: Text(l10n.pkgUpgrade),
               ),

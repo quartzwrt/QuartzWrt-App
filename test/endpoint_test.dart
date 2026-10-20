@@ -6,17 +6,17 @@ import 'package:quartzwrt_app/api/envelope.dart';
 import 'package:quartzwrt_app/api/models.dart';
 
 PairedRouter _router({String? remoteHost, int? remotePort}) => PairedRouter(
-      id: 'dev1',
-      name: 'r',
-      model: 'm',
-      host: '192.168.1.1',
-      port: 443,
-      fingerprint: 'ab' * 32,
-      deviceId: 'dev1',
-      addedAt: 1,
-      remoteHost: remoteHost,
-      remotePort: remotePort,
-    );
+  id: 'dev1',
+  name: 'r',
+  model: 'm',
+  host: '192.168.1.1',
+  port: 443,
+  fingerprint: 'ab' * 32,
+  deviceId: 'dev1',
+  addedAt: 1,
+  remoteHost: remoteHost,
+  remotePort: remotePort,
+);
 
 const _okResult = ApiResult.ok(1, {'value': 'ok'});
 const _refused = ApiResult.fail(0, ApiError('connection_refused', 'refused'));
@@ -64,10 +64,23 @@ void main() {
   group('isTransportFailure', () {
     test('transport-class codes trigger; app-level errors do not', () {
       expect(isTransportFailure(_refused), isTrue);
-      expect(isTransportFailure(const ApiResult.fail(0, ApiError('timeout', ''))), isTrue);
-      expect(isTransportFailure(const ApiResult.fail(0, ApiError('bad_certificate', ''))), isTrue);
+      expect(
+        isTransportFailure(const ApiResult.fail(0, ApiError('timeout', ''))),
+        isTrue,
+      );
+      expect(
+        isTransportFailure(
+          const ApiResult.fail(0, ApiError('bad_certificate', '')),
+        ),
+        isTrue,
+      );
       expect(isTransportFailure(_denied), isFalse);
-      expect(isTransportFailure(const ApiResult.fail(1, ApiError('token_expired', ''))), isFalse);
+      expect(
+        isTransportFailure(
+          const ApiResult.fail(1, ApiError('token_expired', '')),
+        ),
+        isFalse,
+      );
       expect(isTransportFailure(_okResult), isFalse);
     });
   });
@@ -82,16 +95,16 @@ void main() {
     String key(Endpoint e, String? proxy) => '${e.baseUrl}|${proxy ?? ''}';
 
     FailoverTransport build() => FailoverTransport(
-          endpoints: eps,
-          fingerprint: 'ab' * 32,
-          current: () => currentState,
-          onSwitch: (e) {
-            currentState = e;
-            switches.add(e);
-          },
-          clientFactory: (e, fp, proxy) => _fake(fakes, key(e, proxy)),
-          proxyFor: proxyFor,
-        );
+      endpoints: eps,
+      fingerprint: 'ab' * 32,
+      current: () => currentState,
+      onSwitch: (e) {
+        currentState = e;
+        switches.add(e);
+      },
+      clientFactory: (e, fp, proxy) => _fake(fakes, key(e, proxy)),
+      proxyFor: proxyFor,
+    );
 
     setUp(() {
       eps = endpointsOf(_router(remoteHost: '100.1.2.3'));
@@ -121,19 +134,22 @@ void main() {
       expect(switches, isEmpty);
     });
 
-    test('local transport-fail → remote retried once; success sticks', () async {
-      fakes[key(eps[0], null)] = _FakeTransport(_refused);
-      final t = build();
-      final r = await t.call('status');
-      expect(r.ok, isTrue);
-      expect(fakes[key(eps[0], null)]!.calls, 1);
-      expect(fakes[key(eps[1], null)]!.calls, 1);
-      expect(switches.single.kind, EndpointKind.remote);
+    test(
+      'local transport-fail → remote retried once; success sticks',
+      () async {
+        fakes[key(eps[0], null)] = _FakeTransport(_refused);
+        final t = build();
+        final r = await t.call('status');
+        expect(r.ok, isTrue);
+        expect(fakes[key(eps[0], null)]!.calls, 1);
+        expect(fakes[key(eps[1], null)]!.calls, 1);
+        expect(switches.single.kind, EndpointKind.remote);
 
-      // 固化后下一次调用直接走远程
-      await t.call('status');
-      expect(fakes[key(eps[1], null)]!.calls, 2);
-    });
+        // 固化后下一次调用直接走远程
+        await t.call('status');
+        expect(fakes[key(eps[1], null)]!.calls, 2);
+      },
+    );
 
     test('remote in use, fails → falls back to local', () async {
       currentState = eps[1];
@@ -156,7 +172,9 @@ void main() {
 
     test('both fail → returns alt failure, no switch', () async {
       fakes[key(eps[0], null)] = _FakeTransport(_refused);
-      fakes[key(eps[1], null)] = _FakeTransport(const ApiResult.fail(0, ApiError('timeout', '')));
+      fakes[key(eps[1], null)] = _FakeTransport(
+        const ApiResult.fail(0, ApiError('timeout', '')),
+      );
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isFalse);
@@ -173,30 +191,40 @@ void main() {
       expect(switches, isEmpty);
     });
 
-    test('remote via proxy: proxy first, sticks, no extra direct attempt', () async {
-      proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
-      fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_okResult);
-      currentState = eps[1];
-      final t = build();
-      expect(t.attempts(), [(eps[1], '127.0.0.1:9'), (eps[1], null), (eps[0], null)]);
-      final r = await t.call('status');
-      expect(r.ok, isTrue);
-      expect(fakes[key(eps[1], '127.0.0.1:9')]!.calls, 1);
-      expect(fakes[key(eps[1], null)]!.calls, 0); // 未走直连
-      expect(switches, isEmpty);
-    });
+    test(
+      'remote via proxy: proxy first, sticks, no extra direct attempt',
+      () async {
+        proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
+        fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_okResult);
+        currentState = eps[1];
+        final t = build();
+        expect(t.attempts(), [
+          (eps[1], '127.0.0.1:9'),
+          (eps[1], null),
+          (eps[0], null),
+        ]);
+        final r = await t.call('status');
+        expect(r.ok, isTrue);
+        expect(fakes[key(eps[1], '127.0.0.1:9')]!.calls, 1);
+        expect(fakes[key(eps[1], null)]!.calls, 0); // 未走直连
+        expect(switches, isEmpty);
+      },
+    );
 
-    test('proxy fails → direct retry succeeds (same endpoint, no switch)', () async {
-      proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
-      fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_refused);
-      fakes[key(eps[1], null)] = _FakeTransport(_okResult);
-      currentState = eps[1];
-      final t = build();
-      final r = await t.call('status');
-      expect(r.ok, isTrue);
-      expect(fakes[key(eps[1], null)]!.calls, 1);
-      expect(switches, isEmpty);
-    });
+    test(
+      'proxy fails → direct retry succeeds (same endpoint, no switch)',
+      () async {
+        proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
+        fakes[key(eps[1], '127.0.0.1:9')] = _FakeTransport(_refused);
+        fakes[key(eps[1], null)] = _FakeTransport(_okResult);
+        currentState = eps[1];
+        final t = build();
+        final r = await t.call('status');
+        expect(r.ok, isTrue);
+        expect(fakes[key(eps[1], null)]!.calls, 1);
+        expect(switches, isEmpty);
+      },
+    );
 
     test('proxy and direct fail → falls back to local endpoint', () async {
       proxyFor = (e) => e.kind == EndpointKind.remote ? '127.0.0.1:9' : '';
@@ -217,7 +245,11 @@ void main() {
     });
 
     test('stale current (not in list) → uses first', () async {
-      currentState = const Endpoint(host: '10.0.0.9', port: 443, kind: EndpointKind.remote);
+      currentState = const Endpoint(
+        host: '10.0.0.9',
+        port: 443,
+        kind: EndpointKind.remote,
+      );
       final t = build();
       final r = await t.call('status');
       expect(r.ok, isTrue);

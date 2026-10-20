@@ -12,13 +12,19 @@ import '../native/tailnet.dart';
 import 'app_state.dart';
 
 /// 引擎实例（缺失 = 此构建未打包；UI 显式降级）。
-final tailnetEngineProvider = Provider<TailnetEngineApi?>((ref) => FfiTailnetEngine.open());
+final tailnetEngineProvider = Provider<TailnetEngineApi?>(
+  (ref) => FfiTailnetEngine.open(),
+);
 
 /// 状态目录提供者（单测注入临时目录——path_provider 在测试环境不可用）。
-final tailnetDirProvider = Provider<Future<String> Function()>((_) => defaultTailnetDir);
+final tailnetDirProvider = Provider<Future<String> Function()>(
+  (_) => defaultTailnetDir,
+);
 
 /// 接口表采集（单测注入固定 JSON；真机走 dart:io getifaddrs）。
-final tailnetInterfacesProvider = Provider<Future<String> Function()>((_) => collectInterfacesJson);
+final tailnetInterfacesProvider = Provider<Future<String> Function()>(
+  (_) => collectInterfacesJson,
+);
 
 Future<String> defaultTailnetDir() async {
   final base = await getApplicationSupportDirectory();
@@ -49,7 +55,10 @@ class TailnetController extends Notifier<TailnetState> {
     if (_enabled) {
       unawaited(_start());
     }
-    return TailnetState(phase: _enabled ? TailnetPhase.starting : TailnetPhase.stopped, enabled: _enabled);
+    return TailnetState(
+      phase: _enabled ? TailnetPhase.starting : TailnetPhase.stopped,
+      enabled: _enabled,
+    );
   }
 
   /// 开启内嵌直连（持久化；自动启动节点）。
@@ -69,7 +78,9 @@ class TailnetController extends Notifier<TailnetState> {
     _timer = null;
     ref.read(tailnetEngineProvider)?.stop();
     state = TailnetState(
-      phase: ref.read(tailnetEngineProvider) == null ? TailnetPhase.unavailable : TailnetPhase.stopped,
+      phase: ref.read(tailnetEngineProvider) == null
+          ? TailnetPhase.unavailable
+          : TailnetPhase.stopped,
     );
   }
 
@@ -91,7 +102,11 @@ class TailnetController extends Notifier<TailnetState> {
       }
       final ok = engine.start(dir, 'quartz-app');
       if (!ok) {
-        state = TailnetState(phase: TailnetPhase.error, enabled: true, message: engine.lastError());
+        state = TailnetState(
+          phase: TailnetPhase.error,
+          enabled: true,
+          message: engine.lastError(),
+        );
         return;
       }
       _refresh();
@@ -122,10 +137,13 @@ class TailnetController extends Notifier<TailnetState> {
   }
 }
 
-final tailnetProvider = NotifierProvider<TailnetController, TailnetState>(TailnetController.new);
+final tailnetProvider = NotifierProvider<TailnetController, TailnetState>(
+  TailnetController.new,
+);
 
 /// 远程端点可用的本地代理地址（空串 = 不可用/未开启/未连接）。
 String tailnetProxyFor(Ref ref) => proxyOf(ref.read(tailnetProvider));
 
 /// 从状态取代理地址（widget 侧用 ref.read(tailnetProvider) 后调用）。
-String proxyOf(TailnetState st) => st.phase == TailnetPhase.running ? st.proxyAddr : '';
+String proxyOf(TailnetState st) =>
+    st.phase == TailnetPhase.running ? st.proxyAddr : '';

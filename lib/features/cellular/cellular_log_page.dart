@@ -40,21 +40,37 @@ class _CellularLogPageState extends ConsumerState<CellularLogPage> {
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.cellularEntryLog, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-        actions: [TextButton(onPressed: _load, child: Text(l10n.refresh))],
+      appBar: QzAppBar(
+        title: Text(
+          l10n.cellularEntryLog,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          QzLegacyButton(
+            kind: QzButtonKind.ghost,
+            onPressed: _load,
+            child: Text(l10n.refresh),
+          ),
+        ],
       ),
       body: !_loaded
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QzSpinner(size: 22))
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                InfoBanner(title: l10n.cellularLogHintTitle, body: l10n.cellularLogHintBody),
+                InfoBanner(
+                  title: l10n.cellularLogHintTitle,
+                  body: l10n.cellularLogHintBody,
+                ),
                 QuartzCard(
                   title: l10n.cellularEntryLog,
                   child: SelectableText(
                     _log.trim().isEmpty ? l10n.cellularLogEmpty : _log,
-                    style: const TextStyle(fontFamily: 'monospace', fontSize: 11.5, height: 1.5),
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 11.5,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ],

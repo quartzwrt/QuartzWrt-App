@@ -66,7 +66,9 @@ Future<PairOutcome> pairRouter({
     throw PairException(loginR.error!.code, loginR.error!.message);
   }
   final tokens = Tokens.fromPayload(loginR.data);
-  if (tokens.accessToken.isEmpty || tokens.refreshToken.isEmpty || tokens.deviceId.isEmpty) {
+  if (tokens.accessToken.isEmpty ||
+      tokens.refreshToken.isEmpty ||
+      tokens.deviceId.isEmpty) {
     throw PairException('token_invalid', 'malformed login response');
   }
 

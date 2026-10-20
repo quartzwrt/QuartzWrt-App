@@ -1573,6 +1573,18 @@ abstract class AppL10n {
   /// **'Not enabled'**
   String get notEnabled;
 
+  /// No description provided for @ipClickToReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Click to reveal'**
+  String get ipClickToReveal;
+
+  /// No description provided for @ipClickToHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Click to hide'**
+  String get ipClickToHide;
+
   /// No description provided for @bandixLimitTitle.
   ///
   /// In en, this message translates to:
@@ -1837,6 +1849,60 @@ abstract class AppL10n {
   /// **'every {step}s · {points} points'**
   String cellularSeriesHint(String step, String points);
 
+  /// No description provided for @cellularOperatorChinaMobile.
+  ///
+  /// In en, this message translates to:
+  /// **'China Mobile'**
+  String get cellularOperatorChinaMobile;
+
+  /// No description provided for @cellularOperatorChinaUnicom.
+  ///
+  /// In en, this message translates to:
+  /// **'China Unicom'**
+  String get cellularOperatorChinaUnicom;
+
+  /// No description provided for @cellularOperatorChinaTelecom.
+  ///
+  /// In en, this message translates to:
+  /// **'China Telecom'**
+  String get cellularOperatorChinaTelecom;
+
+  /// No description provided for @cellularNoResetPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No reset plan'**
+  String get cellularNoResetPlan;
+
+  /// No description provided for @cellularResetMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly {day} · {time}'**
+  String cellularResetMonthly(int day, String time);
+
+  /// No description provided for @cellularResetWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly · {time}'**
+  String cellularResetWeekly(String time);
+
+  /// No description provided for @cellularResetDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily · {time}'**
+  String cellularResetDaily(String time);
+
+  /// No description provided for @tcpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'TCP'**
+  String get tcpLabel;
+
+  /// No description provided for @udpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'UDP'**
+  String get udpLabel;
+
   /// No description provided for @cellularNetworkSim.
   ///
   /// In en, this message translates to:
@@ -1848,6 +1914,186 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Serving cell'**
   String get cellularServingCell;
+
+  /// No description provided for @cellularRadioSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get cellularRadioSection;
+
+  /// No description provided for @cellularCellSimSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Cell & SIM'**
+  String get cellularCellSimSection;
+
+  /// No description provided for @cellularConnectionSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get cellularConnectionSection;
+
+  /// No description provided for @cellularHardwareSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware'**
+  String get cellularHardwareSection;
+
+  /// No description provided for @cellularBandLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Band'**
+  String get cellularBandLabel;
+
+  /// No description provided for @cellularArfcnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ARFCN'**
+  String get cellularArfcnLabel;
+
+  /// No description provided for @cellularPciLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'PCI'**
+  String get cellularPciLabel;
+
+  /// No description provided for @cellularBwLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'UL / DL BW'**
+  String get cellularBwLabel;
+
+  /// No description provided for @cellularScsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SCS'**
+  String get cellularScsLabel;
+
+  /// No description provided for @cellularDuplexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplex'**
+  String get cellularDuplexLabel;
+
+  /// No description provided for @cellularMccMncLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MCC / MNC'**
+  String get cellularMccMncLabel;
+
+  /// No description provided for @cellularTacLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'TAC'**
+  String get cellularTacLabel;
+
+  /// No description provided for @cellularCellIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cell ID'**
+  String get cellularCellIdLabel;
+
+  /// No description provided for @cellularSimStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM status'**
+  String get cellularSimStatusLabel;
+
+  /// No description provided for @cellularSimSlotLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM slot'**
+  String get cellularSimSlotLabel;
+
+  /// No description provided for @cellularSwitchableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Switchable'**
+  String get cellularSwitchableLabel;
+
+  /// No description provided for @cellularCqiLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'CQI UL / DL'**
+  String get cellularCqiLabel;
+
+  /// No description provided for @cellularAmbrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'AMBR UL / DL'**
+  String get cellularAmbrLabel;
+
+  /// No description provided for @cellularPreferenceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preference'**
+  String get cellularPreferenceLabel;
+
+  /// No description provided for @cellularManufacturerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacturer'**
+  String get cellularManufacturerLabel;
+
+  /// No description provided for @cellularRevisionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Revision'**
+  String get cellularRevisionLabel;
+
+  /// No description provided for @cellularVoltageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Voltage'**
+  String get cellularVoltageLabel;
+
+  /// No description provided for @cellularConnectStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect status'**
+  String get cellularConnectStatusLabel;
+
+  /// No description provided for @simStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get simStatusReady;
+
+  /// No description provided for @yesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yesLabel;
+
+  /// No description provided for @noLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get noLabel;
+
+  /// No description provided for @unlockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get unlockedLabel;
+
+  /// No description provided for @lockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get lockedLabel;
+
+  /// No description provided for @cellularNeighborIntra.
+  ///
+  /// In en, this message translates to:
+  /// **'Intra-frequency'**
+  String get cellularNeighborIntra;
+
+  /// No description provided for @cellularNeighborInter.
+  ///
+  /// In en, this message translates to:
+  /// **'Inter-frequency'**
+  String get cellularNeighborInter;
 
   /// No description provided for @cellularSimLabel.
   ///
@@ -1932,6 +2178,228 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'Dial log'**
   String get cellularEntryLog;
+
+  /// No description provided for @cellularGroupDial.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial'**
+  String get cellularGroupDial;
+
+  /// No description provided for @cellularGroupAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced modem settings'**
+  String get cellularGroupAdvanced;
+
+  /// No description provided for @cellularGroupMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS & SIM'**
+  String get cellularGroupMessages;
+
+  /// No description provided for @cellularEntryNetworkSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Network preference and band lock'**
+  String get cellularEntryNetworkSub;
+
+  /// No description provided for @cellularEntryNeighbor.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbor cells'**
+  String get cellularEntryNeighbor;
+
+  /// No description provided for @cellularEntryNeighborSub.
+  ///
+  /// In en, this message translates to:
+  /// **'LTE / NR measurements (read-only)'**
+  String get cellularEntryNeighborSub;
+
+  /// No description provided for @cellularEntryAtSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Port, presets and response history'**
+  String get cellularEntryAtSub;
+
+  /// No description provided for @cellularEntryMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Modem maintenance'**
+  String get cellularEntryMaintenance;
+
+  /// No description provided for @cellularEntryMaintenanceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial mode, IMEI, reboot, counters'**
+  String get cellularEntryMaintenanceSub;
+
+  /// No description provided for @cellularEntryLogSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial and link events'**
+  String get cellularEntryLogSub;
+
+  /// No description provided for @cellularEntrySmsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages, storage and sync'**
+  String get cellularEntrySmsSub;
+
+  /// No description provided for @cellularEntrySimSub.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM state and slot switch'**
+  String get cellularEntrySimSub;
+
+  /// No description provided for @cellularNeighborReadonly.
+  ///
+  /// In en, this message translates to:
+  /// **'Cell locking stays in the web UI; the app only shows neighbor measurements.'**
+  String get cellularNeighborReadonly;
+
+  /// No description provided for @cellularNeighborEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No neighbor cells reported (unsupported by the modem or none visible).'**
+  String get cellularNeighborEmpty;
+
+  /// No description provided for @cellularNeighborLte.
+  ///
+  /// In en, this message translates to:
+  /// **'LTE neighbors'**
+  String get cellularNeighborLte;
+
+  /// No description provided for @cellularNeighborNr.
+  ///
+  /// In en, this message translates to:
+  /// **'NR neighbors'**
+  String get cellularNeighborNr;
+
+  /// No description provided for @cellularNeighborLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Cell lock state'**
+  String get cellularNeighborLock;
+
+  /// No description provided for @cellularRetryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh or try again later.'**
+  String get cellularRetryHint;
+
+  /// No description provided for @cellularStatsResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic reset schedule'**
+  String get cellularStatsResetTitle;
+
+  /// No description provided for @cellularStatsResetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Clears traffic counters on schedule (monthly uses day 1–28).'**
+  String get cellularStatsResetHint;
+
+  /// No description provided for @cellularStatsResetEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable automatic reset'**
+  String get cellularStatsResetEnable;
+
+  /// No description provided for @cellularStatsResetType.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset cycle'**
+  String get cellularStatsResetType;
+
+  /// No description provided for @cellularStatsDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get cellularStatsDaily;
+
+  /// No description provided for @cellularStatsMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get cellularStatsMonthly;
+
+  /// No description provided for @cellularStatsHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset hour'**
+  String get cellularStatsHour;
+
+  /// No description provided for @cellularStatsDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset day'**
+  String get cellularStatsDay;
+
+  /// No description provided for @cellularStatsApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Save reset schedule'**
+  String get cellularStatsApply;
+
+  /// No description provided for @cellularStatsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset schedule saved'**
+  String get cellularStatsSaved;
+
+  /// No description provided for @cellularAtPort.
+  ///
+  /// In en, this message translates to:
+  /// **'AT port'**
+  String get cellularAtPort;
+
+  /// No description provided for @cellularAtPortInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'{port} (invalid)'**
+  String cellularAtPortInvalid(String port);
+
+  /// No description provided for @cellularAtPortOther.
+  ///
+  /// In en, this message translates to:
+  /// **'{port} (not this modem)'**
+  String cellularAtPortOther(String port);
+
+  /// No description provided for @cellularAtOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Output'**
+  String get cellularAtOutput;
+
+  /// No description provided for @cellularAtOutputEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Commands and responses accumulate here after you send an AT command.'**
+  String get cellularAtOutputEmpty;
+
+  /// No description provided for @cellularAtClearOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear output'**
+  String get cellularAtClearOutput;
+
+  /// No description provided for @cellularAtNoPorts.
+  ///
+  /// In en, this message translates to:
+  /// **'No AT ports found'**
+  String get cellularAtNoPorts;
+
+  /// No description provided for @cellularAtSelectPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Select AT port'**
+  String get cellularAtSelectPort;
+
+  /// No description provided for @cellularAtInvalidPortWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This port is invalid or does not belong to this modem; sending is disabled.'**
+  String get cellularAtInvalidPortWarning;
 
   /// No description provided for @cellularMoreEntriesPlanned.
   ///
@@ -3283,6 +3751,18 @@ abstract class AppL10n {
   /// **'Delete the LED configuration for \"{title}\"?'**
   String ledsDeleteBody(String title);
 
+  /// No description provided for @routerChipNative.
+  ///
+  /// In en, this message translates to:
+  /// **'Native'**
+  String get routerChipNative;
+
+  /// No description provided for @routerChipGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Form'**
+  String get routerChipGeneric;
+
   /// No description provided for @routerChipReady.
   ///
   /// In en, this message translates to:
@@ -3300,6 +3780,270 @@ abstract class AppL10n {
   /// In en, this message translates to:
   /// **'More router settings are coming in a later version.'**
   String get routerMoreHint;
+
+  /// No description provided for @bandixPolicyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy'**
+  String get bandixPolicyLabel;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get viewAll;
+
+  /// No description provided for @clientHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Hostname'**
+  String get clientHost;
+
+  /// No description provided for @clientIp.
+  ///
+  /// In en, this message translates to:
+  /// **'IP address'**
+  String get clientIp;
+
+  /// No description provided for @clientLastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last seen'**
+  String get clientLastSeen;
+
+  /// No description provided for @servicesCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Services & cores'**
+  String get servicesCardTitle;
+
+  /// No description provided for @dockerContainers.
+  ///
+  /// In en, this message translates to:
+  /// **'Containers'**
+  String get dockerContainers;
+
+  /// No description provided for @dockerNetworks.
+  ///
+  /// In en, this message translates to:
+  /// **'Networks'**
+  String get dockerNetworks;
+
+  /// No description provided for @dockerVolumes.
+  ///
+  /// In en, this message translates to:
+  /// **'Volumes'**
+  String get dockerVolumes;
+
+  /// No description provided for @dockerEngine.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine'**
+  String get dockerEngine;
+
+  /// No description provided for @dockerRoot.
+  ///
+  /// In en, this message translates to:
+  /// **'Root'**
+  String get dockerRoot;
+
+  /// No description provided for @dockerNoContainers.
+  ///
+  /// In en, this message translates to:
+  /// **'No containers'**
+  String get dockerNoContainers;
+
+  /// No description provided for @bandixCardNote.
+  ///
+  /// In en, this message translates to:
+  /// **'WAN rates; policy = whitelist / limit / quota'**
+  String get bandixCardNote;
+
+  /// No description provided for @cellularRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered'**
+  String get cellularRegistered;
+
+  /// No description provided for @cellularNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not registered'**
+  String get cellularNotRegistered;
+
+  /// No description provided for @cellularRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get cellularRate;
+
+  /// No description provided for @cellularThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get cellularThisMonth;
+
+  /// No description provided for @heroUptime.
+  ///
+  /// In en, this message translates to:
+  /// **'Uptime'**
+  String get heroUptime;
+
+  /// No description provided for @heroCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Collected'**
+  String get heroCollected;
+
+  /// No description provided for @networkOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'online'**
+  String get networkOnline;
+
+  /// No description provided for @networkOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'offline'**
+  String get networkOffline;
+
+  /// No description provided for @networkCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Download (blue) / Upload (grey) — last 2 minutes'**
+  String get networkCaption;
+
+  /// No description provided for @processesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Processes'**
+  String get processesLabel;
+
+  /// No description provided for @appearancePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get appearancePreview;
+
+  /// No description provided for @appearanceMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance mode'**
+  String get appearanceMode;
+
+  /// No description provided for @appearanceModeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows the system on first use; the local choice takes precedence.'**
+  String get appearanceModeHint;
+
+  /// No description provided for @appearanceMaterial.
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get appearanceMaterial;
+
+  /// No description provided for @appearanceOpacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Interface opacity'**
+  String get appearanceOpacity;
+
+  /// No description provided for @appearanceOpacityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'50–100%; applies to panels, top bar and tab bar; below 100% enables backdrop blur.'**
+  String get appearanceOpacityHint;
+
+  /// No description provided for @appearanceBlur.
+  ///
+  /// In en, this message translates to:
+  /// **'Blur strength'**
+  String get appearanceBlur;
+
+  /// No description provided for @appearanceBlurHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0–40px; applies to chrome and translucent panels; 0 = off.'**
+  String get appearanceBlurHint;
+
+  /// No description provided for @appearanceWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallpaper'**
+  String get appearanceWallpaper;
+
+  /// No description provided for @appearanceWallpaperHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Single image ≤1920px / JPEG / ≤2MB; removing falls back to noise; never uploaded.'**
+  String get appearanceWallpaperHint;
+
+  /// No description provided for @appearanceWallpaperEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No wallpaper'**
+  String get appearanceWallpaperEmpty;
+
+  /// No description provided for @appearanceDefaultNoise.
+  ///
+  /// In en, this message translates to:
+  /// **'Default quartz noise'**
+  String get appearanceDefaultNoise;
+
+  /// No description provided for @appearanceChangeWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get appearanceChangeWallpaper;
+
+  /// No description provided for @appearanceChooseWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image'**
+  String get appearanceChooseWallpaper;
+
+  /// No description provided for @appearanceRemoveWallpaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get appearanceRemoveWallpaper;
+
+  /// No description provided for @appearanceReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get appearanceReset;
+
+  /// No description provided for @appearanceResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance reset to defaults'**
+  String get appearanceResetDone;
+
+  /// No description provided for @appearanceLocalOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'App appearance affects this device only; it never writes /etc/config/quartz on the router.'**
+  String get appearanceLocalOnly;
+
+  /// No description provided for @appearanceWallpaperFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save wallpaper: {detail}'**
+  String appearanceWallpaperFailed(Object detail);
+
+  /// No description provided for @appearanceWallpaperTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Image exceeds 2 MB. Choose a smaller image.'**
+  String get appearanceWallpaperTooLarge;
+
+  /// No description provided for @appearanceLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'On device'**
+  String get appearanceLocal;
 
   /// No description provided for @configSessionUnavailable.
   ///

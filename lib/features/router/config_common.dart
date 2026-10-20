@@ -111,8 +111,8 @@ class ConfigDraft {
     required this.section,
     required this.fields,
     required Map<String, dynamic> initial,
-  })  : _initial = Map.of(initial),
-        _current = Map.of(initial);
+  }) : _initial = Map.of(initial),
+       _current = Map.of(initial);
 
   final String config;
   final String section;
@@ -236,7 +236,7 @@ String configErrorText(AppL10n l10n, ApiError? err) {
 }
 
 void showConfigSnack(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  showQzToast(context, text);
 }
 
 /// 单个字段控件（布尔开关 / 枚举选择 / 文本框）。
@@ -259,17 +259,39 @@ class ConfigFieldTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
-    final muted = theme.colorScheme.onSurface.withValues(alpha: .45);
+    final t = QuartzTokens.of(context);
     switch (field.kind) {
       case ConfigFieldKind.boolean:
-        return SwitchListTile.adaptive(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: Text(field.label, style: theme.textTheme.bodyMedium),
-          subtitle: field.hint == null ? null : Text(field.hint!, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
-          value: configBool(value),
-          onChanged: enabled ? (v) => onChanged(v) : null,
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      field.label,
+                      style: QuartzType.body.copyWith(color: t.text),
+                    ),
+                    if (field.hint != null) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        field.hint!,
+                        style: QuartzType.caption.copyWith(color: t.muted),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              QzToggle(
+                value: configBool(value),
+                semanticLabel: field.label,
+                onChanged: enabled ? (v) => onChanged(v) : null,
+              ),
+            ],
+          ),
         );
       case ConfigFieldKind.choice:
         final current = value == null ? '' : '$value';
@@ -280,29 +302,11 @@ class ConfigFieldTile extends StatelessWidget {
             break;
           }
         }
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(QuartzRadii.sm),
-            onTap: enabled ? () => _choose(context) : null,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-              child: Row(
-                children: [
-                  Expanded(child: Text(field.label, style: theme.textTheme.bodyMedium)),
-                  Text(
-                    label ?? (current.isEmpty ? l10n.configUnset : current),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: enabled ? QuartzColors.accent : muted,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(Icons.expand_more, size: 18, color: muted),
-                ],
-              ),
-            ),
-          ),
+        return QzSelectRow(
+          label: field.label,
+          value: label ?? (current.isEmpty ? l10n.configUnset : current),
+          enabled: enabled,
+          onTap: () => _choose(context),
         );
       case ConfigFieldKind.text:
       case ConfigFieldKind.integer:
@@ -314,28 +318,28 @@ class ConfigFieldTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(field.label, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
-              const SizedBox(height: 5),
-              TextField(
+              QzField(
                 controller: controller,
+                label: field.label,
+                hint: masked
+                    ? l10n.configSensitiveHint
+                    : (field.hint ?? l10n.configUnset),
                 enabled: enabled,
-                obscureText: field.sensitive,
-                keyboardType: field.kind == ConfigFieldKind.integer ? TextInputType.number : TextInputType.text,
+                obscure: field.sensitive,
+                keyboardType: field.kind == ConfigFieldKind.integer
+                    ? TextInputType.number
+                    : TextInputType.text,
                 inputFormatters: field.kind == ConfigFieldKind.integer
                     ? [FilteringTextInputFormatter.digitsOnly]
                     : null,
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: masked ? l10n.configSensitiveHint : (field.hint ?? l10n.configUnset),
-                  hintStyle: TextStyle(color: muted, fontSize: 13),
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                ),
                 onChanged: (v) => onChanged(v),
               ),
               if (!masked && field.hint != null) ...[
                 const SizedBox(height: 3),
-                Text(field.hint!, style: theme.textTheme.bodySmall?.copyWith(color: muted, fontSize: 11)),
+                Text(
+                  field.hint!,
+                  style: QuartzType.caption.copyWith(color: t.faint),
+                ),
               ],
             ],
           ),
@@ -344,41 +348,43 @@ class ConfigFieldTile extends StatelessWidget {
   }
 
   Future<void> _choose(BuildContext context) async {
-    final picked = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark ? QuartzColors.darkRaised : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 10),
-            Text(field.label, style: Theme.of(ctx).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 6),
-            Flexible(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  for (final c in field.choices)
-                    ListTile(
-                      dense: true,
-                      title: Text(c.label),
-                      trailing: c.value == '$value' ? const Icon(Icons.check, size: 18) : null,
-                      onTap: () => Navigator.of(ctx).pop(c.value),
-                    ),
-                ],
-              ),
+    final l10n = AppL10n.of(context);
+    final t = QuartzTokens.of(context);
+    final picked = await showQzSheet<String>(
+      context,
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            field.label,
+            textAlign: TextAlign.center,
+            style: QuartzType.heroTitle.copyWith(color: t.text),
+          ),
+          const SizedBox(height: 8),
+          for (final (i, c) in field.choices.indexed)
+            QzListRow(
+              first: i == 0,
+              title: c.label,
+              showChevron: false,
+              trailing: c.value == '$value'
+                  ? QzIcon(QzIcons.check, size: 18, color: t.accent)
+                  : null,
+              onTap: () => Navigator.of(ctx).pop(c.value),
             ),
-            const SizedBox(height: 8),
-          ],
-        ),
+          const SizedBox(height: 8),
+          QzButton(
+            label: l10n.cancel,
+            kind: QzButtonKind.plain,
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+        ],
       ),
     );
     if (picked != null) onChanged(picked);
   }
 }
 
-/// 一节的编辑卡片（加载后的值 → 修改 → 保存/应用）。
 class ConfigGroupEditor extends ConsumerStatefulWidget {
   const ConfigGroupEditor({
     super.key,
@@ -421,7 +427,8 @@ class _ConfigGroupEditorState extends ConsumerState<ConfigGroupEditor> {
   @override
   void didUpdateWidget(covariant ConfigGroupEditor old) {
     super.didUpdateWidget(old);
-    final changed = old.section != widget.section ||
+    final changed =
+        old.section != widget.section ||
         old.config != widget.config ||
         !_sameMap(old.initial, widget.initial);
     if (changed && !_draft.hasChanges) _reset();
@@ -447,7 +454,9 @@ class _ConfigGroupEditorState extends ConsumerState<ConfigGroupEditor> {
       if (!_isTextual(f.kind)) continue;
       final raw = widget.initial[f.option];
       final masked = f.sensitive && raw == '__masked__';
-      final ctrl = TextEditingController(text: masked ? '' : configValueText(raw));
+      final ctrl = TextEditingController(
+        text: masked ? '' : configValueText(raw),
+      );
       _controllers[f.option]?.dispose();
       _controllers[f.option] = ctrl;
       stale.remove(f.option);
@@ -491,19 +500,12 @@ class _ConfigGroupEditorState extends ConsumerState<ConfigGroupEditor> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
+    final t = QuartzTokens.of(context);
     final fields = _draft.visibleFields;
     return QuartzCard(
       title: widget.title,
       trailing: _draft.hasChanges
-          ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: QuartzColors.warn.withValues(alpha: .14),
-                borderRadius: BorderRadius.circular(7),
-              ),
-              child: Text(l10n.configDirtyChip,
-                  style: const TextStyle(fontSize: 11, color: QuartzColors.warn, fontWeight: FontWeight.w600)),
-            )
+          ? QzChip(l10n.configDirtyChip, kind: QzChipKind.warn)
           : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -511,9 +513,7 @@ class _ConfigGroupEditorState extends ConsumerState<ConfigGroupEditor> {
           if (widget.subtitle != null) ...[
             Text(
               widget.subtitle!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
-                  ),
+              style: QuartzType.caption.copyWith(color: t.muted),
             ),
             const SizedBox(height: 6),
           ],
@@ -533,12 +533,10 @@ class _ConfigGroupEditorState extends ConsumerState<ConfigGroupEditor> {
               },
             ),
           const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _busy || !_draft.hasChanges ? null : _save,
-              child: Text(_busy ? l10n.configSaving : l10n.save),
-            ),
+          QzButton(
+            label: _busy ? l10n.configSaving : l10n.save,
+            expand: true,
+            onPressed: _busy || !_draft.hasChanges ? null : _save,
           ),
         ],
       ),
@@ -583,13 +581,17 @@ Future<ApplyOutcome?> applyConfigMutation(
   final r = await mutate(client);
   if (!r.ok) {
     await client.revert(config);
-    if (context.mounted) showConfigSnack(context, configErrorText(l10n, r.error));
+    if (context.mounted) {
+      showConfigSnack(context, configErrorText(l10n, r.error));
+    }
     return null;
   }
   final applied = await client.apply(rollback: true, timeout: 90);
   if (!applied.ok) {
     await client.revert(config);
-    if (context.mounted) showConfigSnack(context, configErrorText(l10n, applied.error));
+    if (context.mounted) {
+      showConfigSnack(context, configErrorText(l10n, applied.error));
+    }
     return null;
   }
   if (!context.mounted) return null;
@@ -637,7 +639,9 @@ Future<ApplyOutcome?> applyConfigEdits(
       for (final c in configs) {
         await client.revert(c);
       }
-      if (context.mounted) showConfigSnack(context, configErrorText(l10n, r.error));
+      if (context.mounted) {
+        showConfigSnack(context, configErrorText(l10n, r.error));
+      }
       return null;
     }
   }
@@ -647,7 +651,9 @@ Future<ApplyOutcome?> applyConfigEdits(
     for (final c in configs) {
       await client.revert(c);
     }
-    if (context.mounted) showConfigSnack(context, configErrorText(l10n, applied.error));
+    if (context.mounted) {
+      showConfigSnack(context, configErrorText(l10n, applied.error));
+    }
     return null;
   }
   if (!context.mounted) return null;
@@ -666,14 +672,14 @@ Future<ApplyOutcome?> applyConfigEdits(
 }
 
 /// apply 之后的常驻确认条：90s 倒计时（不确认 = 路由器自动回滚）。
-Future<ApplyOutcome> showApplyGuard(BuildContext context, ConfigClient client, {int timeout = 90}) async {
-  final r = await showModalBottomSheet<ApplyOutcome>(
-    context: context,
-    isDismissible: false,
-    enableDrag: false,
-    isScrollControlled: false,
-    backgroundColor: Theme.of(context).brightness == Brightness.dark ? QuartzColors.darkRaised : Colors.white,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+Future<ApplyOutcome> showApplyGuard(
+  BuildContext context,
+  ConfigClient client, {
+  int timeout = 90,
+}) async {
+  final r = await showQzSheet<ApplyOutcome>(
+    context,
+    dismissible: false,
     builder: (_) => _ApplyGuardSheet(client: client, timeout: timeout),
   );
   return r ?? ApplyOutcome.timedOut;
@@ -754,70 +760,63 @@ class _ApplyGuardSheetState extends State<_ApplyGuardSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
+    final t = QuartzTokens.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 12, 18, 30),
+      padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4.5,
-              margin: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: .35),
-                borderRadius: BorderRadius.circular(3),
-              ),
-            ),
+          Text(
+            l10n.configApplyTitle,
+            textAlign: TextAlign.center,
+            style: QuartzType.heroTitle.copyWith(color: t.text),
           ),
-          Text(l10n.configApplyTitle,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
           Text(
             l10n.configApplyCountdown(_left),
             textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: _left <= 15 ? QuartzColors.err : QuartzColors.accent,
-              fontWeight: FontWeight.w700,
-              fontFeatures: const [FontFeature.tabularFigures()],
+            style: QuartzType.metric.copyWith(
+              color: _left <= 15 ? t.err : t.accent,
             ),
           ),
           const SizedBox(height: 8),
+          QzBar(
+            pct: _left / widget.timeout,
+            height: 4,
+            color: _left <= 15 ? t.err : t.warn,
+          ),
+          const SizedBox(height: 10),
           Text(
             l10n.configApplyBody,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: .6),
-              height: 1.5,
-            ),
+            style: QuartzType.sub.copyWith(color: t.muted, height: 1.55),
           ),
           if (_error.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(_error,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(color: QuartzColors.err)),
+            Text(
+              _error,
+              textAlign: TextAlign.center,
+              style: QuartzType.caption.copyWith(color: t.err),
+            ),
           ],
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: QuartzColors.err,
-                    side: BorderSide(color: QuartzColors.err.withValues(alpha: .4)),
-                  ),
+                child: QzButton(
+                  label: l10n.configRollbackNow,
+                  kind: QzButtonKind.danger,
+                  expand: true,
                   onPressed: _busy ? null : _rollback,
-                  child: Text(l10n.configRollbackNow),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: FilledButton(
+                child: QzButton(
+                  label: l10n.configKeepChanges,
+                  expand: true,
                   onPressed: _busy ? null : _confirm,
-                  child: Text(l10n.configKeepChanges),
                 ),
               ),
             ],
@@ -872,7 +871,9 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
     );
     for (final f in widget.fields) {
       if (!_textual(f.kind)) continue;
-      _controllers[f.option] = TextEditingController(text: configValueText(widget.initial[f.option]));
+      _controllers[f.option] = TextEditingController(
+        text: configValueText(widget.initial[f.option]),
+      );
     }
   }
 
@@ -890,7 +891,9 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
       k == ConfigFieldKind.list ||
       k == ConfigFieldKind.secret;
 
-  bool get _dangerous => widget.danger || _draft.visibleFields.any((f) => f.dangerous && _draft.isDirty(f));
+  bool get _dangerous =>
+      widget.danger ||
+      _draft.visibleFields.any((f) => f.dangerous && _draft.isDirty(f));
 
   Future<void> _save() async {
     final l10n = AppL10n.of(context);
@@ -942,29 +945,30 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
-    final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    return Material(
-      color: theme.colorScheme.surface,
+    final t = QuartzTokens.of(context);
+    return ColoredBox(
+      color: t.raised,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 12, 8, 4),
+            padding: const EdgeInsets.fromLTRB(18, 10, 8, 4),
             child: Row(
               children: [
                 Expanded(
-                  child: Text(widget.title,
-                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                  child: Text(
+                    widget.title,
+                    style: QuartzType.heroTitle.copyWith(color: t.text),
+                  ),
                 ),
-                IconButton(
+                QzIconButton(
+                  icon: QzIcons.close,
                   tooltip: l10n.cancel,
-                  onPressed: _busy ? null : () => Navigator.of(context).pop(false),
-                  icon: const Icon(Icons.close),
+                  onTap: _busy ? null : () => Navigator.of(context).pop(false),
                 ),
               ],
             ),
           ),
-          Divider(height: 1, color: theme.dividerColor),
+          QzDivider(),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
@@ -985,7 +989,10 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
                     },
                   ),
                 const SizedBox(height: 6),
-                Text(l10n.configSheetHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
+                Text(
+                  l10n.configSheetHint,
+                  style: QuartzType.caption.copyWith(color: t.faint),
+                ),
               ],
             ),
           ),
@@ -993,12 +1000,10 @@ class _ConfigSectionSheetState extends ConsumerState<ConfigSectionSheet> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _busy ? null : _save,
-                  child: Text(_busy ? l10n.configSaving : l10n.save),
-                ),
+              child: QzButton(
+                label: _busy ? l10n.configSaving : l10n.save,
+                expand: true,
+                onPressed: _busy ? null : _save,
               ),
             ),
           ),

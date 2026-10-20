@@ -59,7 +59,10 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
   }
 
   bool _isIface(Map<String, dynamic> v) =>
-      v.containsKey('ssid') || v.containsKey('encryption') || v.containsKey('mode') || v.containsKey('network');
+      v.containsKey('ssid') ||
+      v.containsKey('encryption') ||
+      v.containsKey('mode') ||
+      v.containsKey('network');
 
   List<String> get _ordered {
     final keys = _sections.keys.toList();
@@ -77,10 +80,13 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryWireless, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryWireless,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -88,8 +94,8 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -106,7 +112,9 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
                           l10n.wirelessEmpty,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: .5,
+                            ),
                           ),
                         ),
                       ),
@@ -116,7 +124,8 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
                       key: ValueKey('$section-$_epoch'),
                       config: 'wireless',
                       section: section,
-                      title: '${_isIface(_sections[section]!) ? l10n.wirelessIface : l10n.wirelessDevice} · $section',
+                      title:
+                          '${_isIface(_sections[section]!) ? l10n.wirelessIface : l10n.wirelessDevice} · $section',
                       subtitle: _subtitle(l10n, _sections[section]!),
                       fields: _fields(l10n, _isIface(_sections[section]!)),
                       initial: _sections[section]!,
@@ -151,43 +160,126 @@ class _WirelessPageState extends ConsumerState<WirelessPage> {
   List<ConfigField> _fields(AppL10n l10n, bool iface) {
     if (!iface) {
       return [
-        ConfigField('disabled', l10n.interfaceDisabled, kind: ConfigFieldKind.boolean, dangerous: true),
-        ConfigField('band', l10n.wirelessBand, kind: ConfigFieldKind.choice, choices: [
-          ConfigChoice('2g', '2.4 GHz'),
-          ConfigChoice('5g', '5 GHz'),
-          ConfigChoice('6g', '6 GHz'),
-        ]),
-        ConfigField('channel', l10n.wirelessChannel, hint: 'auto / 1 / 6 / 36 …', dangerous: true),
-        ConfigField('htmode', l10n.wirelessHtmode, kind: ConfigFieldKind.choice, choices: [
-          for (final h in ['HT20', 'HT40', 'VHT20', 'VHT40', 'VHT80', 'VHT160', 'HE20', 'HE40', 'HE80', 'HE160', 'NOHT'])
-            ConfigChoice(h, h),
-        ]),
-        ConfigField('txpower', l10n.wirelessTxpower, kind: ConfigFieldKind.integer),
+        ConfigField(
+          'disabled',
+          l10n.interfaceDisabled,
+          kind: ConfigFieldKind.boolean,
+          dangerous: true,
+        ),
+        ConfigField(
+          'band',
+          l10n.wirelessBand,
+          kind: ConfigFieldKind.choice,
+          choices: [
+            ConfigChoice('2g', '2.4 GHz'),
+            ConfigChoice('5g', '5 GHz'),
+            ConfigChoice('6g', '6 GHz'),
+          ],
+        ),
+        ConfigField(
+          'channel',
+          l10n.wirelessChannel,
+          hint: 'auto / 1 / 6 / 36 …',
+          dangerous: true,
+        ),
+        ConfigField(
+          'htmode',
+          l10n.wirelessHtmode,
+          kind: ConfigFieldKind.choice,
+          choices: [
+            for (final h in [
+              'HT20',
+              'HT40',
+              'VHT20',
+              'VHT40',
+              'VHT80',
+              'VHT160',
+              'HE20',
+              'HE40',
+              'HE80',
+              'HE160',
+              'NOHT',
+            ])
+              ConfigChoice(h, h),
+          ],
+        ),
+        ConfigField(
+          'txpower',
+          l10n.wirelessTxpower,
+          kind: ConfigFieldKind.integer,
+        ),
         ConfigField('country', l10n.wirelessCountry, hint: 'CN / US / …'),
-        ConfigField('cell_density', l10n.wirelessCellDensity, kind: ConfigFieldKind.choice, choices: [
-          for (var i = 0; i <= 4; i++) ConfigChoice('$i', '$i'),
-        ]),
-        ConfigField('distance', l10n.wirelessDistance, kind: ConfigFieldKind.integer),
+        ConfigField(
+          'cell_density',
+          l10n.wirelessCellDensity,
+          kind: ConfigFieldKind.choice,
+          choices: [for (var i = 0; i <= 4; i++) ConfigChoice('$i', '$i')],
+        ),
+        ConfigField(
+          'distance',
+          l10n.wirelessDistance,
+          kind: ConfigFieldKind.integer,
+        ),
       ];
     }
     return [
-      ConfigField('disabled', l10n.interfaceDisabled, kind: ConfigFieldKind.boolean, dangerous: true),
-      ConfigField('mode', l10n.wirelessMode, kind: ConfigFieldKind.choice, choices: [
-        ConfigChoice('ap', 'AP'),
-        ConfigChoice('sta', 'STA'),
-        ConfigChoice('mesh', 'Mesh'),
-        ConfigChoice('adhoc', 'Ad-Hoc'),
-        ConfigChoice('monitor', 'Monitor'),
-      ]),
+      ConfigField(
+        'disabled',
+        l10n.interfaceDisabled,
+        kind: ConfigFieldKind.boolean,
+        dangerous: true,
+      ),
+      ConfigField(
+        'mode',
+        l10n.wirelessMode,
+        kind: ConfigFieldKind.choice,
+        choices: [
+          ConfigChoice('ap', 'AP'),
+          ConfigChoice('sta', 'STA'),
+          ConfigChoice('mesh', 'Mesh'),
+          ConfigChoice('adhoc', 'Ad-Hoc'),
+          ConfigChoice('monitor', 'Monitor'),
+        ],
+      ),
       ConfigField('ssid', l10n.wirelessSsid, dangerous: true),
-      ConfigField('encryption', l10n.wirelessEncryption, kind: ConfigFieldKind.choice, choices: [
-        for (final e in ['none', 'psk', 'psk2', 'psk-mixed', 'sae', 'sae-mixed', 'wpa', 'wpa2', 'wpa-mixed'])
-          ConfigChoice(e, e),
-      ]),
-      ConfigField('key', l10n.wirelessKey, kind: ConfigFieldKind.secret, sensitive: true, dangerous: true),
-      ConfigField('network', l10n.wirelessNetwork, kind: ConfigFieldKind.list, hint: 'lan'),
+      ConfigField(
+        'encryption',
+        l10n.wirelessEncryption,
+        kind: ConfigFieldKind.choice,
+        choices: [
+          for (final e in [
+            'none',
+            'psk',
+            'psk2',
+            'psk-mixed',
+            'sae',
+            'sae-mixed',
+            'wpa',
+            'wpa2',
+            'wpa-mixed',
+          ])
+            ConfigChoice(e, e),
+        ],
+      ),
+      ConfigField(
+        'key',
+        l10n.wirelessKey,
+        kind: ConfigFieldKind.secret,
+        sensitive: true,
+        dangerous: true,
+      ),
+      ConfigField(
+        'network',
+        l10n.wirelessNetwork,
+        kind: ConfigFieldKind.list,
+        hint: 'lan',
+      ),
       ConfigField('hidden', l10n.wirelessHidden, kind: ConfigFieldKind.boolean),
-      ConfigField('isolate', l10n.wirelessIsolate, kind: ConfigFieldKind.boolean),
+      ConfigField(
+        'isolate',
+        l10n.wirelessIsolate,
+        kind: ConfigFieldKind.boolean,
+      ),
       ConfigField('wmm', l10n.wirelessWmm, kind: ConfigFieldKind.boolean),
     ];
   }

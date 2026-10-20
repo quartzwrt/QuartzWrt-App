@@ -42,10 +42,10 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
   static const _perPage = 24;
 
   String get _scope => switch (_view) {
-        PkgView.upgradable => 'upgradable',
-        PkgView.installed => 'installed',
-        PkgView.all => 'available',
-      };
+    PkgView.upgradable => 'upgradable',
+    PkgView.installed => 'installed',
+    PkgView.all => 'available',
+  };
 
   @override
   void initState() {
@@ -64,7 +64,11 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
   Future<void> _loadUpgradableTotal() async {
     final tm = ref.read(tokenManagerProvider);
     if (tm == null) return;
-    final r = await tm.call('packages', {'scope': 'upgradable', 'page': 1, 'per_page': 1});
+    final r = await tm.call('packages', {
+      'scope': 'upgradable',
+      'page': 1,
+      'per_page': 1,
+    });
     if (!mounted || !r.ok) return;
     setState(() => _upgradableTotal = PackagesPage.fromPayload(r.data).total);
   }
@@ -102,7 +106,9 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
         _apiMissing = true; // 方法不存在（旧固件）
         _data = null;
       } else {
-        _error = r.error?.detail?.isNotEmpty == true ? r.error!.detail! : (r.error?.message ?? '');
+        _error = r.error?.detail?.isNotEmpty == true
+            ? r.error!.detail!
+            : (r.error?.message ?? '');
       }
     });
   }
@@ -148,9 +154,11 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
       final ms = (r.data['result'] as Map?)?['duration_ms'];
       msg = l10n.pkgRefreshDone(((ms as num?)?.toInt() ?? 0) ~/ 1000);
     }
-    if (r.ok && action == 'packages.upgrade' && name != null) msg = l10n.pkgUpgraded(name);
+    if (r.ok && action == 'packages.upgrade' && name != null) {
+      msg = l10n.pkgUpgraded(name);
+    }
     if (r.ok && action == 'packages.remove') msg = l10n.pkgRemoved(name ?? '');
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    showQzToast(context, msg);
     setState(() => _acting = false);
     _load();
     _loadUpgradableTotal();
@@ -178,7 +186,8 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
     await _runAction('packages.upgrade');
   }
 
-  Future<void> _upgradeOne(String name) => _runAction('packages.upgrade', name: name);
+  Future<void> _upgradeOne(String name) =>
+      _runAction('packages.upgrade', name: name);
 
   Future<void> _remove(String name) async {
     final l10n = AppL10n.of(context);
@@ -199,10 +208,12 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
-    await showModalBottomSheet<void>(
-      context: context,
+    await showQzSheet<void>(
+      context,
       backgroundColor: dark ? QuartzColors.darkRaised : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
@@ -210,7 +221,13 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(p.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+              Text(
+                p.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
               const SizedBox(height: 2),
               Text(
                 [
@@ -224,19 +241,38 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
               ),
               const SizedBox(height: 12),
               if (p.upgradable)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.pkgUpgradeTo(p.targetVersion.isNotEmpty ? p.targetVersion : p.installedVersion)),
-                  trailing: const Icon(Icons.arrow_upward, size: 18),
+                QzListRow(
+                  first: true,
+                  title: l10n.pkgUpgradeTo(
+                    p.targetVersion.isNotEmpty
+                        ? p.targetVersion
+                        : p.installedVersion,
+                  ),
+                  trailing: const QzIcon(QzIcons.download, size: 18),
+                  showChevron: false,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 10,
+                  ),
                   onTap: () {
                     Navigator.of(ctx).pop();
                     _upgradeOne(p.name);
                   },
                 ),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.pkgRemove, style: const TextStyle(color: QuartzColors.err, fontWeight: FontWeight.w600)),
-                trailing: const Icon(Icons.delete_outline, size: 18, color: QuartzColors.err),
+              QzListRow(
+                first: !p.upgradable,
+                title: l10n.pkgRemove,
+                danger: true,
+                trailing: const QzIcon(
+                  QzIcons.delete,
+                  size: 18,
+                  color: QuartzColors.err,
+                ),
+                showChevron: false,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 10,
+                ),
                 onTap: () {
                   Navigator.of(ctx).pop();
                   _remove(p.name);
@@ -252,8 +288,8 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
   /// 未安装包行（搜索视图）：安装 v1 后置说明。
   void _notInstalledNote(PackageItem p) {
     final l10n = AppL10n.of(context);
-    showModalBottomSheet<void>(
-      context: context,
+    showQzSheet<void>(
+      context,
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(18, 14, 18, 22),
@@ -261,13 +297,23 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(p.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+              Text(
+                p.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
               const SizedBox(height: 2),
               Text(
-                [p.version, if (p.fileSize > 0) formatBytes(p.fileSize)].join(' · '),
+                [
+                  p.version,
+                  if (p.fileSize > 0) formatBytes(p.fileSize),
+                ].join(' · '),
                 style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .5),
-                    ),
+                  color: Theme.of(ctx).colorScheme.onSurface
+                      .withValues(alpha: .5),
+                ),
               ),
               const SizedBox(height: 10),
               Text(
@@ -292,11 +338,14 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SegmentBar<PkgView>(
+          child: QzTabs<PkgView>(
             values: const [PkgView.upgradable, PkgView.installed, PkgView.all],
             selected: _view,
             labelOf: (v) => switch (v) {
-              PkgView.upgradable => _upgradableTotal > 0 ? l10n.pkgViewUpgradableN(_upgradableTotal) : l10n.pkgViewUpgradable,
+              PkgView.upgradable =>
+                _upgradableTotal > 0
+                    ? l10n.pkgViewUpgradableN(_upgradableTotal)
+                    : l10n.pkgViewUpgradable,
               PkgView.installed => l10n.pkgViewInstalled,
               PkgView.all => l10n.pkgViewAll,
             },
@@ -308,14 +357,19 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
           child: Row(
             children: [
               if (_view == PkgView.upgradable && (_data?.total ?? 0) > 0)
-                FilledButton.tonal(
+                QzLegacyButton.tonal(
                   onPressed: _acting ? null : _upgradeAll,
-                  child: _acting ? const _MiniSpinner() : Text(l10n.upgradeAllBtn(_data?.total ?? 0)),
+                  child: _acting
+                      ? const _MiniSpinner()
+                      : Text(l10n.upgradeAllBtn(_data?.total ?? 0)),
                 ),
               const Spacer(),
-              TextButton.icon(
+              QzLegacyButton.icon(
+                kind: QzButtonKind.ghost,
                 onPressed: _acting ? null : _refreshIndex,
-                icon: _acting ? const _MiniSpinner() : const Icon(Icons.refresh, size: 18),
+                icon: _acting
+                    ? const _MiniSpinner()
+                    : const Icon(Icons.refresh, size: 18),
                 label: Text(l10n.opReindex),
               ),
             ],
@@ -324,15 +378,11 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
         if (_view == PkgView.all)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: TextField(
+            child: QzField(
               controller: _searchCtl,
+              hint: l10n.pkgSearchHint,
+              prefix: const QzIcon(QzIcons.search, size: 18),
               onChanged: _onSearchChanged,
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: l10n.pkgSearchHint,
-                prefixIcon: const Icon(Icons.search, size: 20),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(QuartzRadii.sm)),
-              ),
             ),
           ),
         if (_error != null)
@@ -345,7 +395,11 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
                 children: [
                   Text(_error!, style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  OutlinedButton(onPressed: () => _load(), child: Text(l10n.retry)),
+                  QzLegacyButton(
+                    kind: QzButtonKind.plain,
+                    onPressed: () => _load(),
+                    child: Text(l10n.retry),
+                  ),
                 ],
               ),
             ),
@@ -371,7 +425,11 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
           ),
         ),
         const SizedBox(height: 8),
-        OutlinedButton(onPressed: () => _load(), child: Text(l10n.retry)),
+        QzLegacyButton(
+          kind: QzButtonKind.plain,
+          onPressed: () => _load(),
+          child: Text(l10n.retry),
+        ),
       ],
     );
   }
@@ -381,7 +439,7 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
       return _hint(l10n.pkgSearchPrompt);
     }
     if (_busy && _data == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: QzSpinner(size: 22));
     }
     final items = _data?.items ?? const <PackageItem>[];
     if (items.isEmpty) {
@@ -392,7 +450,7 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
       });
     }
     final data = _data!;
-    return RefreshIndicator(
+    return QzRefresh(
       onRefresh: () => _load(),
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -410,21 +468,22 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
   }
 
   Widget _hint(String text) => ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(24),
-        children: [
-          Center(
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .55),
-                    height: 1.6,
-                  ),
-            ),
+    physics: const AlwaysScrollableScrollPhysics(),
+    padding: const EdgeInsets.all(24),
+    children: [
+      Center(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface
+                .withValues(alpha: .55),
+            height: 1.6,
           ),
-        ],
-      );
+        ),
+      ),
+    ],
+  );
 
   Widget _footer(AppL10n l10n, PackagesPage data, int shown) {
     if (!data.hasMore) {
@@ -434,8 +493,9 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
           child: Text(
             l10n.pkgShownOf(shown, data.total),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .4),
-                ),
+              color: Theme.of(context).colorScheme.onSurface
+                  .withValues(alpha: .4),
+            ),
           ),
         ),
       );
@@ -445,7 +505,8 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
       child: Center(
         child: _loadingMore
             ? const _MiniSpinner()
-            : OutlinedButton(
+            : QzLegacyButton(
+                kind: QzButtonKind.plain,
                 onPressed: () => _load(more: true),
                 child: Text(l10n.pkgLoadMore(shown, data.total)),
               ),
@@ -457,17 +518,17 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
     final theme = Theme.of(context);
     final sub = switch (_view) {
       PkgView.upgradable => [
-          '${p.installedVersion} → ${p.version}',
-          if (p.fileSize > 0) formatBytes(p.fileSize),
-        ].join(' · '),
+        '${p.installedVersion} → ${p.version}',
+        if (p.fileSize > 0) formatBytes(p.fileSize),
+      ].join(' · '),
       PkgView.installed => [
-          p.version,
-          if (p.installedSize > 0) formatBytes(p.installedSize),
-        ].join(' · '),
+        p.version,
+        if (p.installedSize > 0) formatBytes(p.installedSize),
+      ].join(' · '),
       PkgView.all => [
-          p.version,
-          if (p.fileSize > 0) formatBytes(p.fileSize),
-        ].join(' · '),
+        p.version,
+        if (p.fileSize > 0) formatBytes(p.fileSize),
+      ].join(' · '),
     };
     return QuartzCard(
       padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
@@ -488,7 +549,10 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
                     ),
                     if (_view == PkgView.all && p.installed) ...[
                       const SizedBox(width: 6),
-                      _chip(l10n.pkgBadgeInstalled, p.upgradable ? QuartzColors.warn : QuartzColors.ok),
+                      _chip(
+                        l10n.pkgBadgeInstalled,
+                        p.upgradable ? QuartzColors.warn : QuartzColors.ok,
+                      ),
                     ],
                     if (_view == PkgView.installed && p.upgradable) ...[
                       const SizedBox(width: 6),
@@ -508,14 +572,17 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
             ),
           ),
           if (_view == PkgView.upgradable)
-            TextButton(
+            QzLegacyButton(
+              kind: QzButtonKind.ghost,
               onPressed: _acting ? null : () => _upgradeOne(p.name),
               child: Text(l10n.pkgUpgrade),
             )
           else
-            IconButton(
-              icon: const Icon(Icons.chevron_right, size: 18),
-              onPressed: () => _view == PkgView.installed || p.installed ? _installedActions(p) : _notInstalledNote(p),
+            QzLegacyIconButton(
+              icon: const QzIcon(QzIcons.chevronRight, size: 18),
+              onPressed: () => _view == PkgView.installed || p.installed
+                  ? _installedActions(p)
+                  : _notInstalledNote(p),
             ),
         ],
       ),
@@ -523,14 +590,17 @@ class _PackagesSectionState extends ConsumerState<PackagesSection> {
   }
 
   Widget _chip(String text, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: .12),
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: color.withValues(alpha: .4)),
-        ),
-        child: Text(text, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: .12),
+      borderRadius: BorderRadius.circular(999),
+      border: Border.all(color: color.withValues(alpha: .4)),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+    ),
+  );
 }
 
 class _MiniSpinner extends StatelessWidget {
@@ -538,8 +608,8 @@ class _MiniSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const SizedBox(
-        width: 16,
-        height: 16,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
+    width: 16,
+    height: 16,
+    child: QzSpinner(size: 16, stroke: 2),
+  );
 }

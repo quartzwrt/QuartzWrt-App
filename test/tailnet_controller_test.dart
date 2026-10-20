@@ -59,16 +59,22 @@ class _FakeEngine implements TailnetEngineApi {
   String version() => 'fake';
 }
 
-Future<ProviderContainer> _container(_FakeEngine? engine, {Map<String, Object> prefs = const {}}) async {
+Future<ProviderContainer> _container(
+  _FakeEngine? engine, {
+  Map<String, Object> prefs = const {},
+}) async {
   SharedPreferences.setMockInitialValues(prefs);
   final sp = await SharedPreferences.getInstance();
-  final c = ProviderContainer(overrides: [
-    prefsProvider.overrideWithValue(sp),
-    tailnetEngineProvider.overrideWithValue(engine),
-    tailnetDirProvider.overrideWithValue(() async => '/tmp/qt-test-tailnet'),
-    tailnetInterfacesProvider.overrideWithValue(
-        () async => '[{"name":"wlan0","index":2,"addrs":["192.168.1.5"]}]'),
-  ]);
+  final c = ProviderContainer(
+    overrides: [
+      prefsProvider.overrideWithValue(sp),
+      tailnetEngineProvider.overrideWithValue(engine),
+      tailnetDirProvider.overrideWithValue(() async => '/tmp/qt-test-tailnet'),
+      tailnetInterfacesProvider.overrideWithValue(
+        () async => '[{"name":"wlan0","index":2,"addrs":["192.168.1.5"]}]',
+      ),
+    ],
+  );
   addTearDown(c.dispose);
   return c;
 }
@@ -83,12 +89,27 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('deriveState', () {
-    TailnetState d(String backend, {String login = '', String ip = '', String proxy = 'p', String err = ''}) =>
-        deriveState(enabled: true, backendState: backend, loginUrl: login, selfIp: ip, proxyAddr: proxy, lastError: err);
+    TailnetState d(
+      String backend, {
+      String login = '',
+      String ip = '',
+      String proxy = 'p',
+      String err = '',
+    }) => deriveState(
+      enabled: true,
+      backendState: backend,
+      loginUrl: login,
+      selfIp: ip,
+      proxyAddr: proxy,
+      lastError: err,
+    );
 
     test('backend → phase mapping', () {
       expect(d('Running', ip: '100.1.1.1').phase, TailnetPhase.running);
-      expect(d('NeedsLogin', login: 'https://x').phase, TailnetPhase.needsLogin);
+      expect(
+        d('NeedsLogin', login: 'https://x').phase,
+        TailnetPhase.needsLogin,
+      );
       expect(d('Starting').phase, TailnetPhase.starting);
       expect(d('Error: boom', err: 'boom').phase, TailnetPhase.error);
     });
@@ -100,7 +121,14 @@ void main() {
     });
 
     test('disabled → stopped', () {
-      final st = deriveState(enabled: false, backendState: '', loginUrl: '', selfIp: '', proxyAddr: '', lastError: '');
+      final st = deriveState(
+        enabled: false,
+        backendState: '',
+        loginUrl: '',
+        selfIp: '',
+        proxyAddr: '',
+        lastError: '',
+      );
       expect(st.phase, TailnetPhase.stopped);
       expect(st.enabled, isFalse);
     });
@@ -112,30 +140,35 @@ void main() {
     expect(c.read(tailnetProvider).available, isFalse);
   });
 
-  test('enable → start, needsLogin surfaces URL; running exposes proxy', () async {
-    final engine = _FakeEngine()..backend = 'NeedsLogin'..login = 'https://login.example/a/1';
-    final c = await _container(engine);
-    await _prefs([c.read(tailnetProvider.notifier).enable()]);
-    expect(engine.startCalls, 1);
-    expect(engine.ifaces, contains('wlan0')); // 接口表先于 start 注入（Android 必需）
-    var st = c.read(tailnetProvider);
-    expect(st.phase, TailnetPhase.needsLogin);
-    expect(st.loginUrl, 'https://login.example/a/1');
-    expect(st.enabled, isTrue);
+  test(
+    'enable → start, needsLogin surfaces URL; running exposes proxy',
+    () async {
+      final engine = _FakeEngine()
+        ..backend = 'NeedsLogin'
+        ..login = 'https://login.example/a/1';
+      final c = await _container(engine);
+      await _prefs([c.read(tailnetProvider.notifier).enable()]);
+      expect(engine.startCalls, 1);
+      expect(engine.ifaces, contains('wlan0')); // 接口表先于 start 注入（Android 必需）
+      var st = c.read(tailnetProvider);
+      expect(st.phase, TailnetPhase.needsLogin);
+      expect(st.loginUrl, 'https://login.example/a/1');
+      expect(st.enabled, isTrue);
 
-    engine.backend = 'Running';
-    engine.ip = '100.9.9.9';
-    c.read(tailnetProvider.notifier).refreshNow();
-    st = c.read(tailnetProvider);
-    expect(st.phase, TailnetPhase.running);
-    expect(st.selfIp, '100.9.9.9');
-    expect(st.proxyAddr, '127.0.0.1:4567');
+      engine.backend = 'Running';
+      engine.ip = '100.9.9.9';
+      c.read(tailnetProvider.notifier).refreshNow();
+      st = c.read(tailnetProvider);
+      expect(st.phase, TailnetPhase.running);
+      expect(st.selfIp, '100.9.9.9');
+      expect(st.proxyAddr, '127.0.0.1:4567');
 
-    await c.read(tailnetProvider.notifier).disable();
-    expect(engine.stopCalls, 1);
-    expect(c.read(tailnetProvider).phase, TailnetPhase.stopped);
-    expect(c.read(tailnetProvider).enabled, isFalse);
-  });
+      await c.read(tailnetProvider.notifier).disable();
+      expect(engine.stopCalls, 1);
+      expect(c.read(tailnetProvider).phase, TailnetPhase.stopped);
+      expect(c.read(tailnetProvider).enabled, isFalse);
+    },
+  );
 
   test('enabled pref → auto start on build', () async {
     final engine = _FakeEngine()..backend = 'Running';

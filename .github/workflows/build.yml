@@ -33,6 +33,7 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: flutter analyze
+      - run: dart run tool/ui_lint.dart
       - run: flutter test
       # 内嵌引擎（native/tailnet）编译门禁：宿主构建 + probe 可编译（不联网、不起节点）
       - uses: actions/setup-go@v5

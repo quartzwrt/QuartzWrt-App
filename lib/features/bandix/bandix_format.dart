@@ -11,7 +11,8 @@ import '../../l10n/app_localizations.dart';
 
 /// 总体默认限速文本：`↓ 128 KB/s · ↑ 不限`。
 String bandixDefaultLimitText(AppL10n l10n, Map<String, dynamic> lim) {
-  String one(num? v) => (v == null || v == 0) ? l10n.bandixUnlimited : formatRate(v);
+  String one(num? v) =>
+      (v == null || v == 0) ? l10n.bandixUnlimited : formatRate(v);
   return '↓ ${one(lim['default_rx_bps'] as num?)} · ↑ ${one(lim['default_tx_bps'] as num?)}';
 }
 
@@ -34,13 +35,17 @@ String bandixPolicyCountsText(AppL10n l10n, Map<String, dynamic> lim) {
 }
 
 /// 设备策略徽标（白名单=绿，限速/配额=琥珀，默认=灰）。
-Widget bandixPolicyBadge(AppL10n l10n, ThemeData theme, Map<String, dynamic> it) {
+Widget bandixPolicyBadge(
+  AppL10n l10n,
+  ThemeData theme,
+  Map<String, dynamic> it,
+) {
   final (text, hot) = bandixDevicePolicy(l10n, it);
   final color = it['wl'] == true
       ? QuartzColors.ok
       : hot
-          ? QuartzColors.warn
-          : theme.colorScheme.onSurface.withValues(alpha: .45);
+      ? QuartzColors.warn
+      : theme.colorScheme.onSurface.withValues(alpha: .45);
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
     decoration: BoxDecoration(
@@ -50,7 +55,11 @@ Widget bandixPolicyBadge(AppL10n l10n, ThemeData theme, Map<String, dynamic> it)
     ),
     child: Text(
       text,
-      style: TextStyle(fontSize: 11.5, fontWeight: hot ? FontWeight.w600 : FontWeight.w400, color: color),
+      style: TextStyle(
+        fontSize: 11.5,
+        fontWeight: hot ? FontWeight.w600 : FontWeight.w400,
+        color: color,
+      ),
     ),
   );
 }

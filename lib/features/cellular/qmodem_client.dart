@@ -16,7 +16,8 @@ class QmodemReadResult {
   final dynamic data;
   final String message;
 
-  Map<String, dynamic> get map => data is Map<String, dynamic> ? data as Map<String, dynamic> : const {};
+  Map<String, dynamic> get map =>
+      data is Map<String, dynamic> ? data as Map<String, dynamic> : const {};
 }
 
 /// 调用一条转发条目（写或读）：统一 `{action, args}` 信封。
@@ -28,18 +29,31 @@ class QmodemClient {
 
   final TokenManager _tm;
 
-  Future<QmodemReadResult> call(String id, {String? section, Map<String, String> args = const {}}) async {
+  Future<QmodemReadResult> call(
+    String id, {
+    String? section,
+    Map<String, String> args = const {},
+  }) async {
     final payload = <String, dynamic>{...args};
-    if (section != null && section.isNotEmpty) payload['config_section'] = section;
+    if (section != null && section.isNotEmpty) {
+      payload['config_section'] = section;
+    }
     final r = await _tm.call('action', {'action': id, 'args': payload});
     if (!r.ok) {
       final err = r.error;
-      final detail = (err?.detail?.isNotEmpty ?? false) ? err!.detail! : (err?.message ?? '');
-      return QmodemReadResult(false, message: detail.isEmpty ? (err?.code ?? 'unknown') : detail);
+      final detail = (err?.detail?.isNotEmpty ?? false)
+          ? err!.detail!
+          : (err?.message ?? '');
+      return QmodemReadResult(
+        false,
+        message: detail.isEmpty ? (err?.code ?? 'unknown') : detail,
+      );
     }
     // 信封 data = `{action, result:{data}}`（app-api §4.2）
     final result = r.data['result'];
-    if (result is Map<String, dynamic>) return QmodemReadResult(true, data: result['data']);
+    if (result is Map<String, dynamic>) {
+      return QmodemReadResult(true, data: result['data']);
+    }
     return const QmodemReadResult(true, data: null);
   }
 }

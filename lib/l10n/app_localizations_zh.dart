@@ -817,6 +817,12 @@ class AppL10nZh extends AppL10n {
   String get notEnabled => '未启用';
 
   @override
+  String get ipClickToReveal => '点击显示完整地址';
+
+  @override
+  String get ipClickToHide => '点击隐藏地址';
+
+  @override
   String get bandixLimitTitle => '默认限速';
 
   @override
@@ -963,10 +969,133 @@ class AppL10nZh extends AppL10n {
   }
 
   @override
+  String get cellularOperatorChinaMobile => '中国移动';
+
+  @override
+  String get cellularOperatorChinaUnicom => '中国联通';
+
+  @override
+  String get cellularOperatorChinaTelecom => '中国电信';
+
+  @override
+  String get cellularNoResetPlan => '未设置重置计划';
+
+  @override
+  String cellularResetMonthly(int day, String time) {
+    return '每月 $day 日 · $time';
+  }
+
+  @override
+  String cellularResetWeekly(String time) {
+    return '每周 · $time';
+  }
+
+  @override
+  String cellularResetDaily(String time) {
+    return '每天 · $time';
+  }
+
+  @override
+  String get tcpLabel => 'TCP';
+
+  @override
+  String get udpLabel => 'UDP';
+
+  @override
   String get cellularNetworkSim => '网络 · SIM';
 
   @override
   String get cellularServingCell => '服务小区';
+
+  @override
+  String get cellularRadioSection => '射频参数';
+
+  @override
+  String get cellularCellSimSection => '小区与 SIM';
+
+  @override
+  String get cellularConnectionSection => '连接';
+
+  @override
+  String get cellularHardwareSection => '硬件';
+
+  @override
+  String get cellularBandLabel => '频段';
+
+  @override
+  String get cellularArfcnLabel => '频点 (ARFCN)';
+
+  @override
+  String get cellularPciLabel => '物理小区 (PCI)';
+
+  @override
+  String get cellularBwLabel => '上行 / 下行带宽';
+
+  @override
+  String get cellularScsLabel => '子载波间隔';
+
+  @override
+  String get cellularDuplexLabel => '双工方式';
+
+  @override
+  String get cellularMccMncLabel => 'MCC / MNC';
+
+  @override
+  String get cellularTacLabel => '跟踪区 (TAC)';
+
+  @override
+  String get cellularCellIdLabel => '小区 ID';
+
+  @override
+  String get cellularSimStatusLabel => 'SIM 状态';
+
+  @override
+  String get cellularSimSlotLabel => 'SIM 槽位';
+
+  @override
+  String get cellularSwitchableLabel => '可切换';
+
+  @override
+  String get cellularCqiLabel => 'CQI 上行 / 下行';
+
+  @override
+  String get cellularAmbrLabel => 'AMBR 上行 / 下行';
+
+  @override
+  String get cellularPreferenceLabel => '网络偏好';
+
+  @override
+  String get cellularManufacturerLabel => '厂商';
+
+  @override
+  String get cellularRevisionLabel => '版本';
+
+  @override
+  String get cellularVoltageLabel => '电压';
+
+  @override
+  String get cellularConnectStatusLabel => '连接状态';
+
+  @override
+  String get simStatusReady => '就绪';
+
+  @override
+  String get yesLabel => '是';
+
+  @override
+  String get noLabel => '否';
+
+  @override
+  String get unlockedLabel => '未锁定';
+
+  @override
+  String get lockedLabel => '已锁定';
+
+  @override
+  String get cellularNeighborIntra => '同频';
+
+  @override
+  String get cellularNeighborInter => '异频';
 
   @override
   String get cellularSimLabel => 'SIM';
@@ -1009,6 +1138,121 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get cellularEntryLog => '拨号日志';
+
+  @override
+  String get cellularGroupDial => '拨号';
+
+  @override
+  String get cellularGroupAdvanced => '高级模组设置';
+
+  @override
+  String get cellularGroupMessages => '短信与 SIM';
+
+  @override
+  String get cellularEntryNetworkSub => '网络偏好与频段锁定';
+
+  @override
+  String get cellularEntryNeighbor => '邻区信息';
+
+  @override
+  String get cellularEntryNeighborSub => 'LTE / NR 邻区测量（只读）';
+
+  @override
+  String get cellularEntryAtSub => '端口、预置命令与响应记录';
+
+  @override
+  String get cellularEntryMaintenance => '模组维护';
+
+  @override
+  String get cellularEntryMaintenanceSub => '拨号模式、IMEI、重启、统计';
+
+  @override
+  String get cellularEntryLogSub => '拨号与上下线记录';
+
+  @override
+  String get cellularEntrySmsSub => '收发、存储与同步';
+
+  @override
+  String get cellularEntrySimSub => 'SIM 状态与槽位切换';
+
+  @override
+  String get cellularNeighborReadonly => '小区锁定请在网页端操作；App 仅展示邻区测量。';
+
+  @override
+  String get cellularNeighborEmpty => '未获取到邻区信息（模组可能不支持或当前无邻区）。';
+
+  @override
+  String get cellularNeighborLte => 'LTE 邻区';
+
+  @override
+  String get cellularNeighborNr => 'NR 邻区';
+
+  @override
+  String get cellularNeighborLock => '锁小区状态';
+
+  @override
+  String get cellularRetryHint => '请下拉刷新或稍后重试。';
+
+  @override
+  String get cellularStatsResetTitle => '流量重置计划';
+
+  @override
+  String get cellularStatsResetHint => '按计划自动清零流量统计（每月按 1–28 日）。';
+
+  @override
+  String get cellularStatsResetEnable => '启用自动重置';
+
+  @override
+  String get cellularStatsResetType => '重置周期';
+
+  @override
+  String get cellularStatsDaily => '每天';
+
+  @override
+  String get cellularStatsMonthly => '每月';
+
+  @override
+  String get cellularStatsHour => '重置小时';
+
+  @override
+  String get cellularStatsDay => '重置日';
+
+  @override
+  String get cellularStatsApply => '保存重置计划';
+
+  @override
+  String get cellularStatsSaved => '重置计划已保存';
+
+  @override
+  String get cellularAtPort => 'AT 端口';
+
+  @override
+  String cellularAtPortInvalid(String port) {
+    return '$port（无效）';
+  }
+
+  @override
+  String cellularAtPortOther(String port) {
+    return '$port（非本模组）';
+  }
+
+  @override
+  String get cellularAtOutput => '输出';
+
+  @override
+  String get cellularAtOutputEmpty => '发送一条 AT 指令后，命令与响应会累积在这里。';
+
+  @override
+  String get cellularAtClearOutput => '清空输出';
+
+  @override
+  String get cellularAtNoPorts => '未发现可用 AT 端口';
+
+  @override
+  String get cellularAtSelectPort => '选择 AT 端口';
+
+  @override
+  String get cellularAtInvalidPortWarning => '该端口无效或不属于当前模组，无法发送。';
 
   @override
   String get cellularMoreEntriesPlanned => 'SIM 切换 · 短信 · 高级 将在后续轮次补齐';
@@ -1713,6 +1957,12 @@ class AppL10nZh extends AppL10n {
   }
 
   @override
+  String get routerChipNative => '原生';
+
+  @override
+  String get routerChipGeneric => '通用表单';
+
+  @override
   String get routerChipReady => '可用';
 
   @override
@@ -1720,6 +1970,141 @@ class AppL10nZh extends AppL10n {
 
   @override
   String get routerMoreHint => '更多路由器设置将在后续版本提供。';
+
+  @override
+  String get bandixPolicyLabel => '策略';
+
+  @override
+  String get viewAll => '查看全部';
+
+  @override
+  String get clientHost => '主机名';
+
+  @override
+  String get clientIp => 'IP 地址';
+
+  @override
+  String get clientLastSeen => '最近';
+
+  @override
+  String get servicesCardTitle => '服务与核心';
+
+  @override
+  String get dockerContainers => '容器';
+
+  @override
+  String get dockerNetworks => '网络';
+
+  @override
+  String get dockerVolumes => '卷';
+
+  @override
+  String get dockerEngine => '引擎';
+
+  @override
+  String get dockerRoot => '根目录';
+
+  @override
+  String get dockerNoContainers => '暂无容器';
+
+  @override
+  String get bandixCardNote => 'WAN 速率；策略 = 白名单/限速/配额';
+
+  @override
+  String get cellularRegistered => '已注册';
+
+  @override
+  String get cellularNotRegistered => '未注册';
+
+  @override
+  String get cellularRate => '速率';
+
+  @override
+  String get cellularThisMonth => '本月用量';
+
+  @override
+  String get heroUptime => '运行';
+
+  @override
+  String get heroCollected => '采集';
+
+  @override
+  String get networkOnline => '在线';
+
+  @override
+  String get networkOffline => '离线';
+
+  @override
+  String get networkCaption => '下行（蓝）/ 上行（灰）— 最近 2 分钟';
+
+  @override
+  String get processesLabel => '进程';
+
+  @override
+  String get appearancePreview => '预览';
+
+  @override
+  String get appearanceMode => '外观模式';
+
+  @override
+  String get appearanceModeHint => '首次使用跟随系统；本机选择优先。';
+
+  @override
+  String get appearanceMaterial => '材质';
+
+  @override
+  String get appearanceOpacity => '界面不透明度';
+
+  @override
+  String get appearanceOpacityHint => '50–100%；作用于面板、顶栏与 tab；低于 100% 自动毛玻璃。';
+
+  @override
+  String get appearanceBlur => '模糊强度';
+
+  @override
+  String get appearanceBlurHint => '0–40px；作用于 chrome 与半透明面板；0 = 关闭。';
+
+  @override
+  String get appearanceWallpaper => '壁纸';
+
+  @override
+  String get appearanceWallpaperHint =>
+      '单图 ≤1920px / JPEG / ≤2MB；移除后回落噪点；不上传路由器。';
+
+  @override
+  String get appearanceWallpaperEmpty => '未设置壁纸';
+
+  @override
+  String get appearanceDefaultNoise => '默认石英噪点';
+
+  @override
+  String get appearanceChangeWallpaper => '更换';
+
+  @override
+  String get appearanceChooseWallpaper => '选择图片';
+
+  @override
+  String get appearanceRemoveWallpaper => '移除';
+
+  @override
+  String get appearanceReset => '恢复默认';
+
+  @override
+  String get appearanceResetDone => '已恢复默认外观';
+
+  @override
+  String get appearanceLocalOnly => 'App 外观只影响本机；不会写入路由器 /etc/config/quartz。';
+
+  @override
+  String appearanceWallpaperFailed(Object detail) {
+    return '壁纸保存失败：$detail';
+  }
+
+  @override
+  String get appearanceWallpaperTooLarge => '图片超过 2 MB，请换一张更小的图片。';
+
+  @override
+  String get appearanceLocal => '本机';
 
   @override
   String get configSessionUnavailable => '配置会话不可用，请重新登录路由器以启用配置功能。';

@@ -9,7 +9,12 @@ void main() {
         'id': 1,
         'result': [
           0,
-          {'ok': true, 'api': 1, 'snapshot': {'v': 1}, 'access_token': 'x'},
+          {
+            'ok': true,
+            'api': 1,
+            'snapshot': {'v': 1},
+            'access_token': 'x',
+          },
         ],
       });
       expect(r.ok, isTrue);
@@ -57,8 +62,16 @@ void main() {
       for (final body in <Map<String, dynamic>>[
         {'jsonrpc': '2.0', 'id': 1},
         {'jsonrpc': '2.0', 'id': 1, 'result': <dynamic>[]},
-        {'jsonrpc': '2.0', 'id': 1, 'result': [1, {}]},
-        {'jsonrpc': '2.0', 'id': 1, 'result': [0, 'not-a-map']},
+        {
+          'jsonrpc': '2.0',
+          'id': 1,
+          'result': [1, {}],
+        },
+        {
+          'jsonrpc': '2.0',
+          'id': 1,
+          'result': [0, 'not-a-map'],
+        },
       ]) {
         final r = parseUbusResponse(body);
         expect(r.ok, isFalse, reason: '$body');

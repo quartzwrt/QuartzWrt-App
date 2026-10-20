@@ -1,5 +1,8 @@
 // 路由器 · LED 配置（W6.11）：system 配置的 @led 节 + 当前 sysfs LED 列表。
 import 'package:flutter/material.dart';
+
+import '../../core/theme.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/config.dart';
@@ -84,10 +87,13 @@ class _LedPageState extends ConsumerState<LedPage> {
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
     final keys = _keys;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryLed, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryLed,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -95,8 +101,8 @@ class _LedPageState extends ConsumerState<LedPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -108,7 +114,12 @@ class _LedPageState extends ConsumerState<LedPage> {
                   QuartzCard(
                     title: l10n.ledsAvailable,
                     child: _available.isEmpty
-                        ? Text(l10n.ledsEmptyAvailable, style: theme.textTheme.bodySmall?.copyWith(color: muted))
+                        ? Text(
+                            l10n.ledsEmptyAvailable,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: muted,
+                            ),
+                          )
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -120,25 +131,36 @@ class _LedPageState extends ConsumerState<LedPage> {
                   const SizedBox(height: 4),
                   QuartzCard(
                     title: l10n.ledsConfigured,
-                    trailing: IconButton(
+                    trailing: QzLegacyIconButton(
                       tooltip: l10n.ledsAdd,
                       onPressed: _loading ? null : _add,
                       icon: const Icon(Icons.add, size: 20),
                     ),
                     child: keys.isEmpty
-                        ? Text(l10n.ledsEmpty, style: theme.textTheme.bodySmall?.copyWith(color: muted))
+                        ? Text(
+                            l10n.ledsEmpty,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: muted,
+                            ),
+                          )
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               for (final (i, key) in keys.indexed)
-                                _configRow(key, _sections[key] ?? const {}, first: i == 0),
+                                _configRow(
+                                  key,
+                                  _sections[key] ?? const {},
+                                  first: i == 0,
+                                ),
                             ],
                           ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(4, 12, 4, 20),
-                    child: Text(l10n.ledsHint,
-                        style: theme.textTheme.bodySmall?.copyWith(color: muted)),
+                    child: Text(
+                      l10n.ledsHint,
+                      style: theme.textTheme.bodySmall?.copyWith(color: muted),
+                    ),
                   ),
                 ],
               ),
@@ -149,22 +171,34 @@ class _LedPageState extends ConsumerState<LedPage> {
   Widget _availableRow(String name, dynamic raw, {required bool first}) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     final v = raw is Map ? raw : const {};
     final active = '${v['active_trigger'] ?? ''}';
     final triggers = v['triggers'];
     final count = triggers is List ? triggers.length : 0;
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Expanded(
-            child: Text(name, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+            child: Text(
+              name,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           Text(
             active.isEmpty ? '$count triggers' : '$active · $count',
-            style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted),
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              color: muted,
+            ),
           ),
         ],
       ),
@@ -175,17 +209,23 @@ class _LedPageState extends ConsumerState<LedPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     final title = _or(_s(v, 'name'), _or(_s(v, 'sysfs'), key));
     final sub = [
       if (_s(v, 'sysfs').isNotEmpty) _s(v, 'sysfs'),
       if (_s(v, 'trigger').isNotEmpty) _s(v, 'trigger'),
-      if (v.containsKey('default') && !configBool(v['default'])) l10n.firewallDisabled,
+      if (v.containsKey('default') && !configBool(v['default']))
+        l10n.firewallDisabled,
     ].join(' · ');
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 3),
-      child: InkWell(
+      child: QzPressable(
+        highlight: true,
         borderRadius: BorderRadius.circular(8),
         onTap: () => _edit(key, v),
         child: Row(
@@ -196,19 +236,34 @@ class _LedPageState extends ConsumerState<LedPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     if (sub.isNotEmpty)
-                      Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                      Text(
+                        sub,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          color: muted,
+                        ),
+                      ),
                   ],
                 ),
               ),
             ),
-            IconButton(
+            QzLegacyIconButton(
               tooltip: l10n.firewallEdit,
               onPressed: () => _edit(key, v),
               icon: Icon(Icons.edit_outlined, size: 19, color: muted),
             ),
-            IconButton(
+            QzLegacyIconButton(
               tooltip: l10n.firewallDelete,
               onPressed: () => _delete(key, title),
               icon: Icon(Icons.delete_outline, size: 19, color: muted),
@@ -220,23 +275,36 @@ class _LedPageState extends ConsumerState<LedPage> {
   }
 
   Future<void> _edit(String key, Map<String, dynamic> v) async {
-    final saved = await _sheet(title: _or(_s(v, 'name'), key), section: key, initial: v);
+    final saved = await _sheet(
+      title: _or(_s(v, 'name'), key),
+      section: key,
+      initial: v,
+    );
     if (saved == true && mounted) _load();
   }
 
   Future<void> _add() async {
     final l10n = AppL10n.of(context);
-    final saved = await _sheet(title: l10n.ledsAdd, section: null, initial: {'default': true});
+    final saved = await _sheet(
+      title: l10n.ledsAdd,
+      section: null,
+      initial: {'default': true},
+    );
     if (saved == true && mounted) _load();
   }
 
-  Future<bool?> _sheet({required String title, required String? section, required Map<String, dynamic> initial}) {
+  Future<bool?> _sheet({
+    required String title,
+    required String? section,
+    required Map<String, dynamic> initial,
+  }) {
     final l10n = AppL10n.of(context);
-    return showModalBottomSheet<bool>(
-      context: context,
+    return showQzSheet<bool>(
+      context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E2024) : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => FractionallySizedBox(
         heightFactor: .92,
         child: ConfigSectionSheet(
@@ -265,13 +333,31 @@ class _LedPageState extends ConsumerState<LedPage> {
   }
 
   List<ConfigField> _fields(AppL10n l10n) => [
-        ConfigField('name', l10n.ledsName),
-        ConfigField('sysfs', l10n.ledsSysfs),
-        ConfigField('trigger', l10n.ledsTrigger),
-        ConfigField('default', l10n.ledsDefault, kind: ConfigFieldKind.boolean),
-        ConfigField('dev', l10n.ledsDev),
-        ConfigField('interval', l10n.ledsInterval, kind: ConfigFieldKind.integer, min: 0, max: 10000),
-        ConfigField('delayon', l10n.ledsDelayOn, kind: ConfigFieldKind.integer, min: 0, max: 10000),
-        ConfigField('delayoff', l10n.ledsDelayOff, kind: ConfigFieldKind.integer, min: 0, max: 10000),
-      ];
+    ConfigField('name', l10n.ledsName),
+    ConfigField('sysfs', l10n.ledsSysfs),
+    ConfigField('trigger', l10n.ledsTrigger),
+    ConfigField('default', l10n.ledsDefault, kind: ConfigFieldKind.boolean),
+    ConfigField('dev', l10n.ledsDev),
+    ConfigField(
+      'interval',
+      l10n.ledsInterval,
+      kind: ConfigFieldKind.integer,
+      min: 0,
+      max: 10000,
+    ),
+    ConfigField(
+      'delayon',
+      l10n.ledsDelayOn,
+      kind: ConfigFieldKind.integer,
+      min: 0,
+      max: 10000,
+    ),
+    ConfigField(
+      'delayoff',
+      l10n.ledsDelayOff,
+      kind: ConfigFieldKind.integer,
+      min: 0,
+      max: 10000,
+    ),
+  ];
 }

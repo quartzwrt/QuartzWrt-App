@@ -4,7 +4,9 @@ import 'package:quartzwrt_app/discovery/mdns.dart';
 void main() {
   group('parseTxt', () {
     test('segments joined by newlines (multicast_dns behavior)', () {
-      final m = parseTxt('v=1\npath=/ubus\nname=QuartzWrt-R4S\nfp=9d79d120\nrel=QuartzWrt 0.1.0 (ImmortalWrt 25.12)\n');
+      final m = parseTxt(
+        'v=1\npath=/ubus\nname=QuartzWrt-R4S\nfp=9d79d120\nrel=QuartzWrt 0.1.0 (ImmortalWrt 25.12)\n',
+      );
       expect(m['v'], '1');
       expect(m['path'], '/ubus');
       expect(m['name'], 'QuartzWrt-R4S');

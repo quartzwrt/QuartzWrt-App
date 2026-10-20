@@ -36,8 +36,14 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
     final client = ref.read(qmodemClientProvider);
     if (client == null) return;
     if (sync) await client.call('qmodem.sms_sync', section: widget.section);
-    final r = await client.call('qmodem.sms_list', section: widget.section, args: {'limit': '100'});
-    final list = r.ok ? CellularSmsMessage.listFrom(r.map) : <CellularSmsMessage>[];
+    final r = await client.call(
+      'qmodem.sms_list',
+      section: widget.section,
+      args: {'limit': '100'},
+    );
+    final list = r.ok
+        ? CellularSmsMessage.listFrom(r.map)
+        : <CellularSmsMessage>[];
     if (!mounted) return;
     setState(() {
       _loaded = true;
@@ -51,34 +57,63 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
     final l10n = AppL10n.of(context);
     final unread = _msgs.where((m) => m.received && !m.read).length;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.cellularEntrySms, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.cellularEntrySms,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(onPressed: _busy ? null : () => _compose(), icon: const Icon(Icons.edit_outlined)),
-          IconButton(onPressed: _busy ? null : () => _load(sync: true), icon: const Icon(Icons.sync)),
+          QzLegacyIconButton(
+            onPressed: _busy ? null : () => _compose(),
+            icon: const Icon(Icons.edit_outlined),
+          ),
+          QzLegacyIconButton(
+            onPressed: _busy ? null : () => _load(sync: true),
+            icon: const Icon(Icons.sync),
+          ),
         ],
       ),
       body: !_loaded
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: () => _load(sync: true),
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  InfoBanner(title: l10n.cellularSmsPrivacyTitle, body: l10n.cellularSmsPrivacyBody),
-                  if (_error.isNotEmpty) InfoBanner(title: l10n.actionFailed(_error), body: l10n.cellularSettingsHint),
+                  InfoBanner(
+                    title: l10n.cellularSmsPrivacyTitle,
+                    body: l10n.cellularSmsPrivacyBody,
+                  ),
+                  if (_error.isNotEmpty)
+                    InfoBanner(
+                      title: l10n.actionFailed(_error),
+                      body: l10n.cellularSettingsHint,
+                    ),
                   if (_msgs.isEmpty)
                     Padding(
                       padding: const EdgeInsets.all(28),
-                      child: Center(child: Text(l10n.cellularSmsEmpty, style: const TextStyle(fontSize: 13))),
+                      child: Center(
+                        child: Text(
+                          l10n.cellularSmsEmpty,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
                     )
                   else ...[
-                    SectionLabel(l10n.cellularSmsCount('${_msgs.length}', '$unread')),
+                    SectionLabel(
+                      l10n.cellularSmsCount('${_msgs.length}', '$unread'),
+                    ),
                     QuartzCard(
                       child: Column(
                         children: [
                           for (final (i, m) in _msgs.indexed)
-                            _row(context, l10n, m, first: i == 0, last: i == _msgs.length - 1),
+                            _row(
+                              context,
+                              l10n,
+                              m,
+                              first: i == 0,
+                              last: i == _msgs.length - 1,
+                            ),
                         ],
                       ),
                     ),
@@ -89,17 +124,30 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
     );
   }
 
-  Widget _row(BuildContext context, AppL10n l10n, CellularSmsMessage m, {required bool first, required bool last}) {
+  Widget _row(
+    BuildContext context,
+    AppL10n l10n,
+    CellularSmsMessage m, {
+    required bool first,
+    required bool last,
+  }) {
     final theme = Theme.of(context);
     return Semantics(
       button: true,
-      child: InkWell(
+      child: QzPressable(
+        highlight: true,
         onTap: () => m.received && !m.read ? _markRead(m) : _showDetail(m),
         onLongPress: () => _delete(m),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 11),
           decoration: BoxDecoration(
-            border: last ? null : Border(bottom: BorderSide(color: theme.dividerColor.withValues(alpha: .5))),
+            border: last
+                ? null
+                : Border(
+                    bottom: BorderSide(
+                      color: theme.dividerColor.withValues(alpha: .5),
+                    ),
+                  ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +155,14 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
               if (m.received && !m.read)
                 Padding(
                   padding: const EdgeInsets.only(top: 6, right: 7),
-                  child: Container(width: 7, height: 7, decoration: const BoxDecoration(shape: BoxShape.circle, color: QuartzColors.accent)),
+                  child: Container(
+                    width: 7,
+                    height: 7,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: QuartzColors.accent,
+                    ),
+                  ),
                 ),
               Expanded(
                 child: Column(
@@ -117,20 +172,37 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
                       children: [
                         Text(
                           m.peer.isEmpty ? l10n.unknownValue : m.peer,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         const SizedBox(width: 6),
                         if (!m.received)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 1,
+                            ),
                             decoration: BoxDecoration(
                               border: Border.all(color: theme.dividerColor),
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: Text(l10n.cellularSmsSentTag, style: const TextStyle(fontSize: 10)),
+                            child: Text(
+                              l10n.cellularSmsSentTag,
+                              style: const TextStyle(fontSize: 10),
+                            ),
                           ),
                         const Spacer(),
-                        Text(_ts(m.timestampMs), style: TextStyle(fontSize: 11, color: theme.colorScheme.onSurface.withValues(alpha: .45))),
+                        Text(
+                          _ts(m.timestampMs),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: .45,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -138,7 +210,12 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
                       m.content,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12.5, color: theme.colorScheme.onSurface.withValues(alpha: .75)),
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: .75,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -161,34 +238,77 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
   }
 
   void _showDetail(CellularSmsMessage m) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(m.peer.isEmpty ? AppL10n.of(ctx).unknownValue : m.peer),
-        content: SingleChildScrollView(child: SelectableText(m.content)),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppL10n.of(ctx).close)),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _delete(m);
-            },
-            child: Text(AppL10n.of(ctx).deleteAction, style: const TextStyle(color: QuartzColors.err)),
-          ),
-        ],
-      ),
+    final l10n = AppL10n.of(context);
+    showQzSheet<void>(
+      context,
+      builder: (ctx) {
+        final t = QuartzTokens.of(ctx);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              m.peer.isEmpty ? l10n.unknownValue : m.peer,
+              textAlign: TextAlign.center,
+              style: QuartzType.heroTitle.copyWith(color: t.text),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: t.well,
+                borderRadius: BorderRadius.circular(QuartzRadii.field),
+                border: Border.all(color: t.border),
+              ),
+              child: SingleChildScrollView(
+                child: SelectableText(
+                  m.content,
+                  style: QuartzType.body.copyWith(color: t.text),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: QzButton(
+                    label: l10n.close,
+                    kind: QzButtonKind.plain,
+                    onPressed: () => Navigator.pop(ctx),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: QzButton(
+                    label: l10n.deleteAction,
+                    kind: QzButtonKind.danger,
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _delete(m);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 
   Future<void> _markRead(CellularSmsMessage m) async {
     final client = ref.read(qmodemClientProvider);
     if (client == null) return;
-    final r = await client.call('qmodem.sms_mark_read', section: widget.section, args: {'id': m.id});
+    final r = await client.call(
+      'qmodem.sms_mark_read',
+      section: widget.section,
+      args: {'id': m.id},
+    );
     if (!mounted) return;
     if (r.ok) {
       await _load();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppL10n.of(context).actionFailed(r.message))));
+      showQzToast(context, AppL10n.of(context).actionFailed(r.message));
     }
   }
 
@@ -206,11 +326,17 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
     );
     if (!ok) return;
     setState(() => _busy = true);
-    final r = await client.call('qmodem.sms_delete', section: widget.section, args: {'id': m.id, 'index': m.index});
+    final r = await client.call(
+      'qmodem.sms_delete',
+      section: widget.section,
+      args: {'id': m.id, 'index': m.index},
+    );
     if (!mounted) return;
     setState(() => _busy = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     await _load();
   }
@@ -221,57 +347,58 @@ class _CellularSmsPageState extends ConsumerState<CellularSmsPage> {
     if (client == null) return;
     final recipient = TextEditingController();
     final content = TextEditingController();
-    final ok = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        child: Column(
+    final ok = await showQzSheet<bool>(
+      context,
+      builder: (ctx) {
+        final t = QuartzTokens.of(ctx);
+        return Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 14),
-            Text(l10n.cellularSmsCompose, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 12, 18, 6),
-              child: TextField(
-                controller: recipient,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: l10n.cellularSmsRecipient, border: const OutlineInputBorder(), isDense: true),
-              ),
+            Text(
+              l10n.cellularSmsCompose,
+              textAlign: TextAlign.center,
+              style: QuartzType.heroTitle.copyWith(color: t.text),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 6, 18, 6),
-              child: TextField(
-                controller: content,
-                maxLines: 3,
-                maxLength: 480,
-                decoration: InputDecoration(labelText: l10n.cellularSmsContent, border: const OutlineInputBorder(), isDense: true),
-              ),
+            const SizedBox(height: 12),
+            QzField(
+              controller: recipient,
+              label: l10n.cellularSmsRecipient,
+              keyboardType: TextInputType.phone,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => Navigator.pop(ctx, true),
-                  child: Text(l10n.cellularSmsSendAction),
-                ),
-              ),
+            const SizedBox(height: 10),
+            QzField(
+              controller: content,
+              label: l10n.cellularSmsContent,
+              maxLines: 3,
+              maxLength: 480,
+            ),
+            const SizedBox(height: 16),
+            QzButton(
+              label: l10n.cellularSmsSendAction,
+              expand: true,
+              onPressed: () => Navigator.pop(ctx, true),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
     if (ok != true) return;
     final to = recipient.text.trim();
     final text = content.text.trim();
     if (to.isEmpty || text.isEmpty) return;
     setState(() => _busy = true);
-    final r = await client.call('qmodem.sms_send', section: widget.section, args: {'recipient': to, 'content': text});
+    final r = await client.call(
+      'qmodem.sms_send',
+      section: widget.section,
+      args: {'recipient': to, 'content': text},
+    );
     if (!mounted) return;
     setState(() => _busy = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     await _load(sync: true);
   }

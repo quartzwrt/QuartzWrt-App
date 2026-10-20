@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'core/design/quartz_surface.dart';
 import 'core/theme.dart';
 import 'features/apps/app_detail_page.dart';
 import 'features/apps/apps_page.dart';
@@ -15,6 +16,7 @@ import 'features/bandix/bandix_page.dart';
 import 'features/cellular/cellular_at_page.dart';
 import 'features/cellular/cellular_log_page.dart';
 import 'features/cellular/cellular_network_page.dart';
+import 'features/cellular/cellular_neighbor_page.dart';
 import 'features/cellular/cellular_advanced_page.dart';
 import 'features/cellular/cellular_page.dart';
 import 'features/cellular/cellular_sim_page.dart';
@@ -34,12 +36,14 @@ import 'features/router/router_page.dart';
 import 'features/router/routes_page.dart';
 import 'features/router/system_page.dart';
 import 'features/router/wireless_page.dart';
+import 'features/settings/appearance_page.dart';
 import 'features/settings/devices_page.dart';
 import 'features/settings/remote_page.dart';
 import 'features/settings/settings_page.dart';
 import 'features/shell/shell.dart';
 import 'l10n/app_localizations.dart';
 import 'state/app_state.dart';
+import 'state/appearance.dart';
 
 /// 详情页过渡：轻量上滑 + 淡入（tab 切换保持瞬时，避免拖沓）。
 CustomTransitionPage<void> _fadeUpPage(GoRouterState state, Widget child) =>
@@ -56,7 +60,10 @@ CustomTransitionPage<void> _fadeUpPage(GoRouterState state, Widget child) =>
         return FadeTransition(
           opacity: curved,
           child: SlideTransition(
-            position: Tween(begin: const Offset(0, .025), end: Offset.zero).animate(curved),
+            position: Tween(
+              begin: const Offset(0, .025),
+              end: Offset.zero,
+            ).animate(curved),
             child: child,
           ),
         );
@@ -88,69 +95,157 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/discover', builder: (_, _) => const DiscoverPage()),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => ShellScaffold(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) =>
+            ShellScaffold(navigationShell: navigationShell),
         branches: [
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/overview', builder: (_, _) => const OverviewPage()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/router', builder: (_, _) => const RouterPage()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/cellular', builder: (_, _) => const CellularPage()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/settings', builder: (_, _) => const SettingsPage()),
-          ]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/overview',
+                builder: (_, _) => const OverviewPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/router', builder: (_, _) => const RouterPage()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/apps', builder: (_, _) => const AppsPage()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/cellular',
+                builder: (_, _) => const CellularPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/settings',
+                builder: (_, _) => const SettingsPage(),
+              ),
+            ],
+          ),
         ],
       ),
-      GoRoute(path: '/router/clients', pageBuilder: (_, s) => _fadeUpPage(s, const ClientsPage())),
-      GoRoute(path: '/router/interfaces', pageBuilder: (_, s) => _fadeUpPage(s, const InterfacesPage())),
-      GoRoute(path: '/router/wireless', pageBuilder: (_, s) => _fadeUpPage(s, const WirelessPage())),
-      GoRoute(path: '/router/dhcp', pageBuilder: (_, s) => _fadeUpPage(s, const DhcpPage())),
-      GoRoute(path: '/router/routes', pageBuilder: (_, s) => _fadeUpPage(s, const RoutesPage())),
-      GoRoute(path: '/router/system', pageBuilder: (_, s) => _fadeUpPage(s, const SystemPage())),
-      GoRoute(path: '/router/admin', pageBuilder: (_, s) => _fadeUpPage(s, const AdminPage())),
-      GoRoute(path: '/router/firewall', pageBuilder: (_, s) => _fadeUpPage(s, const FirewallPage())),
-      GoRoute(path: '/router/mounts', pageBuilder: (_, s) => _fadeUpPage(s, const MountsPage())),
-      GoRoute(path: '/router/led', pageBuilder: (_, s) => _fadeUpPage(s, const LedPage())),
-      GoRoute(path: '/router/cron', pageBuilder: (_, s) => _fadeUpPage(s, const CronPage())),
-      GoRoute(path: '/router/init', pageBuilder: (_, s) => _fadeUpPage(s, const InitPage())),
+      GoRoute(
+        path: '/router/clients',
+        pageBuilder: (_, s) => _fadeUpPage(s, const ClientsPage()),
+      ),
+      GoRoute(
+        path: '/router/interfaces',
+        pageBuilder: (_, s) => _fadeUpPage(s, const InterfacesPage()),
+      ),
+      GoRoute(
+        path: '/router/wireless',
+        pageBuilder: (_, s) => _fadeUpPage(s, const WirelessPage()),
+      ),
+      GoRoute(
+        path: '/router/dhcp',
+        pageBuilder: (_, s) => _fadeUpPage(s, const DhcpPage()),
+      ),
+      GoRoute(
+        path: '/router/routes',
+        pageBuilder: (_, s) => _fadeUpPage(s, const RoutesPage()),
+      ),
+      GoRoute(
+        path: '/router/system',
+        pageBuilder: (_, s) => _fadeUpPage(s, const SystemPage()),
+      ),
+      GoRoute(
+        path: '/router/admin',
+        pageBuilder: (_, s) => _fadeUpPage(s, const AdminPage()),
+      ),
+      GoRoute(
+        path: '/router/firewall',
+        pageBuilder: (_, s) => _fadeUpPage(s, const FirewallPage()),
+      ),
+      GoRoute(
+        path: '/router/mounts',
+        pageBuilder: (_, s) => _fadeUpPage(s, const MountsPage()),
+      ),
+      GoRoute(
+        path: '/router/led',
+        pageBuilder: (_, s) => _fadeUpPage(s, const LedPage()),
+      ),
+      GoRoute(
+        path: '/router/cron',
+        pageBuilder: (_, s) => _fadeUpPage(s, const CronPage()),
+      ),
+      GoRoute(
+        path: '/router/init',
+        pageBuilder: (_, s) => _fadeUpPage(s, const InitPage()),
+      ),
       GoRoute(
         path: '/apps/detail/:id',
-        pageBuilder: (_, s) => _fadeUpPage(s, AppDetailPage(appId: s.pathParameters['id']!)),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, AppDetailPage(appId: s.pathParameters['id']!)),
       ),
-      GoRoute(path: '/apps/log', pageBuilder: (_, s) => _fadeUpPage(s, const PackageLogPage())),
-      GoRoute(path: '/apps/bandix', pageBuilder: (_, s) => _fadeUpPage(s, const BandixPage())),
+      GoRoute(
+        path: '/apps/log',
+        pageBuilder: (_, s) => _fadeUpPage(s, const PackageLogPage()),
+      ),
+      GoRoute(
+        path: '/apps/bandix',
+        pageBuilder: (_, s) => _fadeUpPage(s, const BandixPage()),
+      ),
       GoRoute(
         path: '/cellular/network',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularNetworkPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, CellularNetworkPage(section: _cellularSection(ref))),
       ),
       GoRoute(
         path: '/cellular/at',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularAtPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, CellularAtPage(section: _cellularSection(ref))),
+      ),
+      GoRoute(
+        path: '/cellular/neighbor',
+        pageBuilder: (_, s) => _fadeUpPage(
+          s,
+          CellularNeighborPage(section: _cellularSection(ref)),
+        ),
       ),
       GoRoute(
         path: '/cellular/sim',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularSimPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, CellularSimPage(section: _cellularSection(ref))),
       ),
       GoRoute(
         path: '/cellular/sms',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularSmsPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, CellularSmsPage(section: _cellularSection(ref))),
       ),
       GoRoute(
         path: '/cellular/advanced',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularAdvancedPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) => _fadeUpPage(
+          s,
+          CellularAdvancedPage(section: _cellularSection(ref)),
+        ),
       ),
       GoRoute(
         path: '/cellular/log',
-        pageBuilder: (_, s) => _fadeUpPage(s, CellularLogPage(section: _cellularSection(ref))),
+        pageBuilder: (_, s) =>
+            _fadeUpPage(s, CellularLogPage(section: _cellularSection(ref))),
       ),
-      GoRoute(path: '/settings/devices', pageBuilder: (_, s) => _fadeUpPage(s, const DevicesPage())),
-      GoRoute(path: '/settings/remote', pageBuilder: (_, s) => _fadeUpPage(s, const RemotePage())),
+      GoRoute(
+        path: '/settings/appearance',
+        pageBuilder: (_, s) => _fadeUpPage(s, const AppearancePage()),
+      ),
+      GoRoute(
+        path: '/settings/devices',
+        pageBuilder: (_, s) => _fadeUpPage(s, const DevicesPage()),
+      ),
+      GoRoute(
+        path: '/settings/remote',
+        pageBuilder: (_, s) => _fadeUpPage(s, const RemotePage()),
+      ),
     ],
   );
 });
@@ -163,10 +258,19 @@ class QuartzApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final appearance = ref.watch(appearanceProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppL10n.of(context).appTitle,
-      theme: buildQuartzTheme(Brightness.light),
-      darkTheme: buildQuartzTheme(Brightness.dark),
+      theme: buildQuartzTheme(
+        Brightness.light,
+        panelAlpha: appearance.opacity,
+        blurSigma: appearance.blur,
+      ),
+      darkTheme: buildQuartzTheme(
+        Brightness.dark,
+        panelAlpha: appearance.opacity,
+        blurSigma: appearance.blur,
+      ),
       themeMode: themeMode,
       locale: locale,
       localizationsDelegates: const [
@@ -177,6 +281,10 @@ class QuartzApp extends ConsumerWidget {
       ],
       supportedLocales: AppL10n.supportedLocales,
       routerConfig: router,
+      builder: (context, child) => QuartzSurface(
+        wallpaperPath: appearance.wallpaperPath,
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

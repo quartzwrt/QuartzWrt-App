@@ -47,30 +47,55 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     final l10n = AppL10n.of(context);
     final hostCtrl = TextEditingController();
     final portCtrl = TextEditingController(text: '443');
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.addByAddressTitle),
-        content: Column(
+    final ok = await showQzSheet<bool>(
+      context,
+      builder: (ctx) {
+        final t = QuartzTokens.of(ctx);
+        return Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: hostCtrl,
-              autofocus: true,
-              decoration: InputDecoration(labelText: l10n.hostLabel, hintText: '192.168.1.1'),
+            Text(
+              l10n.addByAddressTitle,
+              textAlign: TextAlign.center,
+              style: QuartzType.heroTitle.copyWith(color: t.text),
             ),
-            TextField(
+            const SizedBox(height: 12),
+            QzField(
+              controller: hostCtrl,
+              label: l10n.hostLabel,
+              hint: '192.168.1.1',
+              autofocus: true,
+            ),
+            const SizedBox(height: 10),
+            QzField(
               controller: portCtrl,
+              label: l10n.portLabel,
+              hint: '443',
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: l10n.portLabel),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: QzButton(
+                    label: l10n.cancel,
+                    kind: QzButtonKind.plain,
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: QzButton(
+                    label: l10n.confirm,
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(l10n.cancel)),
-          FilledButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text(l10n.confirm)),
-        ],
-      ),
+        );
+      },
     );
     if (ok != true || hostCtrl.text.trim().isEmpty) return;
     if (!mounted) return;
@@ -89,19 +114,13 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
 
   Future<void> _pair(DiscoveredRouter d) async {
     final l10n = AppL10n.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final passwordCtrl = TextEditingController();
     final deviceName = _deviceName();
     var busy = false;
     String? error;
 
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: isDark ? QuartzColors.darkRaised : Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    await showQzSheet<void>(
+      context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheet) {
           Future<void> doPair() async {
@@ -123,7 +142,9 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
               final registry = ref.read(registryProvider);
               await registry.upsert(outcome.router);
               await registry.setActive(outcome.router.id);
-              await ref.read(tokenStoreProvider).writeRefresh(outcome.router.id, outcome.tokens.refreshToken);
+              await ref
+                  .read(tokenStoreProvider)
+                  .writeRefresh(outcome.router.id, outcome.tokens.refreshToken);
               ref.invalidate(activeRouterProvider);
               nav.pop();
               routerR.go('/overview');
@@ -142,79 +163,67 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
             }
           }
 
-          return Padding(
-            padding: EdgeInsets.fromLTRB(18, 10, 18, 24 + MediaQuery.of(ctx).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4.5,
-                    margin: const EdgeInsets.only(bottom: 14),
-                    decoration: BoxDecoration(
-                      color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .35),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                ),
+          final t = QuartzTokens.of(ctx);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.pairTitle(d.name),
+                textAlign: TextAlign.center,
+                style: QuartzType.heroTitle.copyWith(color: t.text),
+              ),
+              const SizedBox(height: 12),
+              KvRow(
+                l10n.certFingerprint,
+                d.verifiable ? _shortFp(d.fingerprint) : l10n.badgeUnverified,
+                first: true,
+                valueColor: d.verifiable ? null : t.warn,
+              ),
+              if (d.release.isNotEmpty) KvRow(l10n.firmwareLabel, d.release),
+              const SizedBox(height: 12),
+              QzField(
+                controller: passwordCtrl,
+                label: l10n.routerPassword,
+                hint: l10n.routerPassword,
+                obscure: true,
+                autofocus: true,
+                enabled: !busy,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.routerPasswordHint,
+                textAlign: TextAlign.center,
+                style: QuartzType.caption.copyWith(color: t.muted),
+              ),
+              if (error != null) ...[
+                const SizedBox(height: 10),
                 Text(
-                  l10n.pairTitle(d.name),
+                  error!,
                   textAlign: TextAlign.center,
-                  style: Theme.of(ctx).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 12),
-                KvRow(
-                  l10n.certFingerprint,
-                  d.verifiable ? _shortFp(d.fingerprint) : l10n.badgeUnverified,
-                  first: true,
-                  valueColor: d.verifiable ? null : QuartzColors.warn,
-                ),
-                if (d.release.isNotEmpty) KvRow(l10n.firmwareLabel, d.release),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: passwordCtrl,
-                  obscureText: true,
-                  autofocus: true,
-                  enabled: !busy,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: l10n.routerPassword,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.routerPasswordHint,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .55),
-                  ),
-                ),
-                if (error != null) ...[
-                  const SizedBox(height: 10),
-                  Text(error!, textAlign: TextAlign.center, style: const TextStyle(color: QuartzColors.err)),
-                ],
-                const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: busy ? null : () => Navigator.of(ctx).pop(),
-                        child: Text(l10n.cancel),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: busy ? null : doPair,
-                        child: Text(busy ? l10n.pairing : l10n.pairButton),
-                      ),
-                    ),
-                  ],
+                  style: QuartzType.caption.copyWith(color: t.err),
                 ),
               ],
-            ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: QzButton(
+                      label: l10n.cancel,
+                      kind: QzButtonKind.plain,
+                      onPressed: busy ? null : () => Navigator.of(ctx).pop(),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: QzButton(
+                      label: busy ? l10n.pairing : l10n.pairButton,
+                      onPressed: busy ? null : doPair,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           );
         },
       ),
@@ -226,32 +235,28 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
     return 'Quartz App';
   }
 
-  String _shortFp(String fp) =>
-      fp.length >= 12 ? '${fp.substring(0, 8)} … ${fp.substring(fp.length - 4)}' : fp;
+  String _shortFp(String fp) => fp.length >= 12
+      ? '${fp.substring(0, 8)} … ${fp.substring(fp.length - 4)}'
+      : fp;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
+    final t = QuartzTokens.of(context);
     final registry = ref.watch(registryProvider);
     final canBack = registry.list().isNotEmpty;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: QzAppBar(
+        titleText: l10n.discoverTitle,
         automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            if (canBack)
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
+        leading: canBack
+            ? QzIconButton(
+                icon: QzIcons.chevronLeft,
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: () => context.go('/overview'),
+                onTap: () => context.go('/overview'),
               )
-            else
-              const SizedBox(width: 8),
-            Text(l10n.discoverTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-          ],
-        ),
+            : const SizedBox(width: 8),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -263,63 +268,61 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                 if (_scanning)
                   const Padding(
                     padding: EdgeInsets.only(right: 8),
-                    child: SizedBox(
-                      width: 12,
-                      height: 12,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
+                    child: QzSpinner(size: 16, stroke: 2),
                   ),
                 Text(
                   l10n.discoverScanning,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: .5),
-                  ),
+                  style: QuartzType.caption.copyWith(color: t.faint),
                 ),
               ],
             ),
           ),
-          for (final d in _found)
-            QuartzCard(
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                leading: const Icon(Icons.router_outlined),
-                title: Text(d.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text([d.model, d.release].where((s) => s.isNotEmpty).join(' · ')),
-                    Text(
-                      d.verifiable ? '✓ ${l10n.badgeVerifiable}' : '⚠ ${l10n.badgeUnverified}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: d.verifiable ? QuartzColors.ok : QuartzColors.warn,
+          if (_found.isNotEmpty)
+            QzListGroup(
+              children: [
+                for (final (i, d) in _found.indexed)
+                  QzListRow(
+                    first: i == 0,
+                    icon: QzIcons.routerAntenna,
+                    title: d.name,
+                    subtitle: [
+                      d.model,
+                      d.release,
+                    ].where((s) => s.isNotEmpty).join(' · '),
+                    chip: d.verifiable
+                        ? l10n.badgeVerifiable
+                        : l10n.badgeUnverified,
+                    chipKind: d.verifiable
+                        ? QzChipKind.native
+                        : QzChipKind.warn,
+                    showChevron: false,
+                    trailing: Text(
+                      '${d.host}:${d.port}',
+                      style: QuartzType.caption.copyWith(
+                        color: t.faint,
+                        fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
-                  ],
-                ),
-                trailing: Text('${d.host}\n:${d.port}', textAlign: TextAlign.right, style: theme.textTheme.bodySmall),
-                onTap: () => _pair(d),
-              ),
+                    onTap: () => _pair(d),
+                  ),
+              ],
             ),
-          if (!_scanning && _found.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                l10n.discoverNone,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: .5),
-                ),
-              ),
-            ),
+          if (!_scanning && _found.isEmpty) QzEmpty(l10n.discoverNone),
           const SizedBox(height: 8),
-          OutlinedButton(onPressed: _addByAddress, child: Text(l10n.addByAddress)),
-          const SizedBox(height: 12),
+          QzButton(
+            label: l10n.addByAddress,
+            kind: QzButtonKind.plain,
+            icon: QzIcons.add,
+            expand: true,
+            onPressed: _addByAddress,
+          ),
+          const SizedBox(height: 10),
           Center(
-            child: TextButton.icon(
+            child: QzButton(
+              label: l10n.refresh,
+              kind: QzButtonKind.ghost,
+              icon: QzIcons.refresh,
               onPressed: _scan,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: Text(l10n.refresh),
             ),
           ),
         ],

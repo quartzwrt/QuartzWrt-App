@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quartzwrt_app/api/models.dart';
 import 'package:quartzwrt_app/features/overview/cards.dart';
+import 'package:quartzwrt_app/widgets/quartz/quartz_controls.dart';
+import 'package:quartzwrt_app/widgets/quartz/quartz_icons.dart';
 import 'package:quartzwrt_app/features/settings/remote_page.dart';
 import 'package:quartzwrt_app/l10n/app_localizations.dart';
 import 'package:quartzwrt_app/native/tailnet.dart';
@@ -66,34 +68,62 @@ class _FixedSnap extends SnapshotController {
 }
 
 PairedRouter _router({String? remoteHost}) => PairedRouter(
-      id: 'dev1',
-      name: 'quartzwrt-vm',
-      model: 'QEMU x86_64',
-      host: '10.0.2.2',
-      port: 8443,
-      fingerprint: '9d79d120' 'ab' * 28,
-      deviceId: 'dev1',
-      addedAt: 1,
-      remoteHost: remoteHost,
-      remotePort: remoteHost == null ? null : 443,
-    );
+  id: 'dev1',
+  name: 'quartzwrt-vm',
+  model: 'QEMU x86_64',
+  host: '10.0.2.2',
+  port: 8443,
+  fingerprint:
+      '9d79d120'
+          'ab' *
+      28,
+  deviceId: 'dev1',
+  addedAt: 1,
+  remoteHost: remoteHost,
+  remotePort: remoteHost == null ? null : 443,
+);
 
 Widget _host(
   Widget child, {
   required SharedPreferences prefs,
   SnapshotState? snap,
   TailnetEngineApi? engine,
-}) =>
-    ProviderScope(
-      overrides: [
-        prefsProvider.overrideWithValue(prefs),
-        if (snap != null) snapshotProvider.overrideWith(() => _FixedSnap(snap)),
-        tailnetEngineProvider.overrideWithValue(engine),
-        tailnetDirProvider.overrideWithValue(() async => '/tmp/qt-test-tailnet'),
-        tailnetInterfacesProvider.overrideWithValue(
-            () async => '[{"name":"wlan0","index":2,"addrs":["192.168.1.5"]}]'),
-      ],
-      child: MaterialApp(
+}) => ProviderScope(
+  overrides: [
+    prefsProvider.overrideWithValue(prefs),
+    if (snap != null) snapshotProvider.overrideWith(() => _FixedSnap(snap)),
+    tailnetEngineProvider.overrideWithValue(engine),
+    tailnetDirProvider.overrideWithValue(() async => '/tmp/qt-test-tailnet'),
+    tailnetInterfacesProvider.overrideWithValue(
+      () async => '[{"name":"wlan0","index":2,"addrs":["192.168.1.5"]}]',
+    ),
+  ],
+  child: MaterialApp(
+    locale: const Locale('zh'),
+    localizationsDelegates: const [
+      AppL10n.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: AppL10n.supportedLocales,
+    home: child,
+  ),
+);
+
+Snapshot _snapWithTailscale() => Snapshot({
+  'v': 1,
+  'services': {
+    'tailscale': {'running': true, 'ip': '100.118.170.8'},
+  },
+});
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('hero badge: LAN vs remote', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
         locale: const Locale('zh'),
         localizationsDelegates: const [
           AppL10n.delegate,
@@ -102,78 +132,71 @@ Widget _host(
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AppL10n.supportedLocales,
-        home: child,
-      ),
-    );
-
-
-Snapshot _snapWithTailscale() => Snapshot({
-      'v': 1,
-      'services': {
-        'tailscale': {'running': true, 'ip': '100.118.170.8'},
-      },
-    });
-
-void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  testWidgets('hero badge: LAN vs remote', (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      locale: const Locale('zh'),
-      localizationsDelegates: const [
-        AppL10n.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: AppL10n.supportedLocales,
-      home: Scaffold(
-        body: Column(
-          children: [
-            HeroCard(snapshot: null, fallbackName: 'r'),
-            HeroCard(snapshot: null, fallbackName: 'r', remote: true),
-          ],
+        home: Scaffold(
+          body: Column(
+            children: [
+              HeroCard(snapshot: null, fallbackName: 'r'),
+              HeroCard(snapshot: null, fallbackName: 'r', remote: true),
+            ],
+          ),
         ),
       ),
-    ));
-    expect(find.text('已连接 · 局域网'), findsOneWidget);
-    expect(find.text('已连接 · 远程'), findsOneWidget);
-    expect(find.byIcon(Icons.cloud_outlined), findsOneWidget); // 仅远程带云标
+    );
+    expect(find.text('r'), findsNWidgets(2));
+    expect(find.text('WAN'), findsNWidgets(2));
+    expect(
+      find.byWidgetPredicate((w) => w is QzIcon && w.name == QzIcons.cloud),
+      findsOneWidget,
+    ); // 仅远程带云标
   });
 
-  testWidgets('remote page shows real tailscale status from snapshot', (tester) async {
+  testWidgets('remote page shows real tailscale status from snapshot', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final reg = RouterRegistry(prefs);
     await reg.upsert(_router());
     await reg.setActive('dev1');
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
-    ));
+    await tester.pumpWidget(
+      _host(
+        const RemotePage(),
+        prefs: prefs,
+        snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('路由器端 · Tailscale'), findsOneWidget);
     expect(find.text('运行中'), findsWidgets);
     expect(find.text('100.118.170.8'), findsOneWidget);
     expect(find.text('使用此地址添加远程连接'), findsOneWidget);
-    expect(find.text('未设置——在家经局域网直连；外出后在本页添加 tailnet 地址即可远程管理。'), findsOneWidget);
+    expect(
+      find.text('未设置——在家经局域网直连；外出后在本页添加 tailnet 地址即可远程管理。'),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('remote page: not detected + guide when tailscale absent', (tester) async {
+  testWidgets('remote page: not detected + guide when tailscale absent', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final reg = RouterRegistry(prefs);
     await reg.upsert(_router());
     await reg.setActive('dev1');
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: Snapshot({'v': 1, 'services': {}})),
-    ));
+    await tester.pumpWidget(
+      _host(
+        const RemotePage(),
+        prefs: prefs,
+        snap: SnapshotState(
+          kind: SnapKind.ok,
+          data: Snapshot({'v': 1, 'services': {}}),
+        ),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('未安装'), findsOneWidget);
@@ -181,18 +204,22 @@ void main() {
     expect(find.text('使用此地址添加远程连接'), findsNothing);
   });
 
-  testWidgets('tap use-this-address opens sheet prefilled with tailnet IP', (tester) async {
+  testWidgets('tap use-this-address opens sheet prefilled with tailnet IP', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final reg = RouterRegistry(prefs);
     await reg.upsert(_router());
     await reg.setActive('dev1');
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
-    ));
+    await tester.pumpWidget(
+      _host(
+        const RemotePage(),
+        prefs: prefs,
+        snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+      ),
+    );
     await tester.pump();
     await tester.tap(find.text('使用此地址添加远程连接'));
     await tester.pumpAndSettle();
@@ -201,7 +228,9 @@ void main() {
     expect(find.text('测试并保存'), findsOneWidget);
   });
 
-  testWidgets('embedded card: unavailable build shows explicit fallback text', (tester) async {
+  testWidgets('embedded card: unavailable build shows explicit fallback text', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1200, 3600);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -211,19 +240,23 @@ void main() {
     await reg.upsert(_router());
     await reg.setActive('dev1');
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
-      engine: null,
-    ));
+    await tester.pumpWidget(
+      _host(
+        const RemotePage(),
+        prefs: prefs,
+        snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+        engine: null,
+      ),
+    );
     await tester.pump();
 
     expect(find.text('内嵌直连（实验）'), findsOneWidget);
     expect(find.textContaining('此构建未包含内嵌引擎'), findsOneWidget);
   });
 
-  testWidgets('embedded card: enable → needsLogin with login button', (tester) async {
+  testWidgets('embedded card: enable → needsLogin with login button', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1200, 3600);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
@@ -234,16 +267,18 @@ void main() {
     await reg.setActive('dev1');
     final engine = _FakeEngine();
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
-      engine: engine,
-    ));
+    await tester.pumpWidget(
+      _host(
+        const RemotePage(),
+        prefs: prefs,
+        snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+        engine: engine,
+      ),
+    );
     await tester.pump();
     expect(find.text('开启内嵌直连'), findsOneWidget);
 
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.byType(QzToggle));
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(engine.started, isTrue);
@@ -252,21 +287,26 @@ void main() {
     expect(find.text('复制链接'), findsOneWidget);
   });
 
-  testWidgets('remote page shows saved remote address with in-use badge when active', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
-    final reg = RouterRegistry(prefs);
-    await reg.upsert(_router(remoteHost: '100.118.170.8'));
-    await reg.setActive('dev1');
+  testWidgets(
+    'remote page shows saved remote address with in-use badge when active',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final reg = RouterRegistry(prefs);
+      await reg.upsert(_router(remoteHost: '100.118.170.8'));
+      await reg.setActive('dev1');
 
-    await tester.pumpWidget(_host(
-      const RemotePage(),
-      prefs: prefs,
-      snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
-    ));
-    await tester.pump();
+      await tester.pumpWidget(
+        _host(
+          const RemotePage(),
+          prefs: prefs,
+          snap: SnapshotState(kind: SnapKind.ok, data: _snapWithTailscale()),
+        ),
+      );
+      await tester.pump();
 
-    expect(find.text('100.118.170.8:443'), findsOneWidget);
-    expect(find.text('移除'), findsOneWidget);
-  });
+      expect(find.text('100.118.170.8:443'), findsOneWidget);
+      expect(find.text('移除'), findsOneWidget);
+    },
+  );
 }

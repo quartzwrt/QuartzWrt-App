@@ -76,10 +76,13 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryInterfaces, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryInterfaces,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -87,8 +90,8 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -104,7 +107,9 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
                         child: Text(
                           l10n.configSectionUnavailable,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: .5,
+                            ),
                           ),
                         ),
                       ),
@@ -130,10 +135,10 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
   }
 
   String _title(AppL10n l10n, String section) => switch (section) {
-        'lan' => 'LAN · ${l10n.routerEntryInterfaces}',
-        'wan' => 'WAN · ${l10n.routerEntryInterfaces}',
-        _ => section,
-      };
+    'lan' => 'LAN · ${l10n.routerEntryInterfaces}',
+    'wan' => 'WAN · ${l10n.routerEntryInterfaces}',
+    _ => section,
+  };
 
   String _subtitle(AppL10n l10n, String section) {
     final proto = '${_sections[section]?['proto'] ?? ''}';
@@ -142,12 +147,12 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
   }
 
   String _protoLabel(AppL10n l10n, String proto) => switch (proto) {
-        'static' => l10n.interfaceStatic,
-        'dhcp' => l10n.interfaceDhcpClient,
-        'pppoe' => l10n.interfacePppoe,
-        'none' => l10n.interfaceNone,
-        _ => proto,
-      };
+    'static' => l10n.interfaceStatic,
+    'dhcp' => l10n.interfaceDhcpClient,
+    'pppoe' => l10n.interfacePppoe,
+    'none' => l10n.interfaceNone,
+    _ => proto,
+  };
 
   List<ConfigField> _fields(AppL10n l10n, String section) {
     final choices = section == 'wan'
@@ -162,27 +167,72 @@ class _InterfacesPageState extends ConsumerState<InterfacesPage> {
             ConfigChoice('dhcp', l10n.interfaceDhcpClient),
             ConfigChoice('none', l10n.interfaceNone),
           ];
-    bool staticOnly(Map<String, dynamic> v) => '${v['proto'] ?? 'static'}' == 'static';
+    bool staticOnly(Map<String, dynamic> v) =>
+        '${v['proto'] ?? 'static'}' == 'static';
     bool pppoeOnly(Map<String, dynamic> v) => '${v['proto'] ?? ''}' == 'pppoe';
     return [
-      ConfigField('proto', l10n.interfaceProto, kind: ConfigFieldKind.choice, choices: choices),
+      ConfigField(
+        'proto',
+        l10n.interfaceProto,
+        kind: ConfigFieldKind.choice,
+        choices: choices,
+      ),
       ConfigField('device', l10n.interfaceDevice, hint: 'eth0 / eth1'),
-      ConfigField('disabled', l10n.interfaceDisabled, kind: ConfigFieldKind.boolean, dangerous: true),
+      ConfigField(
+        'disabled',
+        l10n.interfaceDisabled,
+        kind: ConfigFieldKind.boolean,
+        dangerous: true,
+      ),
       if (section == 'wan')
         ConfigField('auto', l10n.interfaceAuto, kind: ConfigFieldKind.boolean),
-      ConfigField('ipaddr', l10n.interfaceIpaddr, dangerous: true, visibleWhen: staticOnly),
-      ConfigField('netmask', l10n.interfaceNetmask, dangerous: true, visibleWhen: staticOnly),
-      ConfigField('gateway', l10n.interfaceGateway, dangerous: true, visibleWhen: staticOnly),
-      ConfigField('dns', l10n.interfaceDns, kind: ConfigFieldKind.list, hint: l10n.interfaceDnsHint,
-          visibleWhen: (v) => staticOnly(v) || pppoeOnly(v)),
-      ConfigField('ip6addr', l10n.interfaceIp6addr, kind: ConfigFieldKind.list,
-          hint: l10n.interfaceIp6Hint, visibleWhen: staticOnly),
-      ConfigField('ip6assign', l10n.interfaceIp6assign, kind: ConfigFieldKind.integer,
-          visibleWhen: staticOnly),
+      ConfigField(
+        'ipaddr',
+        l10n.interfaceIpaddr,
+        dangerous: true,
+        visibleWhen: staticOnly,
+      ),
+      ConfigField(
+        'netmask',
+        l10n.interfaceNetmask,
+        dangerous: true,
+        visibleWhen: staticOnly,
+      ),
+      ConfigField(
+        'gateway',
+        l10n.interfaceGateway,
+        dangerous: true,
+        visibleWhen: staticOnly,
+      ),
+      ConfigField(
+        'dns',
+        l10n.interfaceDns,
+        kind: ConfigFieldKind.list,
+        hint: l10n.interfaceDnsHint,
+        visibleWhen: (v) => staticOnly(v) || pppoeOnly(v),
+      ),
+      ConfigField(
+        'ip6addr',
+        l10n.interfaceIp6addr,
+        kind: ConfigFieldKind.list,
+        hint: l10n.interfaceIp6Hint,
+        visibleWhen: staticOnly,
+      ),
+      ConfigField(
+        'ip6assign',
+        l10n.interfaceIp6assign,
+        kind: ConfigFieldKind.integer,
+        visibleWhen: staticOnly,
+      ),
       if (section == 'wan') ...[
         ConfigField('username', l10n.interfaceUsername, visibleWhen: pppoeOnly),
-        ConfigField('password', l10n.interfacePassword, kind: ConfigFieldKind.secret,
-            sensitive: true, visibleWhen: pppoeOnly),
+        ConfigField(
+          'password',
+          l10n.interfacePassword,
+          kind: ConfigFieldKind.secret,
+          sensitive: true,
+          visibleWhen: pppoeOnly,
+        ),
       ],
     ];
   }

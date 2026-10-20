@@ -843,6 +843,12 @@ class AppL10nEn extends AppL10n {
   String get notEnabled => 'Not enabled';
 
   @override
+  String get ipClickToReveal => 'Click to reveal';
+
+  @override
+  String get ipClickToHide => 'Click to hide';
+
+  @override
   String get bandixLimitTitle => 'Default rate limit';
 
   @override
@@ -996,10 +1002,133 @@ class AppL10nEn extends AppL10n {
   }
 
   @override
+  String get cellularOperatorChinaMobile => 'China Mobile';
+
+  @override
+  String get cellularOperatorChinaUnicom => 'China Unicom';
+
+  @override
+  String get cellularOperatorChinaTelecom => 'China Telecom';
+
+  @override
+  String get cellularNoResetPlan => 'No reset plan';
+
+  @override
+  String cellularResetMonthly(int day, String time) {
+    return 'Monthly $day · $time';
+  }
+
+  @override
+  String cellularResetWeekly(String time) {
+    return 'Weekly · $time';
+  }
+
+  @override
+  String cellularResetDaily(String time) {
+    return 'Daily · $time';
+  }
+
+  @override
+  String get tcpLabel => 'TCP';
+
+  @override
+  String get udpLabel => 'UDP';
+
+  @override
   String get cellularNetworkSim => 'Network · SIM';
 
   @override
   String get cellularServingCell => 'Serving cell';
+
+  @override
+  String get cellularRadioSection => 'Radio';
+
+  @override
+  String get cellularCellSimSection => 'Cell & SIM';
+
+  @override
+  String get cellularConnectionSection => 'Connection';
+
+  @override
+  String get cellularHardwareSection => 'Hardware';
+
+  @override
+  String get cellularBandLabel => 'Band';
+
+  @override
+  String get cellularArfcnLabel => 'ARFCN';
+
+  @override
+  String get cellularPciLabel => 'PCI';
+
+  @override
+  String get cellularBwLabel => 'UL / DL BW';
+
+  @override
+  String get cellularScsLabel => 'SCS';
+
+  @override
+  String get cellularDuplexLabel => 'Duplex';
+
+  @override
+  String get cellularMccMncLabel => 'MCC / MNC';
+
+  @override
+  String get cellularTacLabel => 'TAC';
+
+  @override
+  String get cellularCellIdLabel => 'Cell ID';
+
+  @override
+  String get cellularSimStatusLabel => 'SIM status';
+
+  @override
+  String get cellularSimSlotLabel => 'SIM slot';
+
+  @override
+  String get cellularSwitchableLabel => 'Switchable';
+
+  @override
+  String get cellularCqiLabel => 'CQI UL / DL';
+
+  @override
+  String get cellularAmbrLabel => 'AMBR UL / DL';
+
+  @override
+  String get cellularPreferenceLabel => 'Preference';
+
+  @override
+  String get cellularManufacturerLabel => 'Manufacturer';
+
+  @override
+  String get cellularRevisionLabel => 'Revision';
+
+  @override
+  String get cellularVoltageLabel => 'Voltage';
+
+  @override
+  String get cellularConnectStatusLabel => 'Connect status';
+
+  @override
+  String get simStatusReady => 'Ready';
+
+  @override
+  String get yesLabel => 'Yes';
+
+  @override
+  String get noLabel => 'No';
+
+  @override
+  String get unlockedLabel => 'Unlocked';
+
+  @override
+  String get lockedLabel => 'Locked';
+
+  @override
+  String get cellularNeighborIntra => 'Intra-frequency';
+
+  @override
+  String get cellularNeighborInter => 'Inter-frequency';
 
   @override
   String get cellularSimLabel => 'SIM';
@@ -1044,6 +1173,126 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get cellularEntryLog => 'Dial log';
+
+  @override
+  String get cellularGroupDial => 'Dial';
+
+  @override
+  String get cellularGroupAdvanced => 'Advanced modem settings';
+
+  @override
+  String get cellularGroupMessages => 'SMS & SIM';
+
+  @override
+  String get cellularEntryNetworkSub => 'Network preference and band lock';
+
+  @override
+  String get cellularEntryNeighbor => 'Neighbor cells';
+
+  @override
+  String get cellularEntryNeighborSub => 'LTE / NR measurements (read-only)';
+
+  @override
+  String get cellularEntryAtSub => 'Port, presets and response history';
+
+  @override
+  String get cellularEntryMaintenance => 'Modem maintenance';
+
+  @override
+  String get cellularEntryMaintenanceSub => 'Dial mode, IMEI, reboot, counters';
+
+  @override
+  String get cellularEntryLogSub => 'Dial and link events';
+
+  @override
+  String get cellularEntrySmsSub => 'Messages, storage and sync';
+
+  @override
+  String get cellularEntrySimSub => 'SIM state and slot switch';
+
+  @override
+  String get cellularNeighborReadonly =>
+      'Cell locking stays in the web UI; the app only shows neighbor measurements.';
+
+  @override
+  String get cellularNeighborEmpty =>
+      'No neighbor cells reported (unsupported by the modem or none visible).';
+
+  @override
+  String get cellularNeighborLte => 'LTE neighbors';
+
+  @override
+  String get cellularNeighborNr => 'NR neighbors';
+
+  @override
+  String get cellularNeighborLock => 'Cell lock state';
+
+  @override
+  String get cellularRetryHint => 'Refresh or try again later.';
+
+  @override
+  String get cellularStatsResetTitle => 'Traffic reset schedule';
+
+  @override
+  String get cellularStatsResetHint =>
+      'Clears traffic counters on schedule (monthly uses day 1–28).';
+
+  @override
+  String get cellularStatsResetEnable => 'Enable automatic reset';
+
+  @override
+  String get cellularStatsResetType => 'Reset cycle';
+
+  @override
+  String get cellularStatsDaily => 'Daily';
+
+  @override
+  String get cellularStatsMonthly => 'Monthly';
+
+  @override
+  String get cellularStatsHour => 'Reset hour';
+
+  @override
+  String get cellularStatsDay => 'Reset day';
+
+  @override
+  String get cellularStatsApply => 'Save reset schedule';
+
+  @override
+  String get cellularStatsSaved => 'Reset schedule saved';
+
+  @override
+  String get cellularAtPort => 'AT port';
+
+  @override
+  String cellularAtPortInvalid(String port) {
+    return '$port (invalid)';
+  }
+
+  @override
+  String cellularAtPortOther(String port) {
+    return '$port (not this modem)';
+  }
+
+  @override
+  String get cellularAtOutput => 'Output';
+
+  @override
+  String get cellularAtOutputEmpty =>
+      'Commands and responses accumulate here after you send an AT command.';
+
+  @override
+  String get cellularAtClearOutput => 'Clear output';
+
+  @override
+  String get cellularAtNoPorts => 'No AT ports found';
+
+  @override
+  String get cellularAtSelectPort => 'Select AT port';
+
+  @override
+  String get cellularAtInvalidPortWarning =>
+      'This port is invalid or does not belong to this modem; sending is disabled.';
 
   @override
   String get cellularMoreEntriesPlanned =>
@@ -1774,6 +2023,12 @@ class AppL10nEn extends AppL10n {
   }
 
   @override
+  String get routerChipNative => 'Native';
+
+  @override
+  String get routerChipGeneric => 'Form';
+
+  @override
   String get routerChipReady => 'Ready';
 
   @override
@@ -1782,6 +2037,147 @@ class AppL10nEn extends AppL10n {
   @override
   String get routerMoreHint =>
       'More router settings are coming in a later version.';
+
+  @override
+  String get bandixPolicyLabel => 'Policy';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get clientHost => 'Hostname';
+
+  @override
+  String get clientIp => 'IP address';
+
+  @override
+  String get clientLastSeen => 'Last seen';
+
+  @override
+  String get servicesCardTitle => 'Services & cores';
+
+  @override
+  String get dockerContainers => 'Containers';
+
+  @override
+  String get dockerNetworks => 'Networks';
+
+  @override
+  String get dockerVolumes => 'Volumes';
+
+  @override
+  String get dockerEngine => 'Engine';
+
+  @override
+  String get dockerRoot => 'Root';
+
+  @override
+  String get dockerNoContainers => 'No containers';
+
+  @override
+  String get bandixCardNote => 'WAN rates; policy = whitelist / limit / quota';
+
+  @override
+  String get cellularRegistered => 'Registered';
+
+  @override
+  String get cellularNotRegistered => 'Not registered';
+
+  @override
+  String get cellularRate => 'Rate';
+
+  @override
+  String get cellularThisMonth => 'This month';
+
+  @override
+  String get heroUptime => 'Uptime';
+
+  @override
+  String get heroCollected => 'Collected';
+
+  @override
+  String get networkOnline => 'online';
+
+  @override
+  String get networkOffline => 'offline';
+
+  @override
+  String get networkCaption =>
+      'Download (blue) / Upload (grey) — last 2 minutes';
+
+  @override
+  String get processesLabel => 'Processes';
+
+  @override
+  String get appearancePreview => 'Preview';
+
+  @override
+  String get appearanceMode => 'Appearance mode';
+
+  @override
+  String get appearanceModeHint =>
+      'Follows the system on first use; the local choice takes precedence.';
+
+  @override
+  String get appearanceMaterial => 'Material';
+
+  @override
+  String get appearanceOpacity => 'Interface opacity';
+
+  @override
+  String get appearanceOpacityHint =>
+      '50–100%; applies to panels, top bar and tab bar; below 100% enables backdrop blur.';
+
+  @override
+  String get appearanceBlur => 'Blur strength';
+
+  @override
+  String get appearanceBlurHint =>
+      '0–40px; applies to chrome and translucent panels; 0 = off.';
+
+  @override
+  String get appearanceWallpaper => 'Wallpaper';
+
+  @override
+  String get appearanceWallpaperHint =>
+      'Single image ≤1920px / JPEG / ≤2MB; removing falls back to noise; never uploaded.';
+
+  @override
+  String get appearanceWallpaperEmpty => 'No wallpaper';
+
+  @override
+  String get appearanceDefaultNoise => 'Default quartz noise';
+
+  @override
+  String get appearanceChangeWallpaper => 'Change';
+
+  @override
+  String get appearanceChooseWallpaper => 'Choose image';
+
+  @override
+  String get appearanceRemoveWallpaper => 'Remove';
+
+  @override
+  String get appearanceReset => 'Reset';
+
+  @override
+  String get appearanceResetDone => 'Appearance reset to defaults';
+
+  @override
+  String get appearanceLocalOnly =>
+      'App appearance affects this device only; it never writes /etc/config/quartz on the router.';
+
+  @override
+  String appearanceWallpaperFailed(Object detail) {
+    return 'Failed to save wallpaper: $detail';
+  }
+
+  @override
+  String get appearanceWallpaperTooLarge =>
+      'Image exceeds 2 MB. Choose a smaller image.';
+
+  @override
+  String get appearanceLocal => 'On device';
 
   @override
   String get configSessionUnavailable =>

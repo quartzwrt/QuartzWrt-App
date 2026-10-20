@@ -52,12 +52,18 @@ class RouterRegistry {
   Future<void> upsert(PairedRouter r) async {
     final all = [...list()]..removeWhere((x) => x.id == r.id);
     all.add(r);
-    await _prefs.setString(_kRouters, jsonEncode(all.map((x) => x.toJson()).toList()));
+    await _prefs.setString(
+      _kRouters,
+      jsonEncode(all.map((x) => x.toJson()).toList()),
+    );
   }
 
   Future<void> remove(String id) async {
     final all = [...list()]..removeWhere((x) => x.id == id);
-    await _prefs.setString(_kRouters, jsonEncode(all.map((x) => x.toJson()).toList()));
+    await _prefs.setString(
+      _kRouters,
+      jsonEncode(all.map((x) => x.toJson()).toList()),
+    );
     if (activeId == id) {
       await setActive(all.isEmpty ? null : all.first.id);
     }
@@ -102,19 +108,21 @@ abstract interface class TokenStore {
 
 class SecureTokenStore implements TokenStore {
   SecureTokenStore([FlutterSecureStorage? storage])
-      : _s = storage ?? const FlutterSecureStorage();
+    : _s = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _s;
 
   @override
-  Future<String?> readRefresh(String routerId) => _s.read(key: '$_kRefreshPrefix$routerId');
+  Future<String?> readRefresh(String routerId) =>
+      _s.read(key: '$_kRefreshPrefix$routerId');
 
   @override
   Future<void> writeRefresh(String routerId, String token) =>
       _s.write(key: '$_kRefreshPrefix$routerId', value: token);
 
   @override
-  Future<void> clearRefresh(String routerId) => _s.delete(key: '$_kRefreshPrefix$routerId');
+  Future<void> clearRefresh(String routerId) =>
+      _s.delete(key: '$_kRefreshPrefix$routerId');
 }
 
 class MemoryTokenStore implements TokenStore {
@@ -124,7 +132,8 @@ class MemoryTokenStore implements TokenStore {
   Future<String?> readRefresh(String routerId) async => _m[routerId];
 
   @override
-  Future<void> writeRefresh(String routerId, String token) async => _m[routerId] = token;
+  Future<void> writeRefresh(String routerId, String token) async =>
+      _m[routerId] = token;
 
   @override
   Future<void> clearRefresh(String routerId) async => _m.remove(routerId);

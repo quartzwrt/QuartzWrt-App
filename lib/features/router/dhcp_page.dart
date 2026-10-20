@@ -1,6 +1,9 @@
 // 路由器 · DHCP 与 DNS（W6.10）：dhcp 配置的 dnsmasq 段与 dhcp 段
 // + 静态租约（W6.11，config host 增删；add/delete → apply/confirm）。
 import 'package:flutter/material.dart';
+
+import '../../core/theme.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/config.dart';
@@ -94,10 +97,13 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryDhcp, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryDhcp,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -105,8 +111,8 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -123,7 +129,9 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
                           l10n.dhcpEmpty,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: .5,
+                            ),
                           ),
                         ),
                       ),
@@ -136,8 +144,13 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
                       title: _isDnsmasq(section, _sections[section]!)
                           ? l10n.dhcpDnsmasq
                           : '${l10n.dhcpServer} · $section',
-                      subtitle: _isDnsmasq(section, _sections[section]!) ? section : l10n.dhcpServerHint,
-                      fields: _fields(l10n, _isDnsmasq(section, _sections[section]!)),
+                      subtitle: _isDnsmasq(section, _sections[section]!)
+                          ? section
+                          : l10n.dhcpServerHint,
+                      fields: _fields(
+                        l10n,
+                        _isDnsmasq(section, _sections[section]!),
+                      ),
                       initial: _sections[section]!,
                       onSaved: _load,
                     ),
@@ -156,7 +169,7 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
     final hosts = _hostSections;
     return QuartzCard(
       title: l10n.dhcpStaticLeases,
-      trailing: IconButton(
+      trailing: QzLegacyIconButton(
         tooltip: l10n.dhcpAddLease,
         onPressed: () => _addLease(l10n),
         icon: const Icon(Icons.add, size: 20),
@@ -178,16 +191,25 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
     );
   }
 
-  Widget _leaseRow(BuildContext context, AppL10n l10n, String section, {required bool first}) {
+  Widget _leaseRow(
+    BuildContext context,
+    AppL10n l10n,
+    String section, {
+    required bool first,
+  }) {
     final theme = Theme.of(context);
     final v = _sections[section] ?? const <String, dynamic>{};
     final name = (v['name'] as String?)?.trim() ?? '';
     final mac = (v['mac'] as String?) ?? '';
     final ip = (v['ip'] as String?) ?? '';
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
@@ -195,17 +217,24 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name.isEmpty ? mac : name,
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  name.isEmpty ? mac : name,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const SizedBox(height: 1),
                 Text(
                   [mac, if (ip.isNotEmpty) ip].join(' · '),
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                    color: muted,
+                  ),
                 ),
               ],
             ),
           ),
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.dhcpDeleteLease,
             onPressed: () => _deleteLease(l10n, section, name),
             icon: Icon(Icons.delete_outline, size: 19, color: muted),
@@ -219,52 +248,69 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
     final name = TextEditingController();
     final mac = TextEditingController();
     final ip = TextEditingController();
-    final result = await showDialog<Map<String, String>>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.dhcpAddLease),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: name,
-                decoration: InputDecoration(labelText: l10n.dhcpLeaseName),
-              ),
-              TextField(
-                controller: mac,
-                decoration: InputDecoration(labelText: l10n.dhcpLeaseMac),
-                autocorrect: false,
-              ),
-              TextField(
-                controller: ip,
-                decoration: InputDecoration(labelText: l10n.dhcpLeaseIp),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 6),
-              Text(l10n.dhcpLeaseHint,
-                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .5),
-                      )),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text(l10n.cancel)),
-          FilledButton(
-            onPressed: () {
-              final m = mac.text.trim();
-              if (!RegExp(r'^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$').hasMatch(m)) {
-                ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(l10n.dhcpLeaseInvalidMac)));
-                return;
-              }
-              final values = <String, String>{'name': name.text.trim(), 'mac': m, 'ip': ip.text.trim()};
-              Navigator.of(ctx).pop(values);
-            },
-            child: Text(l10n.save),
-          ),
-        ],
-      ),
+    final result = await showQzSheet<Map<String, String>>(
+      context,
+      builder: (ctx) {
+        final t = QuartzTokens.of(ctx);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.dhcpAddLease,
+              textAlign: TextAlign.center,
+              style: QuartzType.heroTitle.copyWith(color: t.text),
+            ),
+            const SizedBox(height: 12),
+            QzField(controller: name, label: l10n.dhcpLeaseName),
+            const SizedBox(height: 10),
+            QzField(controller: mac, label: l10n.dhcpLeaseMac),
+            const SizedBox(height: 10),
+            QzField(
+              controller: ip,
+              label: l10n.dhcpLeaseIp,
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.dhcpLeaseHint,
+              style: QuartzType.caption.copyWith(color: t.muted),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: QzButton(
+                    label: l10n.cancel,
+                    kind: QzButtonKind.plain,
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: QzButton(
+                    label: l10n.save,
+                    onPressed: () {
+                      final m = mac.text.trim();
+                      if (!RegExp(r'^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$')
+                          .hasMatch(m)) {
+                        showQzToast(ctx, l10n.dhcpLeaseInvalidMac);
+                        return;
+                      }
+                      final values = <String, String>{
+                        'name': name.text.trim(),
+                        'mac': m,
+                        'ip': ip.text.trim(),
+                      };
+                      Navigator.of(ctx).pop(values);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
     name.dispose();
     mac.dispose();
@@ -306,42 +352,116 @@ class _DhcpPageState extends ConsumerState<DhcpPage> {
       return [
         ConfigField('domain', l10n.dhcpDomain),
         ConfigField('local', l10n.dhcpLocal),
-        ConfigField('domainneeded', l10n.dhcpDomainNeeded, kind: ConfigFieldKind.boolean),
-        ConfigField('boguspriv', l10n.dhcpBogusPriv, kind: ConfigFieldKind.boolean),
-        ConfigField('authoritative', l10n.dhcpAuthoritative, kind: ConfigFieldKind.boolean),
-        ConfigField('localservice', l10n.dhcpLocalService, kind: ConfigFieldKind.boolean),
-        ConfigField('rebind_protection', l10n.dhcpRebindProtection, kind: ConfigFieldKind.boolean),
-        ConfigField('expandhosts', l10n.dhcpExpandHosts, kind: ConfigFieldKind.boolean),
-        ConfigField('cachesize', l10n.dhcpCacheSize, kind: ConfigFieldKind.integer),
-        ConfigField('logqueries', l10n.dhcpLogQueries, kind: ConfigFieldKind.boolean),
+        ConfigField(
+          'domainneeded',
+          l10n.dhcpDomainNeeded,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'boguspriv',
+          l10n.dhcpBogusPriv,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'authoritative',
+          l10n.dhcpAuthoritative,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'localservice',
+          l10n.dhcpLocalService,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'rebind_protection',
+          l10n.dhcpRebindProtection,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'expandhosts',
+          l10n.dhcpExpandHosts,
+          kind: ConfigFieldKind.boolean,
+        ),
+        ConfigField(
+          'cachesize',
+          l10n.dhcpCacheSize,
+          kind: ConfigFieldKind.integer,
+        ),
+        ConfigField(
+          'logqueries',
+          l10n.dhcpLogQueries,
+          kind: ConfigFieldKind.boolean,
+        ),
       ];
     }
     return [
-      ConfigField('start', l10n.dhcpStart, kind: ConfigFieldKind.integer, dangerous: true),
-      ConfigField('limit', l10n.dhcpLimit, kind: ConfigFieldKind.integer, dangerous: true),
-      ConfigField('leasetime', l10n.dhcpLeasetime, hint: '12h / 30m / infinite'),
-      ConfigField('ignore', l10n.dhcpIgnore, kind: ConfigFieldKind.boolean, dangerous: true),
-      ConfigField('dynamicdhcp', l10n.dhcpDynamicDhcp, kind: ConfigFieldKind.boolean),
+      ConfigField(
+        'start',
+        l10n.dhcpStart,
+        kind: ConfigFieldKind.integer,
+        dangerous: true,
+      ),
+      ConfigField(
+        'limit',
+        l10n.dhcpLimit,
+        kind: ConfigFieldKind.integer,
+        dangerous: true,
+      ),
+      ConfigField(
+        'leasetime',
+        l10n.dhcpLeasetime,
+        hint: '12h / 30m / infinite',
+      ),
+      ConfigField(
+        'ignore',
+        l10n.dhcpIgnore,
+        kind: ConfigFieldKind.boolean,
+        dangerous: true,
+      ),
+      ConfigField(
+        'dynamicdhcp',
+        l10n.dhcpDynamicDhcp,
+        kind: ConfigFieldKind.boolean,
+      ),
       ConfigField('force', l10n.dhcpForce, kind: ConfigFieldKind.boolean),
-      ConfigField('ra', l10n.dhcpRa, kind: ConfigFieldKind.choice, choices: [
-        ConfigChoice('disabled', l10n.initDisable),
-        ConfigChoice('server', 'Server'),
-        ConfigChoice('relay', 'Relay'),
-        ConfigChoice('hybrid', 'Hybrid'),
-      ]),
-      ConfigField('ra_management', l10n.dhcpRaManagement, kind: ConfigFieldKind.choice, choices: [
-        ConfigChoice('0', '0'),
-        ConfigChoice('1', '1'),
-        ConfigChoice('2', '2'),
-      ]),
-      ConfigField('dhcpv6', l10n.dhcpDhcpv6, kind: ConfigFieldKind.choice, choices: [
-        ConfigChoice('disabled', l10n.initDisable),
-        ConfigChoice('server', 'Server'),
-        ConfigChoice('relay', 'Relay'),
-        ConfigChoice('hybrid', 'Hybrid'),
-      ]),
+      ConfigField(
+        'ra',
+        l10n.dhcpRa,
+        kind: ConfigFieldKind.choice,
+        choices: [
+          ConfigChoice('disabled', l10n.initDisable),
+          ConfigChoice('server', 'Server'),
+          ConfigChoice('relay', 'Relay'),
+          ConfigChoice('hybrid', 'Hybrid'),
+        ],
+      ),
+      ConfigField(
+        'ra_management',
+        l10n.dhcpRaManagement,
+        kind: ConfigFieldKind.choice,
+        choices: [
+          ConfigChoice('0', '0'),
+          ConfigChoice('1', '1'),
+          ConfigChoice('2', '2'),
+        ],
+      ),
+      ConfigField(
+        'dhcpv6',
+        l10n.dhcpDhcpv6,
+        kind: ConfigFieldKind.choice,
+        choices: [
+          ConfigChoice('disabled', l10n.initDisable),
+          ConfigChoice('server', 'Server'),
+          ConfigChoice('relay', 'Relay'),
+          ConfigChoice('hybrid', 'Hybrid'),
+        ],
+      ),
       ConfigField('master', l10n.dhcpMaster, kind: ConfigFieldKind.boolean),
-      ConfigField('dns_service', l10n.dhcpDnsService, kind: ConfigFieldKind.boolean),
+      ConfigField(
+        'dns_service',
+        l10n.dhcpDnsService,
+        kind: ConfigFieldKind.boolean,
+      ),
     ];
   }
 }

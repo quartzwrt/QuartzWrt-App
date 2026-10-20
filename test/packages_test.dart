@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart' show CupertinoTextField;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +63,12 @@ void main() {
         'items': [
           {'name': 'a', 'version': '1'},
           'not-a-map', // 杂项容忍
-          {'name': 'b', 'version': '2', 'upgradable': true, 'target_version': '3'},
+          {
+            'name': 'b',
+            'version': '2',
+            'upgradable': true,
+            'target_version': '3',
+          },
         ],
       });
       expect(pg.scope, 'installed');
@@ -77,8 +83,22 @@ void main() {
       final pg = PackagesPage.fromPayload({
         'scope': 'history',
         'items': [
-          {'ts': 100, 'action': 'packages.remove', 'target': 'no-such', 'ok': false, 'output': 'ERROR: No such package', 'duration_ms': 78},
-          {'ts': 200, 'action': 'packages.upgrade', 'target': 'ttyd', 'ok': true, 'output': '(1/1) Upgrading', 'duration_ms': 1234},
+          {
+            'ts': 100,
+            'action': 'packages.remove',
+            'target': 'no-such',
+            'ok': false,
+            'output': 'ERROR: No such package',
+            'duration_ms': 78,
+          },
+          {
+            'ts': 200,
+            'action': 'packages.upgrade',
+            'target': 'ttyd',
+            'ok': true,
+            'output': '(1/1) Upgrading',
+            'duration_ms': 1234,
+          },
         ],
       });
       final ops = pg.ops;
@@ -95,8 +115,20 @@ void main() {
       final pg = PackagesPage.fromPayload({
         'scope': 'history',
         'items': [
-          {'name': 'packages.remove', 'version': 'no-such', 'description': 'ERROR: No such package', 'file_size': 78, 'installed': false},
-          {'name': 'packages.refresh', 'version': '', 'description': 'OK: 10456 distinct packages available', 'file_size': 2764, 'installed': true},
+          {
+            'name': 'packages.remove',
+            'version': 'no-such',
+            'description': 'ERROR: No such package',
+            'file_size': 78,
+            'installed': false,
+          },
+          {
+            'name': 'packages.refresh',
+            'version': '',
+            'description': 'OK: 10456 distinct packages available',
+            'file_size': 2764,
+            'installed': true,
+          },
         ],
       });
       final ops = pg.ops;
@@ -112,8 +144,22 @@ void main() {
 
     test('appended 累积下一页', () {
       PackageItem it(int i) => PackageItem(name: 'p$i', version: '1');
-      final a = PackagesPage(scope: 'installed', page: 1, perPage: 24, total: 30, pages: 2, raw: [it(1)]);
-      final b = PackagesPage(scope: 'installed', page: 2, perPage: 24, total: 30, pages: 2, raw: [it(2)]);
+      final a = PackagesPage(
+        scope: 'installed',
+        page: 1,
+        perPage: 24,
+        total: 30,
+        pages: 2,
+        raw: [it(1)],
+      );
+      final b = PackagesPage(
+        scope: 'installed',
+        page: 2,
+        perPage: 24,
+        total: 30,
+        pages: 2,
+        raw: [it(2)],
+      );
       final c = a.appended(b);
       expect(c.raw.length, 2);
       expect(c.page, 2);
@@ -124,7 +170,10 @@ void main() {
       final pg = PackagesPage.fromPayload({'scope': 'installed'});
       expect(pg.items, isEmpty);
       expect(pg.pages, 0);
-      final pg2 = PackagesPage.fromPayload({'scope': 'installed', 'items': 'oops'});
+      final pg2 = PackagesPage.fromPayload({
+        'scope': 'installed',
+        'items': 'oops',
+      });
       expect(pg2.items, isEmpty);
     });
   });
@@ -139,7 +188,14 @@ void main() {
         if (method == 'packages' && args?['scope'] == 'upgradable') {
           final per = (args?['per_page'] as int?) ?? 24;
           if (per == 1) {
-            return _ok({'scope': 'upgradable', 'page': 1, 'per_page': 1, 'total': 2, 'pages': 2, 'items': const []});
+            return _ok({
+              'scope': 'upgradable',
+              'page': 1,
+              'per_page': 1,
+              'total': 2,
+              'pages': 2,
+              'items': const [],
+            });
           }
           return _ok({
             'scope': 'upgradable',
@@ -148,8 +204,22 @@ void main() {
             'total': 2,
             'pages': 1,
             'items': [
-              {'name': 'ttyd', 'version': '1.7.8-r1', 'installed_version': '1.7.7-r1', 'file_size': 408255, 'installed': true, 'upgradable': true},
-              {'name': 'bash', 'version': '5.4-r1', 'installed_version': '5.3-r4', 'file_size': 505000, 'installed': true, 'upgradable': true},
+              {
+                'name': 'ttyd',
+                'version': '1.7.8-r1',
+                'installed_version': '1.7.7-r1',
+                'file_size': 408255,
+                'installed': true,
+                'upgradable': true,
+              },
+              {
+                'name': 'bash',
+                'version': '5.4-r1',
+                'installed_version': '5.3-r4',
+                'file_size': 505000,
+                'installed': true,
+                'upgradable': true,
+              },
             ],
           });
         }
@@ -159,7 +229,10 @@ void main() {
             'result': {'stdout': 'ok', 'duration_ms': 120},
           });
         }
-        return ApiResult.fail(1, const ApiError('bad_request', 'unknown scope'));
+        return ApiResult.fail(
+          1,
+          const ApiError('bad_request', 'unknown scope'),
+        );
       });
       await tester.pumpWidget(_host(PackagesSection(), t));
       await tester.pumpAndSettle();
@@ -171,11 +244,13 @@ void main() {
 
       // 单包升级
       await tester.tap(find.text('升级').first);
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
       final upgradeCall = calls.lastWhere((c) => c['method'] == 'action');
       expect(upgradeCall['action'], 'packages.upgrade');
       expect((upgradeCall['args'] as Map)['name'], 'ttyd');
       expect(find.textContaining('已升级 ttyd'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 3)); // toast 自动消失
 
       // 全部升级（确认层 → 确认）
       await tester.tap(find.text('全部升级（2）'));
@@ -192,9 +267,19 @@ void main() {
       final t = _ScriptedTransport((method, args) {
         if (method == 'packages') {
           if (args?['scope'] == 'upgradable') {
-            return _ok({'scope': 'upgradable', 'page': 1, 'per_page': 1, 'total': 0, 'pages': 0, 'items': const []});
+            return _ok({
+              'scope': 'upgradable',
+              'page': 1,
+              'per_page': 1,
+              'total': 0,
+              'pages': 0,
+              'items': const [],
+            });
           }
-          return ApiResult.fail(1, const ApiError('bad_request', 'unknown method'));
+          return ApiResult.fail(
+            1,
+            const ApiError('bad_request', 'unknown method'),
+          );
         }
         return ApiResult.fail(1, const ApiError('transport', 'x'));
       });
@@ -205,7 +290,10 @@ void main() {
     });
 
     testWidgets('旧固件（无 packages 方法）→ 降级说明卡', (tester) async {
-      final t2 = _ScriptedTransport((method, args) => ApiResult.fail(1, const ApiError('bad_request', 'unknown method')));
+      final t2 = _ScriptedTransport(
+        (method, args) =>
+            ApiResult.fail(1, const ApiError('bad_request', 'unknown method')),
+      );
       await tester.pumpWidget(_host(PackagesSection(), t2));
       await tester.pumpAndSettle();
       expect(find.text('软件包管理暂不可用'), findsOneWidget);
@@ -214,10 +302,24 @@ void main() {
     testWidgets('搜索视图：空查询提示 → 结果带已安装徽标', (tester) async {
       final t = _ScriptedTransport((method, args) {
         if (method == 'packages' && args?['scope'] == 'upgradable') {
-          return _ok({'scope': 'upgradable', 'page': 1, 'per_page': 1, 'total': 0, 'pages': 0, 'items': const []});
+          return _ok({
+            'scope': 'upgradable',
+            'page': 1,
+            'per_page': 1,
+            'total': 0,
+            'pages': 0,
+            'items': const [],
+          });
         }
         if (method == 'packages' && args?['scope'] == 'installed') {
-          return _ok({'scope': 'installed', 'page': 1, 'per_page': 24, 'total': 0, 'pages': 0, 'items': const []});
+          return _ok({
+            'scope': 'installed',
+            'page': 1,
+            'per_page': 24,
+            'total': 0,
+            'pages': 0,
+            'items': const [],
+          });
         }
         if (method == 'packages' && args?['scope'] == 'available') {
           return _ok({
@@ -227,7 +329,13 @@ void main() {
             'total': 1,
             'pages': 1,
             'items': [
-              {'name': 'tailscale', 'version': '1.98.3-r1', 'file_size': 4000000, 'installed': true, 'installed_version': '1.98.3-r1'},
+              {
+                'name': 'tailscale',
+                'version': '1.98.3-r1',
+                'file_size': 4000000,
+                'installed': true,
+                'installed_version': '1.98.3-r1',
+              },
             ],
           });
         }
@@ -239,7 +347,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('输入名称搜索软件包'), findsOneWidget);
 
-      await tester.enterText(find.byType(TextField), 'tail');
+      await tester.enterText(find.byType(CupertinoTextField), 'tail');
       await tester.pump(const Duration(milliseconds: 500)); // 防抖
       await tester.pumpAndSettle();
       expect(find.text('tailscale'), findsOneWidget);
@@ -252,8 +360,21 @@ void main() {
           return _ok({
             'scope': 'history',
             'items': [
-              {'ts': 100, 'action': 'packages.remove', 'target': 'no-such', 'ok': false, 'output': 'ERROR: No such package: no-such', 'duration_ms': 78},
-              {'ts': 200, 'action': 'packages.refresh', 'ok': true, 'output': 'OK: 10456 distinct packages available', 'duration_ms': 2764},
+              {
+                'ts': 100,
+                'action': 'packages.remove',
+                'target': 'no-such',
+                'ok': false,
+                'output': 'ERROR: No such package: no-such',
+                'duration_ms': 78,
+              },
+              {
+                'ts': 200,
+                'action': 'packages.refresh',
+                'ok': true,
+                'output': 'OK: 10456 distinct packages available',
+                'duration_ms': 2764,
+              },
             ],
           });
         }
@@ -281,13 +402,24 @@ class _ScriptedTransport implements ApiTransport {
   final ApiResult Function(String method, Map<String, dynamic>? args) onCall;
 
   @override
-  Future<ApiResult> call(String method, [Map<String, dynamic>? args]) async => onCall(method, args);
+  Future<ApiResult> call(String method, [Map<String, dynamic>? args]) async =>
+      onCall(method, args);
 }
 
 Widget _host(Widget child, ApiTransport transport) {
-  final tm = TokenManager(() => transport, MemoryTokenStore(), routerId: 'dev1');
+  final tm = TokenManager(
+    () => transport,
+    MemoryTokenStore(),
+    routerId: 'dev1',
+  );
   tm.seed(
-    const Tokens(accessToken: 'a1', accessExp: 9999999999, refreshToken: 'r1', refreshExp: 9999999999, deviceId: 'dev1'),
+    const Tokens(
+      accessToken: 'a1',
+      accessExp: 9999999999,
+      refreshToken: 'r1',
+      refreshExp: 9999999999,
+      deviceId: 'dev1',
+    ),
     'r1',
   );
   return ProviderScope(
@@ -319,10 +451,19 @@ void _dioClassifyTests() {
   });
 
   test('classifyDioError：超时/拒连/未知的归一化', () {
-    DioException mk(DioExceptionType t) => DioException(requestOptions: RequestOptions(path: '/ubus'), type: t);
+    DioException mk(DioExceptionType t) => DioException(
+      requestOptions: RequestOptions(path: '/ubus'),
+      type: t,
+    );
     expect(classifyDioError(mk(DioExceptionType.receiveTimeout)), 'timeout');
-    expect(classifyDioError(mk(DioExceptionType.connectionError)), 'connection_refused');
-    expect(classifyDioError(mk(DioExceptionType.badCertificate)), 'bad_certificate');
+    expect(
+      classifyDioError(mk(DioExceptionType.connectionError)),
+      'connection_refused',
+    );
+    expect(
+      classifyDioError(mk(DioExceptionType.badCertificate)),
+      'bad_certificate',
+    );
     expect(classifyDioError(mk(DioExceptionType.unknown)), 'transport');
   });
 }

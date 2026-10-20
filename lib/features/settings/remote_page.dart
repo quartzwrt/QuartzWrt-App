@@ -38,14 +38,22 @@ class RemotePage extends ConsumerWidget {
     final tsIp = (ts?['ip'] as String?)?.trim();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.remotePageTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.remotePageTitle,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           if (router == null)
-            QuartzCard(child: Text(l10n.discoverNone, style: Theme.of(context).textTheme.bodySmall))
+            QuartzCard(
+              child: Text(
+                l10n.discoverNone,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            )
           else ...[
             QuartzCard(
               title: l10n.remoteRouterStatusTitle,
@@ -54,7 +62,9 @@ class RemotePage extends ConsumerWidget {
                 children: [
                   KvRow(
                     l10n.appDetailStatusTitle,
-                    tsRunning ? l10n.running : (ts == null ? l10n.notInstalled : l10n.stopped2),
+                    tsRunning
+                        ? l10n.running
+                        : (ts == null ? l10n.notInstalled : l10n.stopped2),
                     first: true,
                     valueMono: false,
                     valueColor: tsRunning ? QuartzColors.ok : null,
@@ -66,15 +76,17 @@ class RemotePage extends ConsumerWidget {
                     Text(
                       l10n.remoteNotDetected,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .55),
-                            height: 1.45,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurface
+                            .withValues(alpha: .55),
+                        height: 1.45,
+                      ),
                     ),
                   ],
                   if (tsRunning && tsIp != null && tsIp.isNotEmpty) ...[
                     const SizedBox(height: 10),
-                    FilledButton(
-                      onPressed: () => _addRemote(context, ref, prefillHost: tsIp),
+                    QzLegacyButton(
+                      onPressed: () =>
+                          _addRemote(context, ref, prefillHost: tsIp),
                       child: Text(l10n.remoteUseThisAddr),
                     ),
                   ],
@@ -104,15 +116,18 @@ class RemotePage extends ConsumerWidget {
                       child: Text(
                         l10n.remoteAddrNone,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .55),
-                              height: 1.45,
-                            ),
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withValues(alpha: .55),
+                          height: 1.45,
+                        ),
                       ),
                     )
                   else ...[
                     KvRow(
                       '${router.remoteHost}:${router.remotePort ?? 443}',
-                      endpoint?.kind == EndpointKind.remote ? l10n.remoteInUse : '',
+                      endpoint?.kind == EndpointKind.remote
+                          ? l10n.remoteInUse
+                          : '',
                       first: true,
                       valueMono: false,
                       valueColor: QuartzColors.ok,
@@ -120,28 +135,35 @@ class RemotePage extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        OutlinedButton(
+                        QzLegacyButton(
+                          kind: QzButtonKind.plain,
                           onPressed: () => _testRemote(context, ref, router),
                           child: Text(l10n.remoteTestBtn),
                         ),
                         const SizedBox(width: 8),
-                        OutlinedButton(
-                          onPressed: () => _addRemote(context, ref, prefillHost: router.remoteHost),
+                        QzLegacyButton(
+                          kind: QzButtonKind.plain,
+                          onPressed: () => _addRemote(
+                            context,
+                            ref,
+                            prefillHost: router.remoteHost,
+                          ),
                           child: Text(l10n.remoteEditBtn),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => _removeRemote(context, ref, router),
-                            style: OutlinedButton.styleFrom(foregroundColor: QuartzColors.err),
-                            child: Text(l10n.remoteRemoveShort),
+                          child: QzButton(
+                            label: l10n.remoteRemoveShort,
+                            kind: QzButtonKind.danger,
+                            onPressed: () =>
+                                _removeRemote(context, ref, router),
                           ),
                         ),
                       ],
                     ),
                   ],
                   if (!router.hasRemote)
-                    FilledButton(
+                    QzLegacyButton(
                       onPressed: () => _addRemote(context, ref),
                       child: Text(l10n.remoteAddBtn),
                     ),
@@ -153,9 +175,10 @@ class RemotePage extends ConsumerWidget {
               child: Text(
                 l10n.remoteAutoBody,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .65),
-                      height: 1.5,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurface
+                      .withValues(alpha: .65),
+                  height: 1.5,
+                ),
               ),
             ),
             const _EmbeddedCard(),
@@ -164,9 +187,10 @@ class RemotePage extends ConsumerWidget {
               child: Text(
                 l10n.remoteSecurityBody,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .65),
-                      height: 1.5,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurface
+                      .withValues(alpha: .65),
+                  height: 1.5,
+                ),
               ),
             ),
           ],
@@ -194,12 +218,19 @@ class RemotePage extends ConsumerWidget {
             ),
             child: Text(
               '$n',
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: QuartzColors.accent),
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: QuartzColors.accent,
+              ),
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(text, style: theme.textTheme.bodySmall?.copyWith(height: 1.5)),
+            child: Text(
+              text,
+              style: theme.textTheme.bodySmall?.copyWith(height: 1.5),
+            ),
           ),
         ],
       ),
@@ -208,21 +239,29 @@ class RemotePage extends ConsumerWidget {
 
   // ---- 添加/修改：测试并保存（严格 pin 的 info 探测） ----
 
-  Future<void> _addRemote(BuildContext context, WidgetRef ref, {String? prefillHost}) async {
+  Future<void> _addRemote(
+    BuildContext context,
+    WidgetRef ref, {
+    String? prefillHost,
+  }) async {
     final l10n = AppL10n.of(context);
     final router = ref.read(activeRouterProvider);
     if (router == null) return;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final hostCtrl = TextEditingController(text: prefillHost ?? router.remoteHost ?? '');
+    final hostCtrl = TextEditingController(
+      text: prefillHost ?? router.remoteHost ?? '',
+    );
     final portCtrl = TextEditingController(text: '${router.remotePort ?? 443}');
     var busy = false;
     String? error;
 
-    final saved = await showModalBottomSheet<bool>(
-      context: context,
+    final saved = await showQzSheet<bool>(
+      context,
       isScrollControlled: true,
       backgroundColor: isDark ? QuartzColors.darkRaised : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheet) {
           Future<void> testAndSave() async {
@@ -237,12 +276,18 @@ class RemotePage extends ConsumerWidget {
               error = null;
             });
             try {
-              await probeEndpoint(router,
-                  host: host, port: port, proxyAddr: proxyOf(ref.read(tailnetProvider)));
+              await probeEndpoint(
+                router,
+                host: host,
+                port: port,
+                proxyAddr: proxyOf(ref.read(tailnetProvider)),
+              );
               final registry = ref.read(registryProvider);
               await registry.setRemote(router.id, host, port);
               ref.read(activeRouterProvider.notifier).reload();
-              ref.read(endpointProvider.notifier).switchTo(
+              ref
+                  .read(endpointProvider.notifier)
+                  .switchTo(
                     Endpoint(host: host, port: port, kind: EndpointKind.remote),
                   );
               if (ctx.mounted) Navigator.of(ctx).pop(true);
@@ -260,7 +305,12 @@ class RemotePage extends ConsumerWidget {
           }
 
           return Padding(
-            padding: EdgeInsets.fromLTRB(18, 10, 18, 24 + MediaQuery.of(ctx).viewInsets.bottom),
+            padding: EdgeInsets.fromLTRB(
+              18,
+              10,
+              18,
+              24 + MediaQuery.of(ctx).viewInsets.bottom,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -271,7 +321,8 @@ class RemotePage extends ConsumerWidget {
                     height: 4.5,
                     margin: const EdgeInsets.only(bottom: 14),
                     decoration: BoxDecoration(
-                      color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .35),
+                      color: Theme.of(ctx).colorScheme.onSurface
+                          .withValues(alpha: .35),
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -279,47 +330,51 @@ class RemotePage extends ConsumerWidget {
                 Text(
                   l10n.remoteAddBtn,
                   textAlign: TextAlign.center,
-                  style: Theme.of(ctx).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(ctx).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 12),
-                TextField(
+                QzField(
                   controller: hostCtrl,
+                  label: l10n.remoteHostLabel,
+                  hint: '100.101.102.103',
                   autofocus: true,
                   enabled: !busy,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: l10n.remoteHostLabel,
-                    hintText: '100.101.102.103',
-                  ),
                 ),
                 const SizedBox(height: 10),
-                TextField(
+                QzField(
                   controller: portCtrl,
+                  label: l10n.portLabel,
                   enabled: !busy,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: l10n.portLabel,
-                  ),
                 ),
                 if (error != null) ...[
                   const SizedBox(height: 10),
-                  Text(error!, textAlign: TextAlign.center, style: const TextStyle(color: QuartzColors.err)),
+                  Text(
+                    error!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: QuartzColors.err),
+                  ),
                 ],
                 const SizedBox(height: 14),
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: busy ? null : () => Navigator.of(ctx).pop(false),
+                      child: QzLegacyButton(
+                        kind: QzButtonKind.plain,
+                        onPressed: busy
+                            ? null
+                            : () => Navigator.of(ctx).pop(false),
                         child: Text(l10n.cancel),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: FilledButton(
+                      child: QzLegacyButton(
                         onPressed: busy ? null : testAndSave,
-                        child: Text(busy ? l10n.remoteTesting : l10n.remoteTestSave),
+                        child: Text(
+                          busy ? l10n.remoteTesting : l10n.remoteTestSave,
+                        ),
                       ),
                     ),
                   ],
@@ -331,26 +386,50 @@ class RemotePage extends ConsumerWidget {
       ),
     );
     if (saved == true && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.remoteTestOk)));
+      showQzToast(context, l10n.remoteTestOk);
       ref.read(snapshotProvider.notifier).refreshNow();
     }
   }
 
-  Future<void> _testRemote(BuildContext context, WidgetRef ref, PairedRouter router) async {
+  Future<void> _testRemote(
+    BuildContext context,
+    WidgetRef ref,
+    PairedRouter router,
+  ) async {
     final l10n = AppL10n.of(context);
-    final messenger = ScaffoldMessenger.of(context);
     try {
-      await probeEndpoint(router,
-          host: router.remoteHost!, port: router.remotePort ?? 443, proxyAddr: proxyOf(ref.read(tailnetProvider)));
-      messenger.showSnackBar(SnackBar(content: Text(l10n.remoteTestOk)));
+      await probeEndpoint(
+        router,
+        host: router.remoteHost!,
+        port: router.remotePort ?? 443,
+        proxyAddr: proxyOf(ref.read(tailnetProvider)),
+      );
+      if (!context.mounted) return;
+      showQzToast(context, l10n.remoteTestOk, kind: QzToastKind.ok);
     } on PairException catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(l10n.remoteTestFail(pairErrorText(l10n, e)))));
+      if (context.mounted) {
+        showQzToast(
+          context,
+          l10n.remoteTestFail(pairErrorText(l10n, e)),
+          kind: QzToastKind.err,
+        );
+      }
     } catch (_) {
-      messenger.showSnackBar(SnackBar(content: Text(l10n.remoteTestFail(l10n.errConnect))));
+      if (context.mounted) {
+        showQzToast(
+          context,
+          l10n.remoteTestFail(l10n.errConnect),
+          kind: QzToastKind.err,
+        );
+      }
     }
   }
 
-  Future<void> _removeRemote(BuildContext context, WidgetRef ref, PairedRouter router) async {
+  Future<void> _removeRemote(
+    BuildContext context,
+    WidgetRef ref,
+    PairedRouter router,
+  ) async {
     final l10n = AppL10n.of(context);
     final ok = await showConfirmSheet(
       context,
@@ -364,7 +443,7 @@ class RemotePage extends ConsumerWidget {
     await ref.read(registryProvider).clearRemote(router.id);
     ref.read(activeRouterProvider.notifier).reload();
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.remoteRemoved)));
+    showQzToast(context, l10n.remoteRemoved);
   }
 }
 
@@ -392,7 +471,10 @@ class _EmbeddedCard extends ConsumerWidget {
           children: [
             Text(l10n.embedBody, style: bodyStyle),
             const SizedBox(height: 10),
-            Text(l10n.embedUnavailable, style: const TextStyle(color: QuartzColors.warn, fontSize: 12.5)),
+            Text(
+              l10n.embedUnavailable,
+              style: const TextStyle(color: QuartzColors.warn, fontSize: 12.5),
+            ),
           ],
         ),
       );
@@ -422,23 +504,48 @@ class _EmbeddedCard extends ConsumerWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Expanded(child: Text(l10n.embedEnable, style: theme.textTheme.bodyMedium)),
-              Switch(
+              Expanded(
+                child: Text(
+                  l10n.embedEnable,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+              QzToggle(
                 value: st.enabled,
+                semanticLabel: l10n.embedEnable,
                 onChanged: (v) => v ? ctl.enable() : ctl.disable(),
               ),
             ],
           ),
           if (st.enabled) ...[
-            KvRow(l10n.embedStateLabel, phaseText, first: true, valueMono: false, valueColor: phaseColor),
+            KvRow(
+              l10n.embedStateLabel,
+              phaseText,
+              first: true,
+              valueMono: false,
+              valueColor: phaseColor,
+            ),
             if (st.selfIp.isNotEmpty) KvRow(l10n.embedSelfIpLabel, st.selfIp),
             if (st.phase == TailnetPhase.error && st.message.isNotEmpty)
-              KvRow(l10n.embedErrorDetail, st.message, valueMono: false, valueColor: QuartzColors.err),
+              KvRow(
+                l10n.embedErrorDetail,
+                st.message,
+                valueMono: false,
+                valueColor: QuartzColors.err,
+              ),
           ],
           if (st.enabled && st.logs.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
-              st.logs.split('\n').where((l) => l.trim().isNotEmpty).toList().reversed.take(6).toList().reversed.join('\n'),
+              st.logs
+                  .split('\n')
+                  .where((l) => l.trim().isNotEmpty)
+                  .toList()
+                  .reversed
+                  .take(6)
+                  .toList()
+                  .reversed
+                  .join('\n'),
               style: TextStyle(
                 fontSize: 10.5,
                 height: 1.35,
@@ -454,18 +561,18 @@ class _EmbeddedCard extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: FilledButton(
+                  child: QzLegacyButton(
                     onPressed: () => _openLogin(context, st.loginUrl),
                     child: Text(l10n.embedLoginBtn),
                   ),
                 ),
                 const SizedBox(width: 8),
-                OutlinedButton(
+                QzLegacyButton(
+                  kind: QzButtonKind.plain,
                   onPressed: () async {
                     await Clipboard.setData(ClipboardData(text: st.loginUrl));
                     if (!context.mounted) return;
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(l10n.embedCopied)));
+                    showQzToast(context, l10n.embedCopied);
                   },
                   child: Text(l10n.embedCopyBtn),
                 ),
@@ -484,7 +591,7 @@ class _EmbeddedCard extends ConsumerWidget {
     } catch (_) {
       if (!context.mounted) return;
       final l10n = AppL10n.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.errConnect)));
+      showQzToast(context, l10n.errConnect);
     }
   }
 }

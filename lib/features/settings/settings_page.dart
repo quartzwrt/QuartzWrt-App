@@ -8,6 +8,7 @@ import '../../core/theme.dart';
 import '../../core/version.dart';
 import '../../l10n/app_localizations.dart';
 import '../../state/app_state.dart';
+import '../../state/appearance.dart';
 import '../../widgets/quartz.dart';
 import '../actions/actions.dart';
 
@@ -17,143 +18,125 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
+    final t = QuartzTokens.of(context);
     final router = ref.watch(activeRouterProvider);
     final snap = ref.watch(snapshotProvider).data;
     final themeMode = ref.watch(themeModeProvider);
+    final appearance = ref.watch(appearanceProvider);
     final locale = ref.watch(localeProvider);
-    final remoteActive = ref.watch(endpointProvider)?.kind == EndpointKind.remote;
+    final remoteActive =
+        ref.watch(endpointProvider)?.kind == EndpointKind.remote;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700))),
+      appBar: QzAppBar(titleText: l10n.settingsTitle),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          SectionLabel(l10n.sysSettingsGroup),
+          QzSectionLabel(l10n.sysSettingsGroup),
           if (router == null)
             QuartzCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.discoverNone, style: theme.textTheme.bodySmall),
+                  Text(
+                    l10n.discoverNone,
+                    style: QuartzType.body.copyWith(color: t.muted),
+                  ),
                   const SizedBox(height: 10),
-                  FilledButton(
+                  QzButton(
+                    label: l10n.addRouterEntry,
                     onPressed: () => context.go('/discover'),
-                    child: Text(l10n.addRouterEntry),
+                    expand: true,
                   ),
                 ],
               ),
             )
           else ...[
-            QuartzCard(
-              padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Row(
-                      children: [
-                        StatusDot(DotKind.ok),
-                        Expanded(
-                          child: Text(router.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                        ),
-                      ],
-                    ),
-                    subtitle: Text(remoteActive ? l10n.pairedRemote : l10n.pairedLan),
-                    trailing: Text(
-                      _shortFp(router.fingerprint),
-                      style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
+            QzListGroup(
+              children: [
+                QzListRow(
+                  first: true,
+                  showChevron: false,
+                  leading: StatusDot(DotKind.ok),
+                  title: router.name,
+                  subtitle: remoteActive ? l10n.pairedRemote : l10n.pairedLan,
+                  trailing: Text(
+                    _shortFp(router.fingerprint),
+                    style: QuartzType.caption.copyWith(
+                      color: t.faint,
+                      fontFeatures: const [FontFeature.tabularFigures()],
                     ),
                   ),
-                  const Divider(height: 1, indent: 14, endIndent: 14),
-                  ListTile(
-                    title: Text(l10n.remoteEntry),
-                    subtitle: router.hasRemote
-                        ? Text('${router.remoteHost}:${router.remotePort ?? 443}')
-                        : null,
-                    trailing: const Icon(Icons.chevron_right, size: 18),
-                    onTap: () => context.push('/settings/remote'),
-                  ),
-                  const Divider(height: 1, indent: 14, endIndent: 14),
-                  ListTile(
-                    title: Text(l10n.pairedDevicesEntry),
-                    trailing: const Icon(Icons.chevron_right, size: 18),
-                    onTap: () => context.push('/settings/devices'),
-                  ),
-                  const Divider(height: 1, indent: 14, endIndent: 14),
-                  ListTile(
-                    title: Text(l10n.addRouterEntry),
-                    trailing: const Icon(Icons.chevron_right, size: 18),
-                    onTap: () => context.go('/discover'),
-                  ),
-                  const Divider(height: 1, indent: 14, endIndent: 14),
-                  ListTile(
-                    title: Text(l10n.removeRouterBtn, style: const TextStyle(color: QuartzColors.err)),
-                    trailing: const Icon(Icons.chevron_right, size: 18),
-                    onTap: () => _removeRouter(context, ref, router.id, router.name),
-                  ),
-                ],
-              ),
+                ),
+                QzListRow(
+                  title: l10n.remoteEntry,
+                  subtitle: router.hasRemote
+                      ? '${router.remoteHost}:${router.remotePort ?? 443}'
+                      : null,
+                  onTap: () => context.push('/settings/remote'),
+                ),
+                QzListRow(
+                  title: l10n.pairedDevicesEntry,
+                  onTap: () => context.push('/settings/devices'),
+                ),
+                QzListRow(
+                  title: l10n.addRouterEntry,
+                  onTap: () => context.go('/discover'),
+                ),
+                QzListRow(
+                  title: l10n.removeRouterBtn,
+                  danger: true,
+                  onTap: () =>
+                      _removeRouter(context, ref, router.id, router.name),
+                ),
+              ],
             ),
-            QuartzCard(
-              title: l10n.deviceControlTitle,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () => _reboot(context, ref, router.name),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              l10n.rebootRouter,
-                              style: const TextStyle(color: QuartzColors.err, fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .45))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => _restartService(context, ref, snap),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          Expanded(child: Text(l10n.restartService)),
-                          Text('›', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: .45))),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            QzSectionLabel(l10n.deviceControlTitle),
+            QzListGroup(
+              children: [
+                QzListRow(
+                  first: true,
+                  title: l10n.rebootRouter,
+                  danger: true,
+                  onTap: () => _reboot(context, ref, router.name),
+                ),
+                QzListRow(
+                  title: l10n.restartService,
+                  onTap: () => _restartService(context, ref, snap),
+                ),
+              ],
             ),
           ],
-          SectionLabel(l10n.appSettingsGroup),
-          QuartzCard(
-            title: l10n.appearanceTitle,
-            child: SegmentBar<ThemeMode>(
-              values: const [ThemeMode.system, ThemeMode.dark, ThemeMode.light],
-              selected: themeMode,
-              labelOf: (m) => switch (m) {
-                ThemeMode.system => l10n.followSystem,
-                ThemeMode.dark => l10n.modeDark,
-                ThemeMode.light => l10n.modeLight,
-              },
-              onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
-            ),
+          QzSectionLabel(l10n.appSettingsGroup),
+          QzListGroup(
+            children: [
+              QzListRow(
+                first: true,
+                title: l10n.appearanceTitle,
+                subtitle:
+                    '${switch (themeMode) {
+                      ThemeMode.system => l10n.followSystem,
+                      ThemeMode.dark => l10n.modeDark,
+                      ThemeMode.light => l10n.modeLight,
+                    }} · ${(appearance.opacity * 100).round()}% · ${appearance.blur.round()}px',
+                onTap: () => context.push('/settings/appearance'),
+              ),
+            ],
           ),
           QuartzCard(
             title: l10n.languageTitle,
-            child: SegmentBar<String>(
+            child: QzSegmented<String>(
               values: const ['zh', 'en'],
               // 未显式选择（跟随系统）时，按生效语言回显（走查抓到的显示不一致）
-              selected: (locale?.languageCode ?? Localizations.localeOf(context).languageCode) == 'en' ? 'en' : 'zh',
+              selected:
+                  (locale?.languageCode ??
+                          Localizations.localeOf(context).languageCode) ==
+                      'en'
+                  ? 'en'
+                  : 'zh',
               labelOf: (v) => v == 'zh' ? '中文' : 'English',
-              onChanged: (v) => ref.read(localeProvider.notifier).set(Locale(v)),
+              onChanged: (v) =>
+                  ref.read(localeProvider.notifier).set(Locale(v)),
             ),
           ),
           QuartzCard(
@@ -161,7 +144,11 @@ class SettingsPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                KvRow(l10n.appVersionLabel, '$kAppVersion ($kAppBuild)', first: true),
+                KvRow(
+                  l10n.appVersionLabel,
+                  '$kAppVersion ($kAppBuild)',
+                  first: true,
+                ),
                 KvRow(l10n.apiLabel, 'quartz-app-api v1'),
               ],
             ),
@@ -172,8 +159,9 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  static String _shortFp(String fp) =>
-      fp.length >= 12 ? '${fp.substring(0, 8)} … ${fp.substring(fp.length - 4)} ✓' : fp;
+  static String _shortFp(String fp) => fp.length >= 12
+      ? '${fp.substring(0, 8)} … ${fp.substring(fp.length - 4)} ✓'
+      : fp;
 
   Future<void> _reboot(BuildContext context, WidgetRef ref, String name) async {
     final l10n = AppL10n.of(context);
@@ -188,40 +176,60 @@ class SettingsPage extends ConsumerWidget {
       danger: true,
     );
     if (!ok) return;
-    final r = await runAction(tm, const ActionSpec(id: 'system.reboot', label: 'reboot'));
+    final r = await runAction(
+      tm,
+      const ActionSpec(id: 'system.reboot', label: 'reboot'),
+    );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
   }
 
-  Future<void> _restartService(BuildContext context, WidgetRef ref, dynamic snap) async {
+  Future<void> _restartService(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic snap,
+  ) async {
     final l10n = AppL10n.of(context);
+    final t = QuartzTokens.of(context);
     final tm = ref.read(tokenManagerProvider);
     if (tm == null) return;
     final entries = (snap?.serviceEntries ?? const []);
     if ((entries as List).isEmpty) return;
-    final picked = await showModalBottomSheet<(String, String)>(
-      context: context,
-      backgroundColor:
-          Theme.of(context).brightness == Brightness.dark ? QuartzColors.darkRaised : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 10),
-            Text(l10n.restartService, style: Theme.of(ctx).textTheme.titleMedium),
-            const SizedBox(height: 6),
-            for (final e in entries)
-              ListTile(
-                title: Text(e.$1),
-                subtitle: Text(e.$2['running'] == true ? l10n.running : l10n.stopped2),
-                onTap: () => Navigator.of(ctx).pop((e.$1, e.$2['running'] == true ? l10n.running : l10n.stopped2)),
-              ),
-            const SizedBox(height: 10),
-          ],
-        ),
+    final picked = await showQzSheet<(String, String)>(
+      context,
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.restartService,
+            textAlign: TextAlign.center,
+            style: QuartzType.heroTitle.copyWith(color: t.text),
+          ),
+          const SizedBox(height: 8),
+          for (final (i, e) in entries.indexed)
+            QzListRow(
+              first: i == 0,
+              title: e.$1,
+              subtitle: e.$2['running'] == true ? l10n.running : l10n.stopped2,
+              showChevron: false,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              onTap: () => Navigator.of(ctx).pop((
+                e.$1,
+                e.$2['running'] == true ? l10n.running : l10n.stopped2,
+              )),
+            ),
+          const SizedBox(height: 10),
+          QzButton(
+            label: l10n.cancel,
+            kind: QzButtonKind.plain,
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+        ],
       ),
     );
     if (picked == null || !context.mounted) return;
@@ -237,13 +245,20 @@ class SettingsPage extends ConsumerWidget {
       serviceAction(op: 'restart', label: l10n.actionRestart, name: picked.$1),
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     ref.read(snapshotProvider.notifier).refreshNow();
   }
 
-  Future<void> _removeRouter(BuildContext context, WidgetRef ref, String id, String name) async {
+  Future<void> _removeRouter(
+    BuildContext context,
+    WidgetRef ref,
+    String id,
+    String name,
+  ) async {
     final l10n = AppL10n.of(context);
     final ok = await showConfirmSheet(
       context,

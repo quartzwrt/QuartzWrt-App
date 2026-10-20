@@ -3,6 +3,9 @@
 // 与网页端启动项页同源（`/usr/share/rpcd/ucode/luci`；方法经 app-api `luci.*`
 // 转发条目逐条注册）。enable/disable 改 rc.d 链接，start/stop/restart 调 init 脚本。
 import 'package:flutter/material.dart';
+
+import '../../core/theme.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/luci.dart';
@@ -59,12 +62,14 @@ class _InitPageState extends ConsumerState<InitPage> {
     for (final e in r.map.entries) {
       final v = e.value;
       if (v is! Map) continue;
-      list.add(_InitEntry(
-        e.key,
-        (v['index'] as num?)?.toInt() ?? 0,
-        (v['stop'] as num?)?.toInt(),
-        v['enabled'] == true,
-      ));
+      list.add(
+        _InitEntry(
+          e.key,
+          (v['index'] as num?)?.toInt() ?? 0,
+          (v['stop'] as num?)?.toInt(),
+          v['enabled'] == true,
+        ),
+      );
     }
     list.sort((a, b) => a.name.compareTo(b.name));
     setState(() {
@@ -79,7 +84,9 @@ class _InitPageState extends ConsumerState<InitPage> {
       final ok = await showConfirmSheet(
         context,
         title: '${_actionLabel(l10n, action)} · ${e.name}',
-        body: action == 'disable' ? l10n.initToggleWarning : l10n.initStopWarning,
+        body: action == 'disable'
+            ? l10n.initToggleWarning
+            : l10n.initStopWarning,
         confirmLabel: l10n.confirm,
         cancelLabel: l10n.cancel,
         danger: action == 'stop' || action == 'restart',
@@ -93,7 +100,10 @@ class _InitPageState extends ConsumerState<InitPage> {
     if (!mounted) return;
     setState(() => _busy.remove(e.name));
     if (r.ok) {
-      showConfigSnack(context, l10n.initActionDone(_actionLabel(l10n, action), e.name));
+      showConfigSnack(
+        context,
+        l10n.initActionDone(_actionLabel(l10n, action), e.name),
+      );
       _load();
     } else {
       showConfigSnack(context, configErrorText(l10n, r.error));
@@ -101,25 +111,30 @@ class _InitPageState extends ConsumerState<InitPage> {
   }
 
   String _actionLabel(AppL10n l10n, String action) => switch (action) {
-        'enable' => l10n.initEnable,
-        'disable' => l10n.initDisable,
-        'start' => l10n.initStart,
-        'stop' => l10n.initStop,
-        'restart' => l10n.initRestart,
-        _ => action,
-      };
+    'enable' => l10n.initEnable,
+    'disable' => l10n.initDisable,
+    'start' => l10n.initStart,
+    'stop' => l10n.initStop,
+    'restart' => l10n.initRestart,
+    _ => action,
+  };
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     final q = _query.trim().toLowerCase();
-    final list = q.isEmpty ? _entries : _entries.where((e) => e.name.toLowerCase().contains(q)).toList();
+    final list = q.isEmpty
+        ? _entries
+        : _entries.where((e) => e.name.toLowerCase().contains(q)).toList();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryInit, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryInit,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -127,8 +142,8 @@ class _InitPageState extends ConsumerState<InitPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -139,13 +154,9 @@ class _InitPageState extends ConsumerState<InitPage> {
                   ],
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        isDense: true,
-                        prefixIcon: const Icon(Icons.search, size: 19),
-                        hintText: l10n.initSearch,
-                        border: const OutlineInputBorder(),
-                      ),
+                    child: QzField(
+                      prefix: const QzIcon(QzIcons.search, size: 18),
+                      hint: l10n.initSearch,
                       onChanged: (v) => setState(() => _query = v),
                     ),
                   ),
@@ -156,7 +167,9 @@ class _InitPageState extends ConsumerState<InitPage> {
                         child: Text(
                           l10n.initEmpty,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: .5,
+                            ),
                           ),
                         ),
                       ),
@@ -165,7 +178,8 @@ class _InitPageState extends ConsumerState<InitPage> {
                     QuartzCard(
                       child: Column(
                         children: [
-                          for (final (i, e) in list.indexed) _row(context, l10n, e, first: i == 0),
+                          for (final (i, e) in list.indexed)
+                            _row(context, l10n, e, first: i == 0),
                         ],
                       ),
                     ),
@@ -176,17 +190,29 @@ class _InitPageState extends ConsumerState<InitPage> {
     );
   }
 
-  Widget _row(BuildContext context, AppL10n l10n, _InitEntry e, {required bool first}) {
+  Widget _row(
+    BuildContext context,
+    AppL10n l10n,
+    _InitEntry e, {
+    required bool first,
+  }) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .45);
     final busy = _busy.contains(e.name);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          StatusDot(e.enabled ? DotKind.ok : DotKind.off, margin: const EdgeInsets.only(right: 4, left: 2)),
+          StatusDot(
+            e.enabled ? DotKind.ok : DotKind.off,
+            margin: const EdgeInsets.only(right: 4, left: 2),
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,31 +230,69 @@ class _InitPageState extends ConsumerState<InitPage> {
                     if (e.stop != null) l10n.initStopIndex(e.stop!),
                     e.enabled ? l10n.initEnabled : l10n.initDisabled,
                   ].join(' · '),
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 10.5, color: muted),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 10.5,
+                    color: muted,
+                  ),
                 ),
               ],
             ),
           ),
           if (busy)
-            const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            const SizedBox(
+              width: 20,
+              height: 20,
+              child: QzSpinner(size: 16, stroke: 2),
+            )
           else ...[
-            Switch.adaptive(
+            QzToggle(
               value: e.enabled,
+              semanticLabel: e.name,
               onChanged: (v) => _run(e, v ? 'enable' : 'disable'),
             ),
-            PopupMenuButton<String>(
-              tooltip: '',
-              icon: Icon(Icons.more_horiz, size: 20, color: muted),
-              onSelected: (v) => _run(e, v),
-              itemBuilder: (_) => [
-                PopupMenuItem(value: 'start', child: Text(l10n.initStart)),
-                PopupMenuItem(value: 'restart', child: Text(l10n.initRestart)),
-                PopupMenuItem(value: 'stop', child: Text(l10n.initStop)),
-              ],
+            QzIconButton(
+              icon: QzIcons.more,
+              tooltip: l10n.initStart,
+              onTap: () => _menu(e),
             ),
           ],
         ],
       ),
     );
+  }
+
+  Future<void> _menu(dynamic e) async {
+    final l10n = AppL10n.of(context);
+    final picked = await showQzSheet<String>(
+      context,
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            e.name,
+            textAlign: TextAlign.center,
+            style: Theme.of(ctx).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          QzListRow(
+            title: l10n.initStart,
+            showChevron: false,
+            onTap: () => Navigator.of(ctx).pop('start'),
+          ),
+          QzListRow(
+            title: l10n.initRestart,
+            showChevron: false,
+            onTap: () => Navigator.of(ctx).pop('restart'),
+          ),
+          QzListRow(
+            title: l10n.initStop,
+            showChevron: false,
+            onTap: () => Navigator.of(ctx).pop('stop'),
+          ),
+        ],
+      ),
+    );
+    if (picked != null && mounted) _run(e, picked);
   }
 }

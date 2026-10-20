@@ -20,7 +20,8 @@ class ConfigReadResult {
   final dynamic value;
   final ApiError? error;
 
-  Map<String, dynamic> get map => value is Map<String, dynamic> ? value as Map<String, dynamic> : const {};
+  Map<String, dynamic> get map =>
+      value is Map<String, dynamic> ? value as Map<String, dynamic> : const {};
 
   String get message => apiErrorText(error);
 }
@@ -31,7 +32,11 @@ class ConfigClient {
 
   final TokenManager _tm;
 
-  Future<ConfigReadResult> read(String config, {String? section, String? option}) async {
+  Future<ConfigReadResult> read(
+    String config, {
+    String? section,
+    String? option,
+  }) async {
     final r = await _tm.call('config.read', {
       'config': config,
       if (section != null && section.isNotEmpty) 'section': section,
@@ -41,15 +46,24 @@ class ConfigClient {
     return ConfigReadResult(true, value: r.data['value']);
   }
 
-  Future<ApiResult> write(String config, String section, String option, dynamic value) => _tm.call(
-        'config.write',
-        {'config': config, 'section': section, 'option': option, 'value': value},
-      );
+  Future<ApiResult> write(
+    String config,
+    String section,
+    String option,
+    dynamic value,
+  ) => _tm.call('config.write', {
+    'config': config,
+    'section': section,
+    'option': option,
+    'value': value,
+  });
 
-  Future<ApiResult> changes(String config) => _tm.call('config.changes', {'config': config});
+  Future<ApiResult> changes(String config) =>
+      _tm.call('config.changes', {'config': config});
 
   /// 丢弃**暂存**改动（仅在 apply 之前可用；apply 后请用 [rollback]）。
-  Future<ApiResult> revert(String config) => _tm.call('config.revert', {'config': config});
+  Future<ApiResult> revert(String config) =>
+      _tm.call('config.revert', {'config': config});
 
   Future<ApiResult> apply({bool rollback = true, int timeout = 90}) =>
       _tm.call('config.apply', {'rollback': rollback, 'timeout': timeout});
@@ -60,10 +74,15 @@ class ConfigClient {
   Future<ApiResult> rollback() => _tm.call('config.rollback');
 
   /// 新增 section（暂存；values 只收注册字段；W6.11 静态租约等）。
-  Future<ApiResult> add(String config, String sectionType, Map<String, dynamic> values) => _tm.call(
-        'config.add',
-        {'config': config, 'section_type': sectionType, 'values': values},
-      );
+  Future<ApiResult> add(
+    String config,
+    String sectionType,
+    Map<String, dynamic> values,
+  ) => _tm.call('config.add', {
+    'config': config,
+    'section_type': sectionType,
+    'values': values,
+  });
 
   /// 删除可删除类型的 section（暂存；如 dhcp host）。
   Future<ApiResult> delete(String config, String section) =>
@@ -73,7 +92,9 @@ class ConfigClient {
 /// 取错误里最有信息量的一段（detail 优先于 message）。
 String apiErrorText(ApiError? err) {
   if (err == null) return 'unknown';
-  final detail = (err.detail != null && err.detail!.isNotEmpty) ? err.detail! : err.message;
+  final detail = (err.detail != null && err.detail!.isNotEmpty)
+      ? err.detail!
+      : err.message;
   return detail.isEmpty ? err.code : detail;
 }
 

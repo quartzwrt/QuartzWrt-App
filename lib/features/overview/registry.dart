@@ -21,7 +21,9 @@ class CardSpec {
 final List<CardSpec> overviewCards = [
   CardSpec(id: 'system', build: systemCard),
   CardSpec(id: 'network', build: networkCard),
+  CardSpec(id: 'cellular', build: cellularCard),
   CardSpec(id: 'clients', build: clientsCard),
+  CardSpec(id: 'bandix', visible: (s) => s.bandixAvailable, build: bandixCard),
   CardSpec(id: 'apps', build: appsCard),
   CardSpec(
     id: 'docker',
@@ -33,7 +35,19 @@ final List<CardSpec> overviewCards = [
 
 /// 已知顶层节（已被专属卡/框架消费；其余走通用兜底）。
 const kConsumedSections = {
-  'v', 'ts', 'interval', 'collect_ms', 'host', 'system', 'net', 'docker', 'clients', 'services', 'errors',
+  'v',
+  'ts',
+  'interval',
+  'collect_ms',
+  'host',
+  'system',
+  'net',
+  'docker',
+  'clients',
+  'bandix',
+  'cellular',
+  'services',
+  'errors',
 };
 
 /// 组装概览主体：专属卡（按可见性）→ 通用兜底卡（未知节）→ errors 弱提示。

@@ -43,19 +43,21 @@ ActionSpec serviceAction({
   bool danger = false,
   String? Function(BuildContext)? confirmTitle,
   String? Function(BuildContext)? confirmBody,
-}) =>
-    ActionSpec(
-      id: 'service.$op',
-      label: label,
-      danger: danger,
-      confirmTitle: confirmTitle,
-      confirmBody: confirmBody,
-      argsOf: () => {'name': name},
-    );
+}) => ActionSpec(
+  id: 'service.$op',
+  label: label,
+  danger: danger,
+  confirmTitle: confirmTitle,
+  confirmBody: confirmBody,
+  argsOf: () => {'name': name},
+);
 
 /// 执行（确认层由调用方按 [ActionSpec.danger]/confirm 文案先行展示）。
 Future<ActionResult> runAction(TokenManager tm, ActionSpec spec) async {
-  final r = await tm.call('action', {'action': spec.id, 'args': spec.argsOf?.call() ?? const {}});
+  final r = await tm.call('action', {
+    'action': spec.id,
+    'args': spec.argsOf?.call() ?? const {},
+  });
   if (r.ok) {
     return ActionResult(true, spec.label);
   }

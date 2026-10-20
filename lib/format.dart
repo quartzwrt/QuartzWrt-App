@@ -33,6 +33,19 @@ String formatPct(num pct) => '${(pct * 10).round() / 10}%';
 /// 温度（无传感器 → null 由调用方展示「不可用」）。
 String formatTemp(num? c) => c == null ? '' : '${(c * 10).round() / 10} °C';
 
+/// IP 打码（与 Dashboard `maskIp` 同口径）：IPv4 保留前两段，IPv6 保留前两组；
+/// 去掉 CIDR 后缀。点击展开/收起由 `QzIpValue` 负责。
+String maskIp(String addr) {
+  final raw = addr.trim().split('/').first;
+  if (raw.isEmpty) return '';
+  if (raw.contains(':')) {
+    final parts = raw.split(':').where((p) => p.isNotEmpty).toList();
+    return parts.length >= 2 ? '${parts[0]}:${parts[1]}:*:*:*:*:*:*' : raw;
+  }
+  final parts = raw.split('.');
+  return parts.length == 4 ? '${parts[0]}.${parts[1]}.*.*' : raw;
+}
+
 /// uptime 拆解（天/时/分）——组合文案走 l10n。
 (int days, int hours, int minutes) uptimeParts(int seconds) {
   final d = seconds ~/ 86400;

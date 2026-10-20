@@ -21,7 +21,8 @@ class CellularNetworkPage extends ConsumerStatefulWidget {
   final String section;
 
   @override
-  ConsumerState<CellularNetworkPage> createState() => _CellularNetworkPageState();
+  ConsumerState<CellularNetworkPage> createState() =>
+      _CellularNetworkPageState();
 }
 
 class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
@@ -42,7 +43,10 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
   Future<void> _load() async {
     final client = ref.read(qmodemClientProvider);
     if (client == null) return;
-    final r = await client.call('qmodem.network_prefer', section: widget.section);
+    final r = await client.call(
+      'qmodem.network_prefer',
+      section: widget.section,
+    );
     final prefer = <String>{};
     if (r.ok) {
       final m = r.map;
@@ -77,31 +81,64 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.cellularEntryNetwork, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.cellularEntryNetwork,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           if (!_loaded)
-            const Padding(padding: EdgeInsets.all(24), child: Center(child: CircularProgressIndicator()))
+            const Padding(
+              padding: EdgeInsets.all(24),
+              child: Center(child: QzSpinner(size: 22)),
+            )
           else ...[
-            if (_error.isNotEmpty) InfoBanner(title: l10n.actionFailed(_error), body: l10n.cellularSettingsHint),
+            if (_error.isNotEmpty)
+              InfoBanner(
+                title: l10n.actionFailed(_error),
+                body: l10n.cellularSettingsHint,
+              ),
             QuartzCard(
               title: l10n.cellularNetworkPrefer,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (final r in _rats)
-                    SwitchListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(r, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                      value: _prefer.contains(r),
-                      onChanged: _busy ? null : (v) => setState(() => v ? _prefer.add(r) : _prefer.remove(r)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              r,
+                              style: QuartzType.bodyStrong.copyWith(
+                                color: QuartzTokens.of(context).text,
+                              ),
+                            ),
+                          ),
+                          QzToggle(
+                            value: _prefer.contains(r),
+                            semanticLabel: r,
+                            onChanged: _busy
+                                ? null
+                                : (v) => setState(
+                                    () =>
+                                        v ? _prefer.add(r) : _prefer.remove(r),
+                                  ),
+                          ),
+                        ],
+                      ),
                     ),
                   const SizedBox(height: 4),
-                  Text(l10n.cellularNetworkPreferHint, style: const TextStyle(fontSize: 11.5, color: Color(0x8CFFFFFF))),
+                  Text(
+                    l10n.cellularNetworkPreferHint,
+                    style: QuartzType.caption.copyWith(
+                      color: QuartzTokens.of(context).muted,
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   _applyButton(
                     l10n,
@@ -117,7 +154,10 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if ((modem?.settings?.lockband ?? const []).isEmpty)
-                    Text(l10n.cellularLockbandUnlocked, style: const TextStyle(fontSize: 13))
+                    Text(
+                      l10n.cellularLockbandUnlocked,
+                      style: const TextStyle(fontSize: 13),
+                    )
                   else
                     Wrap(
                       spacing: 7,
@@ -125,23 +165,43 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
                       children: [
                         for (final b in modem!.settings!.lockband)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: QuartzColors.accent.withValues(alpha: .16),
-                              border: Border.all(color: QuartzColors.accent.withValues(alpha: .45)),
+                              border: Border.all(
+                                color: QuartzColors.accent.withValues(
+                                  alpha: .45,
+                                ),
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(b, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+                            child: Text(
+                              b,
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                       ],
                     ),
                   const SizedBox(height: 8),
-                  Text(l10n.cellularLockbandHint, style: const TextStyle(fontSize: 11.5, color: Color(0x8CFFFFFF))),
+                  Text(
+                    l10n.cellularLockbandHint,
+                    style: QuartzType.caption.copyWith(
+                      color: QuartzTokens.of(context).muted,
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   _applyButton(
                     l10n,
                     label: l10n.cellularLockbandUnlock,
-                    enabled: (modem?.settings?.lockband ?? const []).isNotEmpty && !_busy,
+                    enabled:
+                        (modem?.settings?.lockband ?? const []).isNotEmpty &&
+                        !_busy,
                     danger: true,
                     onTap: () => _applyLockbandUnlock(),
                   ),
@@ -152,8 +212,17 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
               title: l10n.cellularAdvanced,
               child: Column(
                 children: [
-                  KvRow(l10n.cellularUsbMode, modem?.settings?.usbMode ?? l10n.unknownValue, first: true),
-                  KvRow(l10n.cellularTemp, modem?.tempC == null ? l10n.unknownValue : '${modem!.tempC!.toStringAsFixed(1)} °C'),
+                  KvRow(
+                    l10n.cellularUsbMode,
+                    modem?.settings?.usbMode ?? l10n.unknownValue,
+                    first: true,
+                  ),
+                  KvRow(
+                    l10n.cellularTemp,
+                    modem?.tempC == null
+                        ? l10n.unknownValue
+                        : '${modem!.tempC!.toStringAsFixed(1)} °C',
+                  ),
                 ],
               ),
             ),
@@ -163,16 +232,18 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
     );
   }
 
-  Widget _applyButton(AppL10n l10n, {String? label, required bool enabled, bool danger = false, required VoidCallback onTap}) {
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton(
-        onPressed: enabled ? onTap : null,
-        style: FilledButton.styleFrom(
-          backgroundColor: danger ? QuartzColors.err.withValues(alpha: .9) : null,
-        ),
-        child: Text(label ?? l10n.cellularApplyPrefer),
-      ),
+  Widget _applyButton(
+    AppL10n l10n, {
+    String? label,
+    required bool enabled,
+    bool danger = false,
+    required VoidCallback onTap,
+  }) {
+    return QzButton(
+      label: label ?? l10n.cellularApplyPrefer,
+      kind: danger ? QzButtonKind.danger : QzButtonKind.primary,
+      expand: true,
+      onPressed: enabled ? onTap : null,
     );
   }
 
@@ -199,7 +270,12 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
     );
   }
 
-  Future<void> _send(String actionId, {required String params, required String label, required bool danger}) async {
+  Future<void> _send(
+    String actionId, {
+    required String params,
+    required String label,
+    required bool danger,
+  }) async {
     final l10n = AppL10n.of(context);
     final tm = ref.read(tokenManagerProvider);
     if (tm == null) return;
@@ -223,8 +299,10 @@ class _CellularNetworkPageState extends ConsumerState<CellularNetworkPage> {
     final r = await runAction(tm, spec);
     if (!mounted) return;
     setState(() => _busy = false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(r.ok ? l10n.actionDone : l10n.actionFailed(r.message))),
+    showQzToast(
+      context,
+      r.ok ? l10n.actionDone : l10n.actionFailed(r.message),
+      kind: r.ok ? QzToastKind.ok : QzToastKind.err,
     );
     if (r.ok) {
       await _load();

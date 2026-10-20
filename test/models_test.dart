@@ -14,8 +14,17 @@ const _sample = {
     'temp_c': null,
   },
   'net': {
-    'wan': {'up': true, 'ifname': 'eth0', 'proto': 'dhcp', 'ipv4': '100.64.7.23'},
-    'series': {'step': 2, 'rx': [1, 2, 3], 'tx': [1, 1, 1]},
+    'wan': {
+      'up': true,
+      'ifname': 'eth0',
+      'proto': 'dhcp',
+      'ipv4': '100.64.7.23',
+    },
+    'series': {
+      'step': 2,
+      'rx': [1, 2, 3],
+      'tx': [1, 1, 1],
+    },
   },
   'docker': null,
   'clients': {
@@ -30,7 +39,11 @@ const _sample = {
   },
   'errors': [],
   // 未知节（L1 泛化渲染的来源）
-  'usb_storage': {'mount': '/mnt/usb', 'total_gb': 128, 'unknown_obj': {'a': 1, 'b': 2}},
+  'usb_storage': {
+    'mount': '/mnt/usb',
+    'total_gb': 128,
+    'unknown_obj': {'a': 1, 'b': 2},
+  },
 };
 
 void main() {
@@ -47,21 +60,27 @@ void main() {
     expect(s.raw['usb_storage'], isA<Map<String, dynamic>>());
   });
 
-  test('service entries: running first, unknown keys kept, malformed tolerated', () {
-    final s = Snapshot.parse({
-      'v': 1,
-      'services': {
-        'b_stopped': {'running': false},
-        'a_running': {'running': true, 'core': 'x 1.0'},
-        'legacy_bool': true, // 非 map 值容错
-      },
-    })!;
-    final entries = s.serviceEntries;
-    expect(entries.first.$1, 'a_running'); // running 优先
-    final names = entries.map((e) => e.$1).toList();
-    expect(names, containsAll(['a_running', 'b_stopped', 'legacy_bool']));
-    expect(entries.firstWhere((e) => e.$1 == 'legacy_bool').$2['running'], true);
-  });
+  test(
+    'service entries: running first, unknown keys kept, malformed tolerated',
+    () {
+      final s = Snapshot.parse({
+        'v': 1,
+        'services': {
+          'b_stopped': {'running': false},
+          'a_running': {'running': true, 'core': 'x 1.0'},
+          'legacy_bool': true, // 非 map 值容错
+        },
+      })!;
+      final entries = s.serviceEntries;
+      expect(entries.first.$1, 'a_running'); // running 优先
+      final names = entries.map((e) => e.$1).toList();
+      expect(names, containsAll(['a_running', 'b_stopped', 'legacy_bool']));
+      expect(
+        entries.firstWhere((e) => e.$1 == 'legacy_bool').$2['running'],
+        true,
+      );
+    },
+  );
 
   test('malformed snapshot → null (degrade to 数据损坏)', () {
     expect(Snapshot.parse(null), isNull);
@@ -74,7 +93,11 @@ void main() {
       'mount': '/mnt/usb',
       'total_gb': 128,
       'flags': ['a', 'b'],
-      'nested': {'a': 1, 'b': 2, 'deep': {'x': 1}},
+      'nested': {
+        'a': 1,
+        'b': 2,
+        'deep': {'x': 1},
+      },
       'nothing': null,
     });
     final m = {for (final e in fields) e.key: e.value};

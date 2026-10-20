@@ -1,8 +1,21 @@
-# QuartzWrt App · UI 设计（定案 v2.0）
+# QuartzWrt App · UI 设计（定案 v3.2）
 
-**状态**: **定案 v2.0（IA v2）** —— 2026-10-19：tab 改为「概览 / 路由器 / 应用 / 蜂窝（条件）/ 设置」；路由器 tab 的 W6.9/W6.10 页面已落地（首页/系统/启动项/接口/无线/DHCP·DNS），W6.11 剩余页面按 `docs/IA-V2-DISCUSSION.md` §14 续做。
+**状态**: **定案 v3.2（IA v2 + Dashboard 卡面 + 本机外观）** —— 2026-10-19：卡片/控件/动效按用户确认稿重建；新增 `/settings/appearance`（模式/不透明度/模糊/本机壁纸）；不写路由器 `/etc/config/quartz`，不上传壁纸。
 **预览**: `design/preview.html`（十二屏，评审图 `design/shots/`）。
 **依据**: `docs/DESIGN.md` §8（信息架构）；WP-2 视觉 token（macOS Vibrancy）；AGGREGATE-API v1 数据面；WP-5 接口面（认证/动作）；WP-3 §6 / WP-4 §13 扩展思想在 App 端的落地。
+
+## 0. 2026-10-19 Dashboard 卡面落地（当前实现）
+
+用户定案：App 卡片贴近 `luci-app-dashboard` 的卡面；控件沿用同一套 Dashboard 规格；新增本机外观设置（**不写路由器 `/etc/config/quartz`，不上传壁纸**）。
+
+- **卡面**：`panel + 1px 描边 + 12px 圆角 + 14/16 padding`；标题 13/600 次级色 + 右侧 accent 深链；Hero 用衬线主机名 + `Uptime / WAN / Collected`；KV 行 = 13 muted 标签 + 内联 6px 占比条 + 12.5 等宽数值；网络卡 19px 等宽上下行 + 66px 平滑曲线；蜂窝新增概览 KPI 2×2 卡。
+- **控件**：按钮/输入/选择行 40px（小号 32）、圆角 8；输入 well 底；交互 accent 蓝；页签 2px 下划线；底部层顶部圆角 20 + scrim .45；Toast raised 卡。
+- **动效**：按压 90ms scale .975/opacity .9；开关 180ms；复选/单选 140–160ms；页签 180ms；底部层 240/180ms；Toast 160/180ms；页面 220/160ms；进度 300ms；无 ripple / 无弹跳 / 实时数据不做每轮过场。
+- **外观设置（`/settings/appearance`）**：外观模式 auto/dark/light；界面不透明度 50–100%（面板 + 顶栏 + tab，<100% 自动模糊）；模糊强度 0–40px；本机壁纸（选择/更换/移除，≤1920px / JPEG / ≤2MB，默认 96×96 石英噪点）；实时预览；恢复默认。
+  - 存储：`SharedPreferences`（`qz.panel_opacity` / `qz.blur` / `qz.wallpaper_path`）；壁纸复制到 App 私有目录；与网页端无写关系。
+  - 网页端对照：`panel_opacity`（50–100，全界面）、`blur`（0–40）、`default_mode`（auto/dark/light）、`wallpaper`（单图/`/www/quartz-wallpaper/wallpaper.jpg`）。
+- **代码**：`lib/core/design/quartz_tokens.dart`、`quartz_surface.dart`、`lib/widgets/quartz/`、`lib/state/appearance.dart`、`lib/features/settings/appearance_page.dart`；`tool/ui_lint.dart` 已进 CI。
+- **状态（2026-10-19）**：analyze 零告警、**99 测试全绿**；AVD 深/浅双模走查（概览上/中/下、蜂窝、管理权表单、路由器/应用/设置/外观、QModem AT/邻区/重置计划），证据 `docs/shots/ui-v6/`；App **v0.7.1 (17)**。VM 路由验收：app-api r13、config 17/17、router 15/15。**未做**：真机 W6.7、实际选图后的落盘/恢复走查（选择器可打开，本次 AVD 无照片）。
 
 ## 1. 设计语言（与 WP-2 同源）
 
@@ -129,3 +142,15 @@
 *v1.0 2026-10-13 —— **用户确认（可以）**：§5 并入定案（双子段结构、安装浏览 v1 后置、**新增「操作记录」页**〔⑫：升级/卸载/刷新结果 + 失败原因，近 30 条，`packages` 读方法 `scope=history`〕）；WP-5 扩展项**正式登记**（读方法 `packages` + 动作 `packages.refresh/upgrade/remove`）。预览十二屏定稿。*
 *v1.5 2026-10-19 —— **FNet3399 真机复验**：App e2e 24/24（真实 5G 模组 + `qmodem.at_cfg lang=en`）；修复 AT 页 `{at_cfg:{cmds}}` 顶层读取 bug（兼容旧形态）；构建号 7。Dashboard 侧同轮由 WP-3 修 Docker/蜂窝卡（见其 DESIGN v1.6）。*
 *v1.6 2026-10-19 —— **W6.11 首切片**：DHCP 页静态租约（config.add/delete + host 注册表）与独立静态路由页（route/rule，增删 + apply/confirm）；App build 10；路由器首页「静态路由」入口由「待后续版本」转为可用。*
+
+*v1.8 2026-10-19 —— **Dashboard 卡面定案落地**：卡片/控件/动效按用户确认稿重建；新增本机外观页（不透明度/模糊/模式/壁纸）；App v0.6.0 (13)；96 测试全绿。*
+
+*v1.9 2026-10-19 —— **UI 缺陷修复轮**：`KvRow` 全行值右缘对齐、系统占比条等长/同色/数值缩放、补交换分区；Bandix（TCP/UDP/DNS + 设备下行/上行/累计）、Docker（引擎/容器列表）、服务（quartz-daemon）概览卡补齐；蜂窝 tab 对齐 Dashboard QModem 卡（运营商名称/速率标签/信号单位/重置计划/IPv4 回退/四栏字段）；`QzField` 去掉 CupertinoTextField 内层白底；App v0.6.1 (14)；99 测试全绿；证据 `docs/shots/ui-v6/`。*
+
+*v1.10 2026-10-19 —— **蜂窝 KPI 等高 + IP 交互对齐 Dashboard**：两处蜂窝 KPI 行改 `IntrinsicHeight + stretch`；新增 `QzIpValue`（虚线底、点按展开/收起、Tooltip），打码口径改 IPv4 `a.b.*.*` / IPv6 前两组，接入 Hero WAN、网络卡、蜂窝详情与拨号卡；App v0.6.2 (15)；99 测试全绿。*
+
+*v1.11 2026-10-19 —— **QModem 功能补全 + 层级对齐网页端**：蜂窝入口按「拨号 / 高级模组设置 / 短信与 SIM」分组；AT Debug 补端口（含无效/非本模组）、预置命令、累积输出与清空，加载拆快路径避免上游探测阻塞；新增邻区（只读）与流量重置计划；修复 `InfoBanner` 圆角非均匀边框导致的整块白底（Flutter paint 异常）；VM 升级 app-api r13，config 17/17、router 15/15；App v0.7.0 (16)。*
+
+*v1.12 2026-10-19 —— **蜂窝首页中文化**：四栏字段名与状态值改为中文（技术缩写保留）；App v0.7.1 (17)。*
+
+*v1.13 2026-10-19 —— **UI 审核收口**：本机壁纸接入全局背景（此前仅预览生效）；同路径换图后失效 Flutter 图片缓存；壁纸超过 2 MB 拒绝保存；蜂窝高级页 USB 模式选择改 `QzChoiceChip`；`tool/ui_lint.dart` 增补 ChoiceChip/FilterChip/Checkbox/Radio/Slider/DropdownButton/Card 等禁用项。*

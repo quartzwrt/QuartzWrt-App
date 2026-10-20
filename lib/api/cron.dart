@@ -9,7 +9,13 @@ import '../state/app_state.dart';
 import 'envelope.dart';
 
 class CronResult {
-  const CronResult(this.ok, {this.path = '', this.content = '', this.exists = false, this.error});
+  const CronResult(
+    this.ok, {
+    this.path = '',
+    this.content = '',
+    this.exists = false,
+    this.error,
+  });
 
   final bool ok;
   final String path;
@@ -34,7 +40,8 @@ class CronClient {
     );
   }
 
-  Future<ApiResult> write(String content) => _tm.call('cron.write', {'content': content});
+  Future<ApiResult> write(String content) =>
+      _tm.call('cron.write', {'content': content});
 }
 
 final cronClientProvider = Provider<CronClient?>((ref) {

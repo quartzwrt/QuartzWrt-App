@@ -104,12 +104,17 @@ class _CronPageState extends ConsumerState<CronPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final lines = _text.text.isEmpty ? 0 : _text.text.split('\n').where((l) => l.trim().isNotEmpty).length;
+    final lines = _text.text.isEmpty
+        ? 0
+        : _text.text.split('\n').where((l) => l.trim().isNotEmpty).length;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryCron, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryCron,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading || _busy ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -117,7 +122,7 @@ class _CronPageState extends ConsumerState<CronPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QzSpinner(size: 22))
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
@@ -131,34 +136,50 @@ class _CronPageState extends ConsumerState<CronPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (_path.isNotEmpty) ...[
-                        Text(_path, style: theme.textTheme.bodySmall?.copyWith(color: muted, fontFamily: 'monospace')),
+                        Text(
+                          _path,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: muted,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
                         const SizedBox(height: 4),
                       ],
-                      Text(l10n.cronHint, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
+                      Text(
+                        l10n.cronHint,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: muted,
+                        ),
+                      ),
                       const SizedBox(height: 8),
-                      TextField(
+                      QzField(
                         controller: _text,
                         enabled: !_busy,
                         minLines: 12,
                         maxLines: 24,
                         keyboardType: TextInputType.multiline,
-                        style: const TextStyle(fontFamily: 'monospace', fontSize: 12.5, height: 1.4),
-                        decoration: InputDecoration(
-                          isDense: true,
-                          border: const OutlineInputBorder(),
-                          hintText: '* * * * * /usr/bin/logger hello',
-                          hintStyle: TextStyle(color: muted, fontSize: 12),
-                        ),
+                        monospace: true,
+                        hint: '* * * * * /usr/bin/logger hello',
                         onChanged: (_) => setState(() {}),
                       ),
                       const SizedBox(height: 6),
-                      Text(l10n.cronLines(lines), style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                      Text(
+                        l10n.cronLines(lines),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          color: muted,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       SizedBox(
                         width: double.infinity,
-                        child: FilledButton(
-                          onPressed: _busy || _text.text == _original ? null : _save,
-                          child: Text(_busy ? l10n.configSaving : l10n.cronSave),
+                        child: QzLegacyButton(
+                          onPressed: _busy || _text.text == _original
+                              ? null
+                              : _save,
+                          child: Text(
+                            _busy ? l10n.configSaving : l10n.cronSave,
+                          ),
                         ),
                       ),
                     ],

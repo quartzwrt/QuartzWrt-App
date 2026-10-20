@@ -31,31 +31,23 @@ class _AppsPageState extends ConsumerState<AppsPage> {
     final entries = snap?.serviceEntries ?? const [];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.appsTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
-        actions: [
-          if (_seg == _Seg.packages)
-            TextButton(
-              onPressed: () => context.push('/apps/log'),
-              child: Text(l10n.opLogEntry),
-            ),
-          if (_seg == _Seg.apps)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Text(
-                  '${entries.length}',
-                  style: const TextStyle(color: QuartzColors.accent, fontSize: 14, fontWeight: FontWeight.w600),
+      appBar: QzAppBar(
+        titleText: l10n.appsTitle,
+        trailingText: _seg == _Seg.apps ? '${entries.length}' : null,
+        actions: _seg == _Seg.packages
+            ? [
+                QzHeaderAction(
+                  label: l10n.opLogEntry,
+                  onTap: () => context.push('/apps/log'),
                 ),
-              ),
-            ),
-        ],
+              ]
+            : const [],
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentBar<_Seg>(
+            child: QzTabs<_Seg>(
               values: const [_Seg.apps, _Seg.packages],
               selected: _seg,
               labelOf: (s) => s == _Seg.apps ? l10n.segApps : l10n.segPackages,
@@ -82,7 +74,7 @@ class _AppsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppL10n.of(context);
-    final theme = Theme.of(context);
+    final t = QuartzTokens.of(context);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
@@ -90,43 +82,37 @@ class _AppsList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: Text(
             l10n.appsControllableIntro,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: .5),
-            ),
+            style: QuartzType.caption.copyWith(color: t.faint),
           ),
         ),
         if (entries.isEmpty)
-          QuartzCard(child: Text(l10n.appsNone))
-        else
           QuartzCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                for (final (i, e) in entries.indexed) ...[
-                  if (i > 0) const Divider(height: 1, indent: 14, endIndent: 14),
-                  ListTile(
-                    leading: const Icon(Icons.shield_outlined),
-                    title: Text(_prettyName(e.$1), style: const TextStyle(fontWeight: FontWeight.w600)),
-                    subtitle: Row(
-                      children: [
-                        StatusDot(e.$2['running'] == true ? DotKind.ok : DotKind.off),
-                        Expanded(
-                          child: Text(
-                            [
-                              e.$2['running'] == true ? l10n.running : l10n.stopped2,
-                              if ((e.$2['core'] as String?)?.isNotEmpty == true) e.$2['core'] as String,
-                              ?serviceRowFor(e.$1)?.enrich?.call(l10n, e.$2, snap),
-                            ].join(' · '),
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.chevron_right, size: 18),
-                    onTap: () => context.push('/apps/detail/${Uri.encodeComponent(e.$1)}'),
-                  ),
-                ],
-              ],
+            child: Text(
+              l10n.appsNone,
+              style: QuartzType.body.copyWith(color: t.muted),
             ),
+          )
+        else
+          QzListGroup(
+            children: [
+              for (final (i, e) in entries.indexed)
+                QzListRow(
+                  first: i == 0,
+                  leading: StatusDot(
+                    e.$2['running'] == true ? DotKind.ok : DotKind.off,
+                    margin: const EdgeInsets.only(right: 10),
+                  ),
+                  title: _prettyName(e.$1),
+                  subtitle: [
+                    e.$2['running'] == true ? l10n.running : l10n.stopped2,
+                    if ((e.$2['core'] as String?)?.isNotEmpty == true)
+                      e.$2['core'] as String,
+                    ?serviceRowFor(e.$1)?.enrich?.call(l10n, e.$2, snap),
+                  ].join(' · '),
+                  onTap: () =>
+                      context.push('/apps/detail/${Uri.encodeComponent(e.$1)}'),
+                ),
+            ],
           ),
         // 空态才展示「未安装」说明卡（有应用在列时探针机制已自证，避免文案自相矛盾）
         if (entries.isEmpty) ...[
@@ -135,10 +121,7 @@ class _AppsList extends StatelessWidget {
             title: l10n.appsNotInstalledTitle,
             child: Text(
               l10n.appsNotInstalledBody,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: .55),
-                height: 1.5,
-              ),
+              style: QuartzType.sub.copyWith(color: t.muted, height: 1.55),
             ),
           ),
         ],
@@ -147,6 +130,7 @@ class _AppsList extends StatelessWidget {
     );
   }
 
-  static String _prettyName(String id) =>
-      id.isEmpty ? id : id[0].toUpperCase() + id.substring(1).replaceAll('_', ' ');
+  static String _prettyName(String id) => id.isEmpty
+      ? id
+      : id[0].toUpperCase() + id.substring(1).replaceAll('_', ' ');
 }

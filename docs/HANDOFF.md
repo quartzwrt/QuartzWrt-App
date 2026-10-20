@@ -1,5 +1,13 @@
-# 交接说明（2026-10-19 第三轮；路由器 tab W6.9–W6.11 已落地）
+# 交接说明（2026-10-19 第四轮；UI v0.7.1 + 路由器 tab W6.9–W6.11 已落地）
 
+> **2026-10-19 UI 定案落地（Dashboard 卡面）**：用户确认「App 卡片贴近 dashboard」+ 本机外观设置（不写路由器、不上传壁纸）。已实现：`quartz_tokens`（panel 2C2C2E / border 1px / radius 12 / 标题 13/600 muted / mono 数值）、`QuartzSurface`（本机壁纸或 96×96 噪点）、`QzPanel`（opacity/blur 材质）、Dashboard Hero（衬线主机名 + Uptime/WAN/Collected）、系统/网络/蜂窝概览卡、平底 tab 栏、`QzSlider/QzTabs/QzField/QzToggle/QzSheet/QzToast`、`/settings/appearance`（模式/不透明度 50–100/模糊 0–40/本机壁纸/恢复默认）。App **v0.6.0 (13)**；analyze 0 告警 + 96 测试全绿；AVD 深/浅走查证据 `docs/shots/ui-v6/`。**边界**：App 本机 `SharedPreferences`，不写 `/etc/config/quartz`；壁纸只落 App 私有目录。**未做**：真机 W6.7、实际选图落盘走查。
+>
+> **2026-10-19 UI 缺陷修复轮（v0.6.1 build 14）**：`KvRow` 非占比行改右侧自适应值列（负载/进程/交换/温度与占比行数值统一右缘），CPU/内存/存储三条占比条等长、存储条回 accent、数值 `FittedBox` 不截断，系统卡补交换分区；Bandix 卡补连接 TCP/UDP/DNS 与设备下行/上行/累计，Docker 卡补引擎/版本/驱动/根目录 + 容器列表，服务卡补 quartz-daemon；蜂窝 tab 与 Dashboard QModem 卡对齐（运营商 PLMN→名称、速率下行/上行、信号单位、重置计划、IPv4 WAN 回退、四栏详情补齐，模型吃 daemon 10-19 加法字段）；`QzField` 显式 `decoration: null` 去掉 CupertinoTextField 内层白底。analyze 0 告警、**99 测试全绿**、ui_lint 通过；证据 `docs/shots/ui-v6/`（01/02/05/10–15；IP 展开见 16）。
+>
+> **2026-10-19 UI 收尾（v0.6.2 build 15）**：概览蜂窝卡与蜂窝 tab 的 KPI 行改 `IntrinsicHeight + stretch`，信号/速率、本月用量/服务小区同行等高；新增 `QzIpValue`（Dashboard `IpValue` 同款：虚线底、点按展开/收起、Tooltip），打码口径改 IPv4 `a.b.*.*` / IPv6 前两组 + `:*:*:*:*:*:*`，接入 Hero WAN、网络卡 IPv4/IPv6、蜂窝详情与拨号卡；`maskAddress` 委托 `maskIp`。AVD 实测点按展开/收起与等高。APK `build/app/outputs/flutter-apk/app-debug.apk`；未提交。
+>
+> **2026-10-19 QModem 功能补全（v0.7.0 build 16；v0.7.1 中文化）**：蜂窝首页按网页端 QModem 层级分组（拨号 / 高级模组设置 / 短信与 SIM）；AT 调试补端口（ports/other_ttys + valid 标注）、预置命令、累积输出（命令+端口+响应）、清空；加载拆为快照 `at_port` + `tty_ports` 快路径，`at_cfg` 后台补齐，避免整页被上游探测卡住；新增邻区信息（只读，LTE/NR）与流量重置计划（daily/monthly/hour/day）；修复 `InfoBanner` 圆角非均匀边框触发 Flutter paint 异常导致提示框白底（AT/邻区/维护/防火墙等页面全受影响）。**VM 路由验收**：将 app-api r13 amd64 二进制 + ACL 部署到 VM（原 r9 缺 cron/firewall/fstab/dropbear），AVD 逐页走查接口/无线/DHCP/静态路由/防火墙/系统/启动项/挂载/计划任务/LED/上网设备，并实测计划任务写入后清理；`vm-accept-config.sh` **17/17**（原 firewall 负例更新为 openclash）、`vm-accept-router.sh` **15/15**。所有路由 tab 测试均在 VM，FNet3399 未用于本轮路由写操作。
+>
 > **2026-10-19 W6.11 收尾**：管理权（root 密码 + dropbear SSH）、防火墙（defaults/zone/forwarding/rule/redirect）、挂载（fstab）、LED（system @led）、计划任务（cron）五页已实现；Packages app-api r13、App v0.5.2 build 12；真机 e2e **32/32 ALL PASS**。
 >
 > **2026-10-19 UI 走查（模拟器 AVD 配对 FNet3399）**：五页 + 区域编辑 + 中英切换逐页截图，证据 `docs/shots/w6.11/`；发现并修复 ①UCI 未设置 `enabled` 时开关误显示 OFF（zone/rule/forward/redirect/mount/swap/dropbear 统一按默认启用回显）、②wan 摘要/挂载 UUID 长文本换行、③计划任务无改动仍可保存。剩余：W6.7 真机验收、Tailscale 真 tailnet 复核；镜像/APK 仍未作为发布件构建（用户明确暂不需要）。
@@ -12,23 +20,23 @@
 
 ---
 
-## 1. 当前状态（已提交、**未推送**）
+## 1. 当前状态（本轮 UI 提交后）
 
-| 仓库 | 提交 | 内容 |
+| 仓库 | 最近提交 | 内容 |
 | :--- | :--- | :--- |
-| QuartzWrt-Packages | `ed95016` → **`3b5b2a6`** | 蜂窝 `cellular` + app-api `qmodem.*` + 配置面 `config.*`（r8）；本轮：**`config.rollback`（r9）+ `luci.init_list/init_action/timezones` 转发条目** + DESIGN/验收脚本 |
-| QuartzWrt-App | `ea8a097` → **`b84e0c5`**（功能提交；文档修正随后） | 蜂窝 tab + **路由器 tab W6.9/W6.10**（首页/系统/启动项/接口/无线/DHCP·DNS）+ 配置面客户端/确认条 + 96 项测试 |
-| QuartzWrt-ThirdParty | `9924cba` | qmodem `lang` 适配（**fork `quartz` 分支仍待推送**；推送前勿单独 `sync-mirrors.sh qmodem`） |
-| QuartzWrt-Builder | `52d1227` | TDD §5 模式 A/B 实践判据 |
+| QuartzWrt-Packages | **`66f1cef`** | app-api r13（配置面 `config.*` / `luci.*` / 防火墙/挂载/LED/计划任务）+ daemon r7 + Dashboard 蜂窝卡 v4 |
+| QuartzWrt-App | **本轮 UI 提交**（v0.7.1 build 17） | Dashboard 卡面 UI 基座 + 本机外观 + 蜂窝 QModem 补全 + 路由器 tab W6.9–W6.11 + 99 项测试 |
+| QuartzWrt-ThirdParty | **`6f3604e`** | qmodem 受控 Fork `quartz2`（`a2c34f1`，tag `v3.4.0_rc3-quartz2`）+ FORKS 登记 |
+| QuartzWrt-Builder | **`73a71ae`** | feed 锁定 quartz `66f1cef`；TDD §5 模式 A/B 实践判据 |
 
-四仓工作树干净（本轮提交后），`git push` 等用户指令。App 版本 **v0.5.2（构建 12）**；Packages app-api **r13**。
+四仓已推送至 `origin/main`；本轮审核提交 App UI 轮 / Packages `4a02cc4` / Builder `c9bb287` **未推送**。App 版本 **v0.7.1（构建 17）**；Packages app-api **r13**、daemon **r7**。
 
 **本轮完成的能力**：
 - **路由器 tab**：`/router`（旧 `/network` 深链重定向）；分组入口页（已实现页「可用」/未实现「待后续版本」chip）。
 - **页面**：系统（hostname/描述/时区选择器/日志/串口登录）、启动项（`luci.getInitList`/`setInitAction`，启停/重启 + 危险确认）、接口（LAN/WAN，协议驱动字段可见性）、无线（device/iface 两段，敏感 key 掩码）、DHCP·DNS（dnsmasq + dhcp 节）。
 - **配置安全网**：`config.read` → 本地编辑 → `config.write`（暂存）→ `config.apply{rollback:true,timeout:90}` → 90s 倒计时确认条（保留更改 / 立即回滚）。**立即回滚 = `config.rollback`**（见 §4 坑位 1）。
-- **验收**：Flutter `analyze` 零告警、`test` **96 项全过**；Go 全仓测试全绿 + arm64/mipsle 交叉编译；VM 配置面 **17/17**、路由器后端 **15/15**；App e2e **24 项 ALL PASS（真机 FNet3399）**。
-- **真机复验（2026-10-19，FNet3399 刷 `20261018T172200Z-805c39a` 后）**：App e2e **24/24 ALL PASS**（真实 RG520N-EU 5G 模组：`cellular.available=true`；`qmodem.at_cfg` + `lang=en` 返回 40 条命令；`config.read system` + `luci.init_list/timezones` 通过）；真机发现并修复 **AT 页形态 bug**——上游 `get_at_cfg` 返回 `{at_cfg:{cmds,…}}`，App 原先只读顶层 `cmds`（VM 无模组未暴露），现兼容两种形态。App 构建号 10。
+- **验收**：Flutter `analyze` 零告警、`test` **99 项全过**；Go 全仓测试全绿 + arm64/mipsle 交叉编译；VM 配置面 **17/17**、路由器后端 **15/15**；App e2e **32/32 ALL PASS（真机 FNet3399，W6.11 收尾轮）**。
+- **真机复验（2026-10-19，FNet3399 刷 `20261018T172200Z-805c39a` 后）**：App e2e **24/24 ALL PASS**（真实 RG520N-EU 5G 模组：`cellular.available=true`；`qmodem.at_cfg` + `lang=en` 返回 40 条命令；`config.read system` + `luci.init_list/timezones` 通过）；真机发现并修复 **AT 页形态 bug**——上游 `get_at_cfg` 返回 `{at_cfg:{cmds,…}}`，App 原先只读顶层 `cmds`（VM 无模组未暴露），现兼容两种形态。App 构建号 10；后续 UI/QModem 轮升至 v0.7.1 build 17。
 
 ---
 
@@ -49,10 +57,11 @@
 
 ### 2.2 其它待办
 
-- **`net.wan.ipv6` 契约加法**（WP-4）：daemon `netFast` 取首个公网 GUA（跳过 fe80::/ULA/临时），概览/网络卡展示（打码 + 点击展开）。
-- **真机验收**（FNet3399）：路由器 tab 真数据（无线页真实 radio/iface、接口页真实 WAN 协议）；改 LAN IP 的「断开 → 自动回滚」路径；启动项启停；蜂窝真数据（信号/拨号/短信/AT）。
-- **推送**：四仓 + qmodem fork `quartz` 分支（先推 fork 并打 tag `v3.4.0_rc3-quartz2`，再推 ThirdParty，否则镜像适配会被覆盖）。
+- **`net.wan.ipv6`**：✅ 已完成（2026-10-19，daemon r6；首个公网 GUA，跳过 fe80::/ULA/临时地址）。
+- **真机验收**（FNet3399）：W6.11 五页真机 e2e **32/32 ALL PASS**；剩 App UI 真机走查（AVD 已走查，证据 `docs/shots/w6.11/` 与 `docs/shots/ui-v6/`）、无线页真实 radio/iface、改 LAN IP 的「断开 → 自动回滚」路径。
+- **推送**：四仓与 qmodem fork 均已推送；本次 UI 轮按提交后状态复核。
 - **W6.7 真机验收**（含远程客户端过 tailnet 防火墙链）。
+- **Tailscale 真 tailnet 字段复核**（Dashboard TailscaleCard 探针）。
 
 ---
 
@@ -66,7 +75,7 @@
 6. **敏感字段**：`wireless.@wifi-iface[].key`、`network.wan.password` 读面为 `__masked__`；**未修改则不要发该字段**（回写掩码会被 `bad_request` 拒绝，这是有意的）。App 的 `ConfigDraft` 已处理「留空 = 保持」。
 7. **新方法三处登记**（漏一处即 `-32002`/方法不存在）：`cmd/quartz-app-api/main.go` 的 `methodList()`、`files/acl.d/quartz-app-api.json`、分发 `switch`。本轮 `config.rollback` 已登记。
 8. **方法面断言**：`cmd/quartz-app-api/main_test.go` 的 `TestMethodListSurface` 之前仍写死 9 个方法（配置面加入后必然失败）；本轮已扩到 16 并显式列出。以后加方法记得同步。
-9. **VM 工具链**：包级编译 `make package/quartz-app-api/{clean,compile}`（runtime 包 r9）；推包 `python3 -m http.server <port> --bind 127.0.0.1 --directory bin/packages/x86_64/quartz` + VM 内 `wget http://192.168.1.2:<port>/…` + `apk add --allow-untrusted`；**同版本 apk 不会升级**，改代码必须 bump `PKG_RELEASE`；`killall -HUP rpcd` 后有重载窗口，登录脚本要重试。
+9. **VM 工具链**：包级编译 `make package/quartz-app-api/{clean,compile}`（runtime 包 r13）；推包 `python3 -m http.server <port> --bind 127.0.0.1 --directory bin/packages/x86_64/quartz` + VM 内 `wget http://192.168.1.2:<port>/…` + `apk add --allow-untrusted`；**同版本 apk 不会升级**，改代码必须 bump `PKG_RELEASE`；`killall -HUP rpcd` 后有重载窗口，登录脚本要重试。
 10. **`vm-ssh.py` 输出带 CR**：整数/字符串比较前 `tr -d '\r\n'`；多行输出会被拼接。
 11. **VM 无无线硬件/无模组**：无线页只能验空态；接口页有真实 lan/wan；蜂窝真数据只能上 FNet3399。
 12. **App 路由兼容**：旧 `/network`、`/network/clients` 已重定向到 `/router`、`/router/clients`；新增页面都走 `/router/*`。
@@ -88,17 +97,17 @@ GOOS=linux GOARCH=mipsle ~/go-sdk/bin/go build ./...
 cd QuartzWrt-App
 export PATH="$HOME/flutter-sdk/flutter/bin:$PATH"
 flutter analyze
-flutter test                 # 96 项
+flutter test                 # 99 项
 
 # 包级编译（构建树对 quartz feed 是 src-link）
 cd /home/nrxboat/quartzwrt/build/immortalwrt
 make package/quartz-app-api/{clean,compile}
-# 产物 bin/packages/x86_64/quartz/quartz-app-api-0.1.0-r9.apk
+# 产物 bin/packages/x86_64/quartz/quartz-app-api-0.1.0-r13.apk
 
 # 推入 VM（宿主 HTTP + slirp 别名）
 (cd bin/packages/x86_64/quartz && python3 -m http.server 8892 --bind 127.0.0.1 &)
 python3 ../../QuartzWrt-Packages/utils/quartz-daemon/dev/vm-ssh.py \
-  'cd /tmp && wget -q http://192.168.1.2:8892/quartz-app-api-0.1.0-r9.apk -O q.apk && apk add --allow-untrusted q.apk && killall -HUP rpcd'
+  'cd /tmp && wget -q http://192.168.1.2:8892/quartz-app-api-0.1.0-r13.apk -O q.apk && apk add --allow-untrusted q.apk && killall -HUP rpcd'
 
 # VM 验收
 cd QuartzWrt-Packages/utils/quartz-app-api/dev
@@ -106,7 +115,7 @@ bash vm-accept-config.sh     # 17/17
 bash vm-accept-router.sh     # 15/15（luci + config.rollback）
 
 # App e2e（对真固件/VM）
-cd QuartzWrt-App && dart run tool/e2e_vm.dart   # 24 项 ALL PASS（真机）
+cd QuartzWrt-App && dart run tool/e2e_vm.dart   # 32 项 ALL PASS（真机，W6.11 收尾轮）
 ```
 
 **环境事实**：VM 由 `QuartzWrt-Builder/scripts/test-in-vm.sh --detach` 起，宿主转发 `8080→80 / 2222→22 / 8443→443`，root 密码 `quartz`；构建树 `/home/nrxboat/quartzwrt/build/immortalwrt`。

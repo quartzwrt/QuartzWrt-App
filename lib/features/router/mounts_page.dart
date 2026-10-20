@@ -2,6 +2,9 @@
 //
 // 配置编辑/增删走 config.*（fstab global/mount/swap），当前挂载为只读运行时视图。
 import 'package:flutter/material.dart';
+
+import '../../core/theme.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/config.dart';
@@ -72,9 +75,12 @@ class _MountsPageState extends ConsumerState<MountsPage> {
   }
 
   bool _isGlobal(String key, Map<String, dynamic> v) =>
-      key.contains('global') || v.containsKey('auto_mount') || v.containsKey('anon_mount');
+      key.contains('global') ||
+      v.containsKey('auto_mount') ||
+      v.containsKey('anon_mount');
   bool _isSwap(String key, Map<String, dynamic> v) =>
-      key.contains('swap') || (v.containsKey('device') && !v.containsKey('target'));
+      key.contains('swap') ||
+      (v.containsKey('device') && !v.containsKey('target'));
 
   List<String> _keys(bool swap) {
     final out = <String>[];
@@ -94,16 +100,19 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     final globalKey = _sections.keys.cast<String?>().firstWhere(
-          (k) => _isGlobal(k!, _sections[k]!),
-          orElse: () => null,
-        );
+      (k) => _isGlobal(k!, _sections[k]!),
+      orElse: () => null,
+    );
     final mounts = _keys(false);
     final swaps = _keys(true);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.routerEntryMounts, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+      appBar: QzAppBar(
+        title: Text(
+          l10n.routerEntryMounts,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
         actions: [
-          IconButton(
+          QzLegacyIconButton(
             tooltip: l10n.refresh,
             onPressed: _loading ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -111,8 +120,8 @@ class _MountsPageState extends ConsumerState<MountsPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+          ? const Center(child: QzSpinner(size: 22))
+          : QzRefresh(
               onRefresh: _load,
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -152,9 +161,14 @@ class _MountsPageState extends ConsumerState<MountsPage> {
                     ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(4, 12, 4, 20),
-                    child: Text(l10n.mountsHint,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: .45))),
+                    child: Text(
+                      l10n.mountsHint,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: .45,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -168,7 +182,10 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     return QuartzCard(
       title: l10n.mountsCurrent,
       child: _current.isEmpty
-          ? Text(l10n.mountsEmptyCurrent, style: theme.textTheme.bodySmall?.copyWith(color: muted))
+          ? Text(
+              l10n.mountsEmptyCurrent,
+              style: theme.textTheme.bodySmall?.copyWith(color: muted),
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -179,17 +196,25 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     );
   }
 
-  Widget _currentRow(AppL10n l10n, Map<String, dynamic> m, {required bool first}) {
+  Widget _currentRow(
+    AppL10n l10n,
+    Map<String, dynamic> m, {
+    required bool first,
+  }) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     final total = (m['size'] as num?)?.toInt() ?? 0;
     final avail = (m['avail'] as num?)?.toInt() ?? 0;
     final used = (total - avail).clamp(0, total);
     final device = '${m['device'] ?? ''}';
     final mount = '${m['mount'] ?? ''}';
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
@@ -197,14 +222,30 @@ class _MountsPageState extends ConsumerState<MountsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(mount, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-                Text(device, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                Text(
+                  mount,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  device,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                    color: muted,
+                  ),
+                ),
               ],
             ),
           ),
           if (total > 0)
-            Text(l10n.mountsUsage(formatBytes(used), formatBytes(total)),
-                style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+            Text(
+              l10n.mountsUsage(formatBytes(used), formatBytes(total)),
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 11,
+                color: muted,
+              ),
+            ),
         ],
       ),
     );
@@ -222,41 +263,64 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
     return QuartzCard(
       title: title,
-      trailing: IconButton(
+      trailing: QzLegacyIconButton(
         tooltip: addLabel,
         onPressed: _loading ? null : () => _add(swap),
         icon: const Icon(Icons.add, size: 20),
       ),
       child: keys.isEmpty
-          ? Text(empty, style: theme.textTheme.bodySmall?.copyWith(color: muted))
+          ? Text(
+              empty,
+              style: theme.textTheme.bodySmall?.copyWith(color: muted),
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 for (final (i, key) in keys.indexed)
-                  _configRow(l10n, key, _sections[key] ?? const {}, swap: swap, first: i == 0),
+                  _configRow(
+                    l10n,
+                    key,
+                    _sections[key] ?? const {},
+                    swap: swap,
+                    first: i == 0,
+                  ),
               ],
             ),
     );
   }
 
-  Widget _configRow(AppL10n l10n, String key, Map<String, dynamic> v, {required bool swap, required bool first}) {
+  Widget _configRow(
+    AppL10n l10n,
+    String key,
+    Map<String, dynamic> v, {
+    required bool swap,
+    required bool first,
+  }) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurface.withValues(alpha: .5);
-    final divider = theme.brightness == Brightness.dark ? const Color(0x14FFFFFF) : const Color(0x11000000);
+    final divider = QuartzTokens.of(context).border;
     final title = swap
         ? _or(_s(v, 'device'), key)
         : '${_or(_s(v, 'target'), key)} ← ${_or(_s(v, 'device'), _or(_s(v, 'uuid'), _s(v, 'label')))}';
     final sub = swap
-        ? (configBool(v['enabled']) || !v.containsKey('enabled') ? l10n.mountsEnabled : l10n.firewallDisabled)
+        ? (configBool(v['enabled']) || !v.containsKey('enabled')
+              ? l10n.mountsEnabled
+              : l10n.firewallDisabled)
         : [
             if (_s(v, 'fstype').isNotEmpty) _s(v, 'fstype'),
             if (_s(v, 'options').isNotEmpty) _s(v, 'options'),
-            if (v.containsKey('enabled') && !configBool(v['enabled'])) l10n.firewallDisabled,
+            if (v.containsKey('enabled') && !configBool(v['enabled']))
+              l10n.firewallDisabled,
           ].join(' · ');
     return Container(
-      decoration: first ? null : BoxDecoration(border: Border(top: BorderSide(color: divider))),
+      decoration: first
+          ? null
+          : BoxDecoration(
+              border: Border(top: BorderSide(color: divider)),
+            ),
       padding: const EdgeInsets.symmetric(vertical: 3),
-      child: InkWell(
+      child: QzPressable(
+        highlight: true,
         borderRadius: BorderRadius.circular(8),
         onTap: () => _edit(key, v, swap: swap),
         child: Row(
@@ -267,19 +331,34 @@ class _MountsPageState extends ConsumerState<MountsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     if (sub.isNotEmpty)
-                      Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11, color: muted)),
+                      Text(
+                        sub,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 11,
+                          color: muted,
+                        ),
+                      ),
                   ],
                 ),
               ),
             ),
-            IconButton(
+            QzLegacyIconButton(
               tooltip: l10n.firewallEdit,
               onPressed: () => _edit(key, v, swap: swap),
               icon: Icon(Icons.edit_outlined, size: 19, color: muted),
             ),
-            IconButton(
+            QzLegacyIconButton(
               tooltip: l10n.firewallDelete,
               onPressed: () => _delete(key, title, swap: swap),
               icon: Icon(Icons.delete_outline, size: 19, color: muted),
@@ -290,7 +369,11 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     );
   }
 
-  Future<void> _edit(String key, Map<String, dynamic> v, {required bool swap}) async {
+  Future<void> _edit(
+    String key,
+    Map<String, dynamic> v, {
+    required bool swap,
+  }) async {
     final saved = await _sheet(
       title: swap ? _s(v, 'device') : _s(v, 'target'),
       section: key,
@@ -318,11 +401,12 @@ class _MountsPageState extends ConsumerState<MountsPage> {
     required Map<String, dynamic> initial,
   }) {
     final l10n = AppL10n.of(context);
-    return showModalBottomSheet<bool>(
-      context: context,
+    return showQzSheet<bool>(
+      context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E2024) : Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => FractionallySizedBox(
         heightFactor: .92,
         child: ConfigSectionSheet(
@@ -353,27 +437,53 @@ class _MountsPageState extends ConsumerState<MountsPage> {
   }
 
   List<ConfigField> _globalFields(AppL10n l10n) => [
-        ConfigField('anon_swap', l10n.mountsGlobalAnonSwap, kind: ConfigFieldKind.boolean),
-        ConfigField('anon_mount', l10n.mountsGlobalAnonMount, kind: ConfigFieldKind.boolean),
-        ConfigField('auto_swap', l10n.mountsGlobalAutoSwap, kind: ConfigFieldKind.boolean),
-        ConfigField('auto_mount', l10n.mountsGlobalAutoMount, kind: ConfigFieldKind.boolean),
-        ConfigField('check_fs', l10n.mountsGlobalCheckFsck, kind: ConfigFieldKind.boolean),
-        ConfigField('delay_root', l10n.mountsGlobalDelayRoot, kind: ConfigFieldKind.integer, min: 0, max: 120),
-      ];
+    ConfigField(
+      'anon_swap',
+      l10n.mountsGlobalAnonSwap,
+      kind: ConfigFieldKind.boolean,
+    ),
+    ConfigField(
+      'anon_mount',
+      l10n.mountsGlobalAnonMount,
+      kind: ConfigFieldKind.boolean,
+    ),
+    ConfigField(
+      'auto_swap',
+      l10n.mountsGlobalAutoSwap,
+      kind: ConfigFieldKind.boolean,
+    ),
+    ConfigField(
+      'auto_mount',
+      l10n.mountsGlobalAutoMount,
+      kind: ConfigFieldKind.boolean,
+    ),
+    ConfigField(
+      'check_fs',
+      l10n.mountsGlobalCheckFsck,
+      kind: ConfigFieldKind.boolean,
+    ),
+    ConfigField(
+      'delay_root',
+      l10n.mountsGlobalDelayRoot,
+      kind: ConfigFieldKind.integer,
+      min: 0,
+      max: 120,
+    ),
+  ];
 
   List<ConfigField> _mountFields(AppL10n l10n) => [
-        ConfigField('target', l10n.mountsTarget, dangerous: true),
-        ConfigField('device', l10n.mountsDevice),
-        ConfigField('fstype', l10n.mountsFstype),
-        ConfigField('options', l10n.mountsOptions),
-        ConfigField('uuid', l10n.mountsUuid),
-        ConfigField('label', l10n.mountsLabel),
-        ConfigField('enabled', l10n.mountsEnabled, kind: ConfigFieldKind.boolean),
-        ConfigField('enabled_fsck', l10n.mountsFsck, kind: ConfigFieldKind.boolean),
-      ];
+    ConfigField('target', l10n.mountsTarget, dangerous: true),
+    ConfigField('device', l10n.mountsDevice),
+    ConfigField('fstype', l10n.mountsFstype),
+    ConfigField('options', l10n.mountsOptions),
+    ConfigField('uuid', l10n.mountsUuid),
+    ConfigField('label', l10n.mountsLabel),
+    ConfigField('enabled', l10n.mountsEnabled, kind: ConfigFieldKind.boolean),
+    ConfigField('enabled_fsck', l10n.mountsFsck, kind: ConfigFieldKind.boolean),
+  ];
 
   List<ConfigField> _swapFields(AppL10n l10n) => [
-        ConfigField('device', l10n.mountsDevice, dangerous: true),
-        ConfigField('enabled', l10n.mountsEnabled, kind: ConfigFieldKind.boolean),
-      ];
+    ConfigField('device', l10n.mountsDevice, dangerous: true),
+    ConfigField('enabled', l10n.mountsEnabled, kind: ConfigFieldKind.boolean),
+  ];
 }

@@ -53,22 +53,28 @@ Future<List<DiscoveredRouter>> discoverRouters({
   final seen = <String>{};
   const sub = Duration(seconds: 2);
   try {
-    await for (final PtrResourceRecord ptr
-        in c.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(kQuartzService), timeout: timeout)) {
+    await for (final PtrResourceRecord ptr in c.lookup<PtrResourceRecord>(
+      ResourceRecordQuery.serverPointer(kQuartzService),
+      timeout: timeout,
+    )) {
       final fqdn = ptr.domainName;
       if (!seen.add(fqdn)) continue;
 
       final txt = <String, String>{};
-      await for (final TxtResourceRecord t
-          in c.lookup<TxtResourceRecord>(ResourceRecordQuery.text(fqdn), timeout: sub)) {
+      await for (final TxtResourceRecord t in c.lookup<TxtResourceRecord>(
+        ResourceRecordQuery.text(fqdn),
+        timeout: sub,
+      )) {
         txt.addAll(parseTxt(t.text));
         break;
       }
 
       String? target;
       var port = 443;
-      await for (final SrvResourceRecord s
-          in c.lookup<SrvResourceRecord>(ResourceRecordQuery.service(fqdn), timeout: sub)) {
+      await for (final SrvResourceRecord s in c.lookup<SrvResourceRecord>(
+        ResourceRecordQuery.service(fqdn),
+        timeout: sub,
+      )) {
         target = s.target;
         port = s.port;
         break;
@@ -77,20 +83,27 @@ Future<List<DiscoveredRouter>> discoverRouters({
 
       String? host;
       await for (final IPAddressResourceRecord a
-          in c.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(target), timeout: sub)) {
+          in c.lookup<IPAddressResourceRecord>(
+            ResourceRecordQuery.addressIPv4(target),
+            timeout: sub,
+          )) {
         host = a.address.address;
         break;
       }
       host ??= target.replaceAll(RegExp(r'\.$'), '');
 
-      found.add(DiscoveredRouter(
-        name: txt['name']?.isNotEmpty == true ? txt['name']! : fqdn.split('.').first,
-        model: txt['model'] ?? '',
-        release: txt['rel'] ?? '',
-        host: host,
-        port: port,
-        fingerprint: txt['fp'] ?? '',
-      ));
+      found.add(
+        DiscoveredRouter(
+          name: txt['name']?.isNotEmpty == true
+              ? txt['name']!
+              : fqdn.split('.').first,
+          model: txt['model'] ?? '',
+          release: txt['rel'] ?? '',
+          host: host,
+          port: port,
+          fingerprint: txt['fp'] ?? '',
+        ),
+      );
     }
   } finally {
     if (own) c.stop();

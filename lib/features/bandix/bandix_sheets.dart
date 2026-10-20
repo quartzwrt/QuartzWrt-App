@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/token_manager.dart';
 import '../../core/theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../../widgets/quartz.dart';
 import '../../state/app_state.dart';
 
 /// 取当前限速/白名单/配额聚合（失败 → null，调用方降级展示）。
@@ -22,7 +23,11 @@ Future<Map<String, dynamic>?> fetchBandixLimits(TokenManager tm) async {
 }
 
 /// 执行一条 bandix 转发动作；返回 null = 成功，否则错误文本。
-Future<String?> runBandixAction(TokenManager tm, String action, Map<String, dynamic> args) async {
+Future<String?> runBandixAction(
+  TokenManager tm,
+  String action,
+  Map<String, dynamic> args,
+) async {
   final r = await tm.call('action', {'action': action, 'args': args});
   if (r.ok) return null;
   final err = r.error;
@@ -32,9 +37,7 @@ Future<String?> runBandixAction(TokenManager tm, String action, Map<String, dyna
 }
 
 void _snack(BuildContext context, AppL10n l10n, String? err) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(err == null ? l10n.actionDone : l10n.actionFailed(err))),
-  );
+  showQzToast(context, err == null ? l10n.actionDone : l10n.actionFailed(err));
 }
 
 /// 限速默认值对话框（wan_rx/wan_tx，KB/s 显示；0 = 不限）。
@@ -44,16 +47,22 @@ Future<void> showBandixLimitSheet(BuildContext context, WidgetRef ref) async {
   if (tm == null) return;
   final limits = await fetchBandixLimits(tm);
   if (!context.mounted) return;
-  final wl = (limits?['whitelist'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+  final wl =
+      (limits?['whitelist'] as Map<String, dynamic>?) ??
+      const <String, dynamic>{};
   final rxCtrl = TextEditingController(
-      text: '${((wl['default_wan_rx_rate_limit'] as num?)?.toInt() ?? 0) ~/ 1024}');
+    text:
+        '${((wl['default_wan_rx_rate_limit'] as num?)?.toInt() ?? 0) ~/ 1024}',
+  );
   final txCtrl = TextEditingController(
-      text: '${((wl['default_wan_tx_rate_limit'] as num?)?.toInt() ?? 0) ~/ 1024}');
+    text:
+        '${((wl['default_wan_tx_rate_limit'] as num?)?.toInt() ?? 0) ~/ 1024}',
+  );
   var busy = false;
   String? error;
 
-  await showModalBottomSheet<void>(
-    context: context,
+  await showQzSheet<void>(
+    context,
     isScrollControlled: true,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setSheet) => Padding(
@@ -67,43 +76,58 @@ Future<void> showBandixLimitSheet(BuildContext context, WidgetRef ref) async {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.bandixLimitTitle, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+            Text(
+              l10n.bandixLimitTitle,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
-            Text(l10n.bandixLimitBody,
-                style: TextStyle(fontSize: 12, color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .55))),
+            Text(
+              l10n.bandixLimitBody,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(ctx).colorScheme.onSurface
+                    .withValues(alpha: .55),
+              ),
+            ),
             if (limits == null) ...[
               const SizedBox(height: 10),
-              Text(l10n.bandixLimitsUnavailable,
-                  style: TextStyle(fontSize: 12.5, color: QuartzColors.warn)),
+              Text(
+                l10n.bandixLimitsUnavailable,
+                style: TextStyle(fontSize: 12.5, color: QuartzColors.warn),
+              ),
             ],
             const SizedBox(height: 12),
-            TextField(
+            QzField(
               controller: rxCtrl,
+              label: l10n.bandixLimitRx,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: l10n.bandixLimitRx),
             ),
             const SizedBox(height: 10),
-            TextField(
+            QzField(
               controller: txCtrl,
+              label: l10n.bandixLimitTx,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: l10n.bandixLimitTx),
             ),
             if (error != null) ...[
               const SizedBox(height: 10),
-              Text(error!, style: TextStyle(fontSize: 12.5, color: QuartzColors.err)),
+              Text(
+                error!,
+                style: TextStyle(fontSize: 12.5, color: QuartzColors.err),
+              ),
             ],
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: QzLegacyButton(
+                    kind: QzButtonKind.plain,
                     onPressed: busy ? null : () => Navigator.of(ctx).pop(),
                     child: Text(l10n.cancel),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: FilledButton(
+                  child: QzLegacyButton(
                     onPressed: busy
                         ? null
                         : () async {
@@ -117,10 +141,14 @@ Future<void> showBandixLimitSheet(BuildContext context, WidgetRef ref) async {
                               busy = true;
                               error = null;
                             });
-                            final err = await runBandixAction(tm, 'bandix.limit_default_set', {
-                              'wan_rx_rate_limit': rx * 1024,
-                              'wan_tx_rate_limit': tx * 1024,
-                            });
+                            final err = await runBandixAction(
+                              tm,
+                              'bandix.limit_default_set',
+                              {
+                                'wan_rx_rate_limit': rx * 1024,
+                                'wan_tx_rate_limit': tx * 1024,
+                              },
+                            );
                             if (!ctx.mounted) return;
                             Navigator.of(ctx).pop();
                             _snack(context, l10n, err);
@@ -138,14 +166,17 @@ Future<void> showBandixLimitSheet(BuildContext context, WidgetRef ref) async {
 }
 
 /// 白名单对话框：开关 + 列表（删除）+ 添加（MAC）。
-Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async {
+Future<void> showBandixWhitelistSheet(
+  BuildContext context,
+  WidgetRef ref,
+) async {
   final l10n = AppL10n.of(context);
   final tm = ref.read(tokenManagerProvider);
   if (tm == null) return;
   final macCtrl = TextEditingController();
 
-  await showModalBottomSheet<void>(
-    context: context,
+  await showQzSheet<void>(
+    context,
     isScrollControlled: true,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setSheet) {
@@ -157,8 +188,11 @@ Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async
 
         Future<void> reload() async {
           final limits = await fetchBandixLimits(tm);
-          final wl = (limits?['whitelist'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
-          final list = (wl['macs'] as List?)?.whereType<String>().toList() ?? <String>[];
+          final wl =
+              (limits?['whitelist'] as Map<String, dynamic>?) ??
+              const <String, dynamic>{};
+          final list =
+              (wl['macs'] as List?)?.whereType<String>().toList() ?? <String>[];
           setSheet(() {
             enabled = wl['enabled'] == true;
             macs = list;
@@ -196,23 +230,60 @@ Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.bandixWhitelistTitle, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+              Text(
+                l10n.bandixWhitelistTitle,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(l10n.bandixWhitelistBody,
-                  style: TextStyle(fontSize: 12, color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .55))),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(l10n.bandixWhitelistEnabled),
-                value: enabled,
-                onChanged: busy ? null : (v) => act('bandix.whitelist_enabled', {'enabled': v ? 1 : 0}),
+              Text(
+                l10n.bandixWhitelistBody,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(ctx).colorScheme.onSurface
+                      .withValues(alpha: .55),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.bandixWhitelistEnabled,
+                      style: QuartzType.body.copyWith(
+                        color: QuartzTokens.of(ctx).text,
+                      ),
+                    ),
+                  ),
+                  QzToggle(
+                    value: enabled,
+                    semanticLabel: l10n.bandixWhitelistEnabled,
+                    onChanged: busy
+                        ? null
+                        : (v) => act('bandix.whitelist_enabled', {
+                            'enabled': v ? 1 : 0,
+                          }),
+                  ),
+                ],
               ),
               for (final mac in macs)
                 Row(
                   children: [
-                    Expanded(child: Text(mac, style: const TextStyle(fontFamily: 'monospace', fontSize: 13))),
-                    IconButton(
+                    Expanded(
+                      child: Text(
+                        mac,
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                    QzLegacyIconButton(
                       icon: const Icon(Icons.close, size: 18),
-                      onPressed: busy ? null : () => act('bandix.whitelist_delete', {'mac': mac}),
+                      onPressed: busy
+                          ? null
+                          : () => act('bandix.whitelist_delete', {'mac': mac}),
                     ),
                   ],
                 ),
@@ -220,13 +291,14 @@ Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: QzField(
                       controller: macCtrl,
-                      decoration: const InputDecoration(labelText: 'MAC', hintText: 'aa:bb:cc:dd:ee:ff'),
+                      label: 'MAC',
+                      hint: 'aa:bb:cc:dd:ee:ff',
                     ),
                   ),
                   const SizedBox(width: 10),
-                  FilledButton.tonal(
+                  QzLegacyButton.tonal(
                     onPressed: busy
                         ? null
                         : () {
@@ -241,7 +313,10 @@ Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async
               ),
               if (error != null) ...[
                 const SizedBox(height: 10),
-                Text(error!, style: TextStyle(fontSize: 12.5, color: QuartzColors.err)),
+                Text(
+                  error!,
+                  style: TextStyle(fontSize: 12.5, color: QuartzColors.err),
+                ),
               ],
             ],
           ),
@@ -252,7 +327,10 @@ Future<void> showBandixWhitelistSheet(BuildContext context, WidgetRef ref) async
 }
 
 /// 主机名绑定对话框：从在线设备快选 MAC + 主机名输入（空 = 清除绑定）。
-Future<void> showBandixHostnameSheet(BuildContext context, WidgetRef ref) async {
+Future<void> showBandixHostnameSheet(
+  BuildContext context,
+  WidgetRef ref,
+) async {
   final l10n = AppL10n.of(context);
   final tm = ref.read(tokenManagerProvider);
   if (tm == null) return;
@@ -262,8 +340,8 @@ Future<void> showBandixHostnameSheet(BuildContext context, WidgetRef ref) async 
   var busy = false;
   String? error;
 
-  await showModalBottomSheet<void>(
-    context: context,
+  await showQzSheet<void>(
+    context,
     isScrollControlled: true,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setSheet) => Padding(
@@ -277,10 +355,19 @@ Future<void> showBandixHostnameSheet(BuildContext context, WidgetRef ref) async 
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.bandixHostnameTitle, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+            Text(
+              l10n.bandixHostnameTitle,
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
-            Text(l10n.bandixHostnameBody,
-                style: TextStyle(fontSize: 12, color: Theme.of(ctx).colorScheme.onSurface.withValues(alpha: .55))),
+            Text(
+              l10n.bandixHostnameBody,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(ctx).colorScheme.onSurface
+                    .withValues(alpha: .55),
+              ),
+            ),
             const SizedBox(height: 8),
             if (snap != null && snap.clientItems.isNotEmpty)
               Wrap(
@@ -288,43 +375,51 @@ Future<void> showBandixHostnameSheet(BuildContext context, WidgetRef ref) async 
                 runSpacing: 4,
                 children: [
                   for (final item in snap.clientItems.take(8))
-                    ActionChip(
-                      label: Text(
+                    QzPressable(
+                      onTap: () =>
+                          macCtrl.text = (item['mac'] as String?) ?? '',
+                      borderRadius: BorderRadius.circular(QuartzRadii.sm),
+                      child: QzChip(
                         (item['host'] as String?)?.isNotEmpty == true
                             ? item['host'] as String
                             : (item['ip'] as String?) ?? '—',
-                        style: const TextStyle(fontSize: 12),
+                        kind: QzChipKind.muted,
                       ),
-                      onPressed: () => macCtrl.text = (item['mac'] as String?) ?? '',
                     ),
                 ],
               ),
             const SizedBox(height: 10),
-            TextField(
+            QzField(
               controller: macCtrl,
-              decoration: const InputDecoration(labelText: 'MAC', hintText: 'aa:bb:cc:dd:ee:ff'),
+              label: 'MAC',
+              hint: 'aa:bb:cc:dd:ee:ff',
             ),
             const SizedBox(height: 10),
-            TextField(
+            QzField(
               controller: hostCtrl,
-              decoration: InputDecoration(labelText: l10n.bandixHostnameField, hintText: l10n.bandixHostnameHint),
+              label: l10n.bandixHostnameField,
+              hint: l10n.bandixHostnameHint,
             ),
             if (error != null) ...[
               const SizedBox(height: 10),
-              Text(error!, style: TextStyle(fontSize: 12.5, color: QuartzColors.err)),
+              Text(
+                error!,
+                style: TextStyle(fontSize: 12.5, color: QuartzColors.err),
+              ),
             ],
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: QzLegacyButton(
+                    kind: QzButtonKind.plain,
                     onPressed: busy ? null : () => Navigator.of(ctx).pop(),
                     child: Text(l10n.cancel),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: FilledButton(
+                  child: QzLegacyButton(
                     onPressed: busy
                         ? null
                         : () async {
@@ -337,10 +432,11 @@ Future<void> showBandixHostnameSheet(BuildContext context, WidgetRef ref) async 
                               busy = true;
                               error = null;
                             });
-                            final err = await runBandixAction(tm, 'bandix.hostname_set', {
-                              'mac': mac,
-                              'hostname': hostCtrl.text.trim(),
-                            });
+                            final err = await runBandixAction(
+                              tm,
+                              'bandix.hostname_set',
+                              {'mac': mac, 'hostname': hostCtrl.text.trim()},
+                            );
                             if (!ctx.mounted) return;
                             Navigator.of(ctx).pop();
                             _snack(context, l10n, err);

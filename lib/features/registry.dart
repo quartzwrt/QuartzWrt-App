@@ -18,7 +18,12 @@ class ServiceRowSpec {
   final String id;
 
   /// 列表副标题追加密文本（版本/状态之后）；返回 null = 不追加。
-  final String? Function(AppL10n l10n, Map<String, dynamic> entry, Snapshot? snap)? enrich;
+  final String? Function(
+    AppL10n l10n,
+    Map<String, dynamic> entry,
+    Snapshot? snap,
+  )?
+  enrich;
 
   /// 详情页追加卡。
   final Widget Function(BuildContext context, WidgetRef ref)? detailCard;

@@ -53,8 +53,7 @@ String classifyDioError(DioException e) {
   return switch (e.type) {
     DioExceptionType.connectionTimeout ||
     DioExceptionType.receiveTimeout ||
-    DioExceptionType.sendTimeout =>
-      'timeout',
+    DioExceptionType.sendTimeout => 'timeout',
     DioExceptionType.badCertificate => 'bad_certificate',
     DioExceptionType.connectionError => 'connection_refused',
     _ => 'transport',
@@ -68,15 +67,16 @@ HttpClient createPinnedHttpClient(PinPolicy policy, {String? proxyAddr}) {
     final proxy = proxyAddr;
     client.findProxy = (uri) => 'PROXY $proxy';
   }
-  client.badCertificateCallback = (X509Certificate cert, String host, int port) {
-    // 与路由器侧 `sha256sum /etc/uhttpd.crt`（DER 字节）一致。
-    final hex = hexOf(Uint8List.fromList(sha256.convert(cert.der).bytes));
-    policy.capturedHex = hex;
-    if (policy.captureMode) return true; // TOFU：配对握手记录指纹
-    final expected = policy.expectedHex?.toLowerCase();
-    if (expected == null || expected.isEmpty) return false;
-    return hex == expected;
-  };
+  client.badCertificateCallback =
+      (X509Certificate cert, String host, int port) {
+        // 与路由器侧 `sha256sum /etc/uhttpd.crt`（DER 字节）一致。
+        final hex = hexOf(Uint8List.fromList(sha256.convert(cert.der).bytes));
+        policy.capturedHex = hex;
+        if (policy.captureMode) return true; // TOFU：配对握手记录指纹
+        final expected = policy.expectedHex?.toLowerCase();
+        if (expected == null || expected.isEmpty) return false;
+        return hex == expected;
+      };
   return client;
 }
 
@@ -87,14 +87,16 @@ abstract interface class ApiTransport {
 
 class QuartzApiClient implements ApiTransport {
   QuartzApiClient(String baseUrl, {PinPolicy? pin, String? proxyAddr})
-      : this.withPolicy(baseUrl, pin ?? PinPolicy(), proxyAddr: proxyAddr);
+    : this.withPolicy(baseUrl, pin ?? PinPolicy(), proxyAddr: proxyAddr);
 
   QuartzApiClient.withPolicy(String baseUrl, this.pin, {String? proxyAddr})
-      : _dio = Dio(BaseOptions(
+    : _dio = Dio(
+        BaseOptions(
           baseUrl: baseUrl,
           connectTimeout: const Duration(seconds: 5),
           receiveTimeout: const Duration(seconds: 10),
-        )) {
+        ),
+      ) {
     _dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () => createPinnedHttpClient(pin, proxyAddr: proxyAddr),
     );
@@ -113,7 +115,12 @@ class QuartzApiClient implements ApiTransport {
           'jsonrpc': '2.0',
           'id': 1,
           'method': 'call',
-          'params': [kDefaultUbusSid, kApiObject, method, args ?? <String, dynamic>{}],
+          'params': [
+            kDefaultUbusSid,
+            kApiObject,
+            method,
+            args ?? <String, dynamic>{},
+          ],
         },
       );
       final body = resp.data;
@@ -122,7 +129,10 @@ class QuartzApiClient implements ApiTransport {
       }
       return parseUbusResponse(body);
     } on DioException catch (e) {
-      return ApiResult.fail(0, ApiError(classifyDioError(e), e.message ?? 'network error'));
+      return ApiResult.fail(
+        0,
+        ApiError(classifyDioError(e), e.message ?? 'network error'),
+      );
     }
   }
 
@@ -134,18 +144,21 @@ class QuartzApiClient implements ApiTransport {
     required String username,
     required String password,
     required String deviceName,
-  }) =>
-      call('login', {
-        'username': username,
-        'password': password,
-        'device_name': deviceName,
-      });
+  }) => call('login', {
+    'username': username,
+    'password': password,
+    'device_name': deviceName,
+  });
 
-  Future<ApiResult> refresh({required String deviceId, required String refreshToken}) =>
-      call('refresh', {'device_id': deviceId, 'refresh_token': refreshToken});
+  Future<ApiResult> refresh({
+    required String deviceId,
+    required String refreshToken,
+  }) => call('refresh', {'device_id': deviceId, 'refresh_token': refreshToken});
 
-  Future<ApiResult> logout({required String deviceId, required String refreshToken}) =>
-      call('logout', {'device_id': deviceId, 'refresh_token': refreshToken});
+  Future<ApiResult> logout({
+    required String deviceId,
+    required String refreshToken,
+  }) => call('logout', {'device_id': deviceId, 'refresh_token': refreshToken});
 
   Future<ApiResult> status({required String accessToken}) =>
       call('status', {'access_token': accessToken});
@@ -154,14 +167,19 @@ class QuartzApiClient implements ApiTransport {
     required String accessToken,
     required String action,
     Map<String, dynamic> args = const {},
-  }) =>
-      call('action', {'access_token': accessToken, 'action': action, 'args': args});
+  }) => call('action', {
+    'access_token': accessToken,
+    'action': action,
+    'args': args,
+  });
 
   Future<ApiResult> devices({required String accessToken}) =>
       call('devices', {'access_token': accessToken});
 
-  Future<ApiResult> revoke({required String accessToken, required String deviceId}) =>
-      call('revoke', {'access_token': accessToken, 'device_id': deviceId});
+  Future<ApiResult> revoke({
+    required String accessToken,
+    required String deviceId,
+  }) => call('revoke', {'access_token': accessToken, 'device_id': deviceId});
 
   /// 软件包面（WP-5 §4.5）。scope ∈ installed|upgradable|available|history；
   /// query=包名子串（服务端包裹为 apk 模式）；page/perPage 分页。
@@ -171,12 +189,11 @@ class QuartzApiClient implements ApiTransport {
     String? query,
     int? page,
     int? perPage,
-  }) =>
-      call('packages', {
-        'access_token': accessToken,
-        'scope': scope,
-        if (query != null && query.isNotEmpty) 'query': query,
-        'page': ?page,
-        'per_page': ?perPage,
-      });
+  }) => call('packages', {
+    'access_token': accessToken,
+    'scope': scope,
+    if (query != null && query.isNotEmpty) 'query': query,
+    'page': ?page,
+    'per_page': ?perPage,
+  });
 }

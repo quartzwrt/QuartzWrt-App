@@ -42,18 +42,24 @@ class _PackageLogPageState extends ConsumerState<PackageLogPage> {
     final l10n = AppL10n.of(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.chevron_left), onPressed: () => context.pop()),
+      appBar: QzAppBar(
+        leading: QzLegacyIconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => context.pop(),
+        ),
         title: Text(l10n.opLogTitle),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh, size: 20), onPressed: _load),
+          QzLegacyIconButton(
+            icon: const Icon(Icons.refresh, size: 20),
+            onPressed: _load,
+          ),
         ],
       ),
       body: FutureBuilder<ApiResult>(
         future: _future,
         builder: (context, snap) {
           if (snap.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: QzSpinner(size: 22));
           }
           final r = snap.data;
           if (r?.ok != true) {
@@ -62,19 +68,29 @@ class _PackageLogPageState extends ConsumerState<PackageLogPage> {
               padding: const EdgeInsets.all(16),
               children: [
                 QuartzCard(
-                  title: missing ? l10n.packagesApiMissingTitle : l10n.unavailable,
+                  title: missing
+                      ? l10n.packagesApiMissingTitle
+                      : l10n.unavailable,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        missing ? l10n.packagesApiMissingBody : (r?.error?.message ?? ''),
+                        missing
+                            ? l10n.packagesApiMissingBody
+                            : (r?.error?.message ?? ''),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: .55),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: .55,
+                          ),
                           height: 1.5,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      OutlinedButton(onPressed: _load, child: Text(l10n.retry)),
+                      QzLegacyButton(
+                        kind: QzButtonKind.plain,
+                        onPressed: _load,
+                        child: Text(l10n.retry),
+                      ),
                     ],
                   ),
                 ),
@@ -85,7 +101,7 @@ class _PackageLogPageState extends ConsumerState<PackageLogPage> {
           if (ops.isEmpty) {
             return Center(child: Text(l10n.opLogEmpty));
           }
-          return RefreshIndicator(
+          return QzRefresh(
             onRefresh: () async => _load(),
             child: ListView(
               padding: const EdgeInsets.all(16),
@@ -175,7 +191,10 @@ class _OpCard extends StatelessWidget {
           ],
           const SizedBox(height: 4),
           Text(
-            l10n.opLogMeta(op.ok ? l10n.opResultOk : l10n.opResultFail, '${(op.durationMs / 1000).toStringAsFixed(1)}s'),
+            l10n.opLogMeta(
+              op.ok ? l10n.opResultOk : l10n.opResultFail,
+              '${(op.durationMs / 1000).toStringAsFixed(1)}s',
+            ),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: .4),
               fontFeatures: const [FontFeature.tabularFigures()],
@@ -188,7 +207,11 @@ class _OpCard extends StatelessWidget {
 
   /// apk 输出取尾部一行摘要（去掉 URL 类噪音行）。
   static String _tail(String output) {
-    final lines = output.trim().split('\n').where((l) => l.trim().isNotEmpty).toList();
+    final lines = output
+        .trim()
+        .split('\n')
+        .where((l) => l.trim().isNotEmpty)
+        .toList();
     if (lines.isEmpty) return '';
     for (final l in lines.reversed) {
       final t = l.trim();

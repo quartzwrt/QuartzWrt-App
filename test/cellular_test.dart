@@ -1,68 +1,136 @@
 // 蜂窝模型 / 展示助手 / 粘性门控（W6.12）。
+import 'dart:ui' show Locale;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quartzwrt_app/api/cellular.dart';
 import 'package:quartzwrt_app/api/models.dart';
+import 'package:quartzwrt_app/features/cellular/cellular_display.dart';
+import 'package:quartzwrt_app/l10n/app_localizations.dart';
 import 'package:quartzwrt_app/storage/store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 一份真实量级的 cellular 节（两模组：Quectel 全量 + Fibocom 部分信号）。
 Map<String, dynamic> _snapshotJson() => {
-      'v': 1,
-      'ts': 1760000000,
-      'interval': 2,
-      'errors': <String>[],
-      'cellular': {
-        'available': true,
-        'updated': 1760000000,
-        'capabilities': {'at': true, 'sms': true, 'sim_switch': false, 'stats': true, 'temp': true},
-        'modems': [
+  'v': 1,
+  'ts': 1760000000,
+  'interval': 2,
+  'errors': <String>[],
+  'cellular': {
+    'available': true,
+    'updated': 1760000000,
+    'capabilities': {
+      'at': true,
+      'sms': true,
+      'sim_switch': false,
+      'stats': true,
+      'temp': true,
+    },
+    'modems': [
+      {
+        'id': 'modem1',
+        'model': 'RM500U-CN',
+        'vendor': 'quectel',
+        'firmware': 'RM500UCNCAR03A09M4G',
+        'temp_c': 42.5,
+        'registered': true,
+        'operator': '46001',
+        'network_mode': '5G NSA',
+        'network_type': '5G NSA',
+        'at_port': '/dev/ttyUSB2',
+        'voltage_mv': 3900,
+        'connect_status': 'connected',
+        'cqi_ul': 6,
+        'cqi_dl': 5,
+        'ambr_ul': 100,
+        'ambr_dl': 500,
+        'cell_info': {
+          'network_mode': '5G NSA',
+          'duplex': 'TDD',
+          'mcc': '460',
+          'mnc': '01',
+          'tac': '1234',
+          'cell_id': '987654',
+          'pci': '293',
+          'arfcn': '627264',
+          'band': 'NR n78',
+          'ul_bandwidth': '100',
+          'dl_bandwidth': '100',
+          'scs': '30',
+        },
+        'signal': {
+          'rsrp': -78,
+          'rsrq': -11.0,
+          'sinr': 22.0,
+          'rssi': -51,
+          'quality_pct': 64.6,
+          'series': {
+            'step': 10,
+            'rsrp': [-80, -78, -77],
+          },
+        },
+        'serving_cells': [
           {
-            'id': 'modem1',
-            'model': 'RM500U-CN',
-            'vendor': 'quectel',
-            'firmware': 'RM500UCNCAR03A09M4G',
-            'temp_c': 42.5,
-            'registered': true,
-            'operator': '中国联通',
-            'network_mode': '5G NSA',
-            'signal': {
-              'rsrp': -78,
-              'rsrq': -11.0,
-              'sinr': 22.0,
-              'rssi': -51,
-              'quality_pct': 64.6,
-              'series': {
-                'step': 10,
-                'rsrp': [-80, -78, -77],
-              },
-            },
-            'serving_cells': [
-              {'role': 'pcc', 'rat': 'LTE', 'band': 'LTE B3', 'channel': '1300', 'pci': '293', 'dl_bandwidth': '20'},
-              {'role': 'nsa', 'rat': 'NR', 'band': 'NR n78', 'channel': '627264', 'pci': '293', 'dl_bandwidth': '100'},
-            ],
-            'dial': {'running': true, 'ipv4': '10.42.7.23', 'rx_bps': 18200000, 'tx_bps': 2400000},
-            'traffic': {
-              'available': true,
-              'updated_at': 1760000000,
-              'rx_bytes': 46180000000,
-              'tx_bytes': 3320000000,
-              'reset': {'enabled': true, 'type': 'monthly', 'hour': 0, 'day': 1},
-            },
-            'sim': {'status': 'ready', 'slot': '1', 'switchable': false},
-            'settings': {'usb_mode': 'qmi', 'prefer': '4G+5G', 'lockband': ['NR:41,78,79']},
-            'capabilities': {'at': true, 'sms': true, 'sim_switch': false, 'stats': true, 'current_band': true, 'temp': true},
+            'role': 'pcc',
+            'rat': 'LTE',
+            'band': 'LTE B3',
+            'channel': '1300',
+            'pci': '293',
+            'ul_bandwidth': '20',
+            'dl_bandwidth': '20',
           },
           {
-            'id': 'modem2',
-            'model': '',
-            'registered': false,
-            'signal': {'rssi': -67, 'rsrq': -13.0},
-            'capabilities': {'at': true, 'sms': true},
+            'role': 'nsa',
+            'rat': 'NR',
+            'band': 'NR n78',
+            'channel': '627264',
+            'pci': '293',
+            'dl_bandwidth': '100',
           },
         ],
-        'errors': ['cellular: modem2.get_stats failed'],
+        'dial': {
+          'running': true,
+          'ipv4': '10.42.7.23',
+          'rx_bps': 18200000,
+          'tx_bps': 2400000,
+        },
+        'traffic': {
+          'available': true,
+          'updated_at': 1760000000,
+          'rx_bytes': 46180000000,
+          'tx_bytes': 3320000000,
+          'reset': {'enabled': true, 'type': 'monthly', 'hour': 0, 'day': 1},
+        },
+        'sim': {
+          'status': 'ready',
+          'slot': '1',
+          'isp': '46001',
+          'switchable': false,
+        },
+        'settings': {
+          'usb_mode': 'qmi',
+          'prefer': '4G+5G',
+          'lockband': ['NR:41,78,79'],
+        },
+        'capabilities': {
+          'at': true,
+          'sms': true,
+          'sim_switch': false,
+          'stats': true,
+          'current_band': true,
+          'temp': true,
+        },
       },
-    };
+      {
+        'id': 'modem2',
+        'model': '',
+        'registered': false,
+        'signal': {'rssi': -67, 'rsrq': -13.0},
+        'capabilities': {'at': true, 'sms': true},
+      },
+    ],
+    'errors': ['cellular: modem2.get_stats failed'],
+  },
+};
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -80,8 +148,20 @@ void main() {
       expect(m.title, 'RM500U-CN');
       expect(m.tempC, 42.5);
       expect(m.registered, isTrue);
-      expect(m.operator, '中国联通');
+      expect(m.operator, '46001');
       expect(m.networkMode, '5G NSA');
+      expect(m.networkType, '5G NSA');
+      expect(m.atPort, '/dev/ttyUSB2');
+      expect(m.voltageMv, 3900);
+      expect(m.connectStatus, 'connected');
+      expect(m.cqiUl, 6);
+      expect(m.cqiDl, 5);
+      expect(m.ambrUl, 100);
+      expect(m.ambrDl, 500);
+      expect(m.cellInfo!.mcc, '460');
+      expect(m.cellInfo!.tac, '1234');
+      expect(m.cellInfo!.cellId, '987654');
+      expect(m.cellInfo!.duplex, 'TDD');
       expect(m.signal!.rsrp, -78);
       expect(m.signal!.qualityPct, 64.6);
       expect(m.signal!.series!.step, 10);
@@ -109,7 +189,12 @@ void main() {
       expect(m2.traffic, isNull); // 未提供 → null，不展示 0 值
       expect(m2.capabilities.stats, isFalse);
 
-      final bare = Snapshot.parse({'v': 1, 'ts': 1, 'interval': 2, 'errors': <String>[]})!;
+      final bare = Snapshot.parse({
+        'v': 1,
+        'ts': 1,
+        'interval': 2,
+        'errors': <String>[],
+      })!;
       expect(bare.cellular, isNull);
     });
 
@@ -125,7 +210,13 @@ void main() {
       final c = Cellular.fromJson({
         'available': true,
         'modems': [
-          {'id': 'm1', 'signal': 'oops', 'dial': 3, 'serving_cells': ['x'], 'unknown_key': 1},
+          {
+            'id': 'm1',
+            'signal': 'oops',
+            'dial': 3,
+            'serving_cells': ['x'],
+            'unknown_key': 1,
+          },
         ],
       });
       expect(c.shown, isTrue);
@@ -135,13 +226,108 @@ void main() {
     });
   });
 
+  group('展示口径（与 Dashboard QModem 卡对齐）', () {
+    final l10n = lookupAppL10n(const Locale('zh'));
+
+    test('运营商 PLMN → 名称；已是名称则原样；SIM.isp 兜底', () {
+      expect(
+        cellularOperatorText(
+          l10n,
+          const CellularModem(id: 'm', operator: '46001'),
+        ),
+        '46001 · 中国联通',
+      );
+      expect(
+        cellularOperatorText(
+          l10n,
+          const CellularModem(id: 'm', operator: '中国联通'),
+        ),
+        '中国联通',
+      );
+      expect(
+        cellularOperatorText(
+          l10n,
+          const CellularModem(
+            id: 'm',
+            sim: CellularSim(isp: '46011'),
+          ),
+        ),
+        '46011 · 中国电信',
+      );
+      expect(cellularOperatorText(l10n, const CellularModem(id: 'm')), isEmpty);
+    });
+
+    test('重置计划：月/周/日/未启用', () {
+      expect(
+        cellularResetText(
+          l10n,
+          const CellularTraffic(
+            available: true,
+            resetEnabled: true,
+            resetType: 'monthly',
+            resetHour: 3,
+            resetDay: 1,
+          ),
+        ),
+        '每月 1 日 · 03:00',
+      );
+      expect(
+        cellularResetText(
+          l10n,
+          const CellularTraffic(
+            available: true,
+            resetEnabled: true,
+            resetType: 'weekly',
+            resetHour: 0,
+          ),
+        ),
+        '每周 · 00:00',
+      );
+      expect(
+        cellularResetText(
+          l10n,
+          const CellularTraffic(available: true, resetEnabled: true),
+        ),
+        '未设置重置计划',
+      );
+      expect(cellularResetText(l10n, null), '—');
+    });
+
+    test('信号带单位；compact 省略 RSSI；CQI/AMBR 缺省为 —', () {
+      const sig = CellularSignal(rsrq: -11, sinr: 22, rssi: -51);
+      expect(cellularSignalText(sig), 'RSRQ -11 dB · SINR 22 dB\nRSSI -51 dBm');
+      expect(
+        cellularSignalText(sig, compact: true),
+        'RSRQ -11 dB · SINR 22 dB',
+      );
+      const bare = CellularModem(id: 'm');
+      expect(cellularCqiText(bare), '—');
+      expect(cellularAmbrText(bare), '—');
+    });
+  });
+
   group('短信解析（qmodem.sms.list）', () {
     test('messages 形态：字段、已读、排序、秒级时间戳', () {
       final list = CellularSmsMessage.listFrom({
         'status': 'ok',
         'messages': [
-          {'id': 1, 'index': 3, 'type': 'received', 'sender': '10086', 'content': 'a', 'timestamp': 1760000000, 'is_read': false},
-          {'id': 2, 'index': 4, 'type': 'sent', 'recipient': '+8613800138000', 'content': 'b', 'timestamp': 1760000600},
+          {
+            'id': 1,
+            'index': 3,
+            'type': 'received',
+            'sender': '10086',
+            'content': 'a',
+            'timestamp': 1760000000,
+            'is_read': false,
+          },
+          {
+            'id': 2,
+            'index': 4,
+            'type': 'sent',
+            'recipient': '+8613800138000',
+            'content': 'b',
+            'timestamp': 1760000600,
+          },
           {'id': 3, 'content': '', 'sender': ''}, // 空条目 → 丢弃
         ],
       });
@@ -156,13 +342,17 @@ void main() {
     });
 
     test('msg / received 形态与毫秒时间戳', () {
-      final a = CellularSmsMessage.listFrom({'msg': [
-        {'id': 9, 'sender': 'x', 'content': 'hi', 'timestamp': 1760000000000},
-      ]});
+      final a = CellularSmsMessage.listFrom({
+        'msg': [
+          {'id': 9, 'sender': 'x', 'content': 'hi', 'timestamp': 1760000000000},
+        ],
+      });
       expect(a.single.timestampMs, 1760000000000);
-      final b = CellularSmsMessage.listFrom({'received': [
-        {'sender': 'y', 'content': 'ho'},
-      ]});
+      final b = CellularSmsMessage.listFrom({
+        'received': [
+          {'sender': 'y', 'content': 'ho'},
+        ],
+      });
       expect(b.single.content, 'ho');
       expect(b.single.timestampMs, 0);
     });
@@ -170,7 +360,11 @@ void main() {
     test('非列表/缺字段不崩', () {
       expect(CellularSmsMessage.listFrom({'messages': 'oops'}), isEmpty);
       expect(CellularSmsMessage.listFrom(const {}), isEmpty);
-      expect(CellularSmsMessage.fromJson({'id': 1, 'sender': 'x', 'content': 'y'})?.id, '1');
+      expect(
+        CellularSmsMessage.fromJson({'id': 1, 'sender': 'x', 'content': 'y'})
+            ?.id,
+        '1',
+      );
     });
   });
 
@@ -188,9 +382,10 @@ void main() {
       expect(qualityBars(120), 5);
     });
 
-    test('地址打码：IPv4 保留前三段；IPv6 保留首尾', () {
-      expect(maskAddress('100.64.7.23'), '100.64.7.…');
-      expect(maskAddress('240e:3a1:0:1::d1f'), '240e:…:d1f');
+    test('地址打码与 Dashboard 一致：IPv4 前两段；IPv6 前两组', () {
+      expect(maskAddress('100.64.7.23'), '100.64.*.*');
+      expect(maskAddress('240e:3a1:0:1::d1f'), '240e:3a1:*:*:*:*:*:*');
+      expect(maskAddress('100.64.7.23/24'), '100.64.*.*');
       expect(maskAddress(''), '');
     });
 
@@ -208,8 +403,15 @@ void main() {
   group('粘性门控（PairedRouter.cellularSeen）', () {
     test('JSON 往返 + 旧数据兼容（缺键=false）', () {
       final r = PairedRouter(
-        id: 'a', name: 'n', model: 'm', host: 'h', port: 443,
-        fingerprint: 'f', deviceId: 'd', addedAt: 1, cellularSeen: true,
+        id: 'a',
+        name: 'n',
+        model: 'm',
+        host: 'h',
+        port: 443,
+        fingerprint: 'f',
+        deviceId: 'd',
+        addedAt: 1,
+        cellularSeen: true,
       );
       expect(r.toJson()['cellular_seen'], isTrue);
       final back = PairedRouter.fromJson(r.toJson())!;
@@ -223,10 +425,18 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
       final reg = RouterRegistry(prefs);
-      await reg.upsert(PairedRouter(
-        id: 'a', name: 'n', model: 'm', host: 'h', port: 443,
-        fingerprint: 'f', deviceId: 'd', addedAt: 1,
-      ));
+      await reg.upsert(
+        PairedRouter(
+          id: 'a',
+          name: 'n',
+          model: 'm',
+          host: 'h',
+          port: 443,
+          fingerprint: 'f',
+          deviceId: 'd',
+          addedAt: 1,
+        ),
+      );
       expect(reg.byId('a')!.cellularSeen, isFalse);
       await reg.setCellularSeen('a');
       expect(reg.byId('a')!.cellularSeen, isTrue);

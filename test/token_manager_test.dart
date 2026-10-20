@@ -26,29 +26,39 @@ class FakeTransport implements ApiTransport {
 ApiResult ok(Map<String, dynamic> data) => ApiResult.ok(1, data);
 ApiResult fail(String code) => ApiResult.fail(1, ApiError(code, code));
 
-Map<String, dynamic> tokensPayload({String access = 'a1', String refresh = 'r1'}) => {
-      'access_token': access,
-      'access_exp': 9999999999,
-      'refresh_token': refresh,
-      'refresh_exp': 9999999999,
-      'device_id': 'dev1',
-    };
+Map<String, dynamic> tokensPayload({
+  String access = 'a1',
+  String refresh = 'r1',
+}) => {
+  'access_token': access,
+  'access_exp': 9999999999,
+  'refresh_token': refresh,
+  'refresh_exp': 9999999999,
+  'device_id': 'dev1',
+};
 
 void main() {
-  test('single-flight: concurrent ensureAccess triggers exactly one refresh', () async {
-    final t = FakeTransport();
-    t.enqueue('refresh', ok(tokensPayload()));
-    final store = MemoryTokenStore();
-    await store.writeRefresh('dev1', 'r0');
+  test(
+    'single-flight: concurrent ensureAccess triggers exactly one refresh',
+    () async {
+      final t = FakeTransport();
+      t.enqueue('refresh', ok(tokensPayload()));
+      final store = MemoryTokenStore();
+      await store.writeRefresh('dev1', 'r0');
 
-    final tm = TokenManager(() => t, store, routerId: 'dev1');
-    final results = await Future.wait([tm.ensureAccess(), tm.ensureAccess(), tm.ensureAccess()]);
+      final tm = TokenManager(() => t, store, routerId: 'dev1');
+      final results = await Future.wait([
+        tm.ensureAccess(),
+        tm.ensureAccess(),
+        tm.ensureAccess(),
+      ]);
 
-    expect(results, ['a1', 'a1', 'a1']);
-    expect(t.calls.where((c) => c == 'refresh').length, 1);
-    // 旋转后的新 refresh 已持久化
-    expect(await store.readRefresh('dev1'), 'r1');
-  });
+      expect(results, ['a1', 'a1', 'a1']);
+      expect(t.calls.where((c) => c == 'refresh').length, 1);
+      // 旋转后的新 refresh 已持久化
+      expect(await store.readRefresh('dev1'), 'r1');
+    },
+  );
 
   test('expired access is refreshed (with pre-expiry margin)', () async {
     final t = FakeTransport();
@@ -85,7 +95,12 @@ void main() {
     t.enqueue('refresh', ok(tokensPayload(access: 'a1')));
     t.enqueue('status', fail('token_expired'));
     t.enqueue('refresh', ok(tokensPayload(access: 'a2', refresh: 'r2')));
-    t.enqueue('status', ok({'snapshot': {'v': 1}}));
+    t.enqueue(
+      'status',
+      ok({
+        'snapshot': {'v': 1},
+      }),
+    );
 
     final r = await tm.call('status');
     expect(r.ok, isTrue);
@@ -93,16 +108,19 @@ void main() {
     expect(await store.readRefresh('dev1'), 'r2');
   });
 
-  test('device_revoked → ApiAuthException + local credentials cleared', () async {
-    final t = FakeTransport();
-    final store = MemoryTokenStore();
-    await store.writeRefresh('dev1', 'r0');
-    final tm = TokenManager(() => t, store, routerId: 'dev1');
-    t.enqueue('refresh', fail('device_revoked'));
+  test(
+    'device_revoked → ApiAuthException + local credentials cleared',
+    () async {
+      final t = FakeTransport();
+      final store = MemoryTokenStore();
+      await store.writeRefresh('dev1', 'r0');
+      final tm = TokenManager(() => t, store, routerId: 'dev1');
+      t.enqueue('refresh', fail('device_revoked'));
 
-    await expectLater(tm.ensureAccess(), throwsA(isA<ApiAuthException>()));
-    expect(await store.readRefresh('dev1'), isNull);
-  });
+      await expectLater(tm.ensureAccess(), throwsA(isA<ApiAuthException>()));
+      expect(await store.readRefresh('dev1'), isNull);
+    },
+  );
 
   test('transport error is not fatal to credentials', () async {
     final t = FakeTransport();

@@ -26,7 +26,10 @@ class Endpoint {
 
   @override
   bool operator ==(Object other) =>
-      other is Endpoint && other.host == host && other.port == port && other.kind == kind;
+      other is Endpoint &&
+      other.host == host &&
+      other.port == port &&
+      other.kind == kind;
 
   @override
   int get hashCode => Object.hash(host, port, kind);
@@ -37,21 +40,42 @@ class Endpoint {
 
 /// 路由器可用端点：局域网在前、远程在后。
 List<Endpoint> endpointsOf(PairedRouter r) => [
-      Endpoint(host: r.host, port: r.port, kind: EndpointKind.local),
-      if (r.hasRemote)
-        Endpoint(host: r.remoteHost!, port: r.remotePort ?? 443, kind: EndpointKind.remote),
-    ];
+  Endpoint(host: r.host, port: r.port, kind: EndpointKind.local),
+  if (r.hasRemote)
+    Endpoint(
+      host: r.remoteHost!,
+      port: r.remotePort ?? 443,
+      kind: EndpointKind.remote,
+    ),
+];
 
 /// 端点客户端工厂（测试注入用；默认严格 pin + 可选本地代理）。
-typedef EndpointClientFactory = ApiTransport Function(Endpoint e, String fingerprint, String? proxyAddr);
+typedef EndpointClientFactory = ApiTransport Function(
+  Endpoint e,
+  String fingerprint,
+  String? proxyAddr,
+);
 
-ApiTransport pinnedClientFor(Endpoint e, String fingerprint, String? proxyAddr) =>
-    QuartzApiClient.withPolicy(e.baseUrl, PinPolicy(expectedHex: fingerprint), proxyAddr: proxyAddr);
+ApiTransport pinnedClientFor(
+  Endpoint e,
+  String fingerprint,
+  String? proxyAddr,
+) => QuartzApiClient.withPolicy(
+  e.baseUrl,
+  PinPolicy(expectedHex: fingerprint),
+  proxyAddr: proxyAddr,
+);
 
 /// 传输级失败码（可触发端点轮换；与 client.dart 的错误归一化对应）。
-const kTransportFailureCodes = {'timeout', 'connection_refused', 'transport', 'bad_certificate'};
+const kTransportFailureCodes = {
+  'timeout',
+  'connection_refused',
+  'transport',
+  'bad_certificate',
+};
 
-bool isTransportFailure(ApiResult r) => !r.ok && kTransportFailureCodes.contains(r.error?.code);
+bool isTransportFailure(ApiResult r) =>
+    !r.ok && kTransportFailureCodes.contains(r.error?.code);
 
 /// 当前端点 → 备选端点轮换传输（远程端点可经本地代理，见文件头注释）。
 class FailoverTransport implements ApiTransport {
@@ -81,15 +105,17 @@ class FailoverTransport implements ApiTransport {
   final Map<String, ApiTransport> _clients = {};
 
   ApiTransport _clientFor(Endpoint e, String? proxy) => _clients.putIfAbsent(
-        '${e.baseUrl}|${proxy ?? ''}',
-        () => clientFactory(e, fingerprint, proxy),
-      );
+    '${e.baseUrl}|${proxy ?? ''}',
+    () => clientFactory(e, fingerprint, proxy),
+  );
 
   /// 尝试序列：当前端点〔代理→直连〕→ 另一端点〔代理→直连〕。
   List<(Endpoint, String?)> attempts() {
     if (endpoints.isEmpty) return const [];
     final cur = current();
-    final first = (cur != null && endpoints.contains(cur)) ? cur : endpoints.first;
+    final first = (cur != null && endpoints.contains(cur))
+        ? cur
+        : endpoints.first;
     final out = <(Endpoint, String?)>[];
     void addFor(Endpoint e) {
       // 仅远程端点可走代理：局域网地址经 tailnet 出站没有意义（结构性约束）。
@@ -120,7 +146,9 @@ class FailoverTransport implements ApiTransport {
       r = await _clientFor(e, proxy).call(method, args);
       if (!isTransportFailure(r)) {
         final cur = current();
-        final effective = (cur != null && endpoints.contains(cur)) ? cur : endpoints.first;
+        final effective = (cur != null && endpoints.contains(cur))
+            ? cur
+            : endpoints.first;
         if (e != effective) onSwitch(e);
         return r;
       }

@@ -16,7 +16,8 @@ class LuciResult {
   final dynamic data;
   final ApiError? error;
 
-  Map<String, dynamic> get map => data is Map<String, dynamic> ? data as Map<String, dynamic> : const {};
+  Map<String, dynamic> get map =>
+      data is Map<String, dynamic> ? data as Map<String, dynamic> : const {};
 
   String get message => apiErrorText(error);
 }
@@ -26,12 +27,17 @@ class LuciClient {
 
   final TokenManager _tm;
 
-  Future<LuciResult> _call(String id, [Map<String, String> args = const {}]) async {
+  Future<LuciResult> _call(
+    String id, [
+    Map<String, String> args = const {},
+  ]) async {
     final r = await _tm.call('action', {'action': id, 'args': args});
     if (!r.ok) return LuciResult(false, error: r.error);
     // 信封 data = `{action, result:{data}}`（与 qmodem 转发条目同形）。
     final result = r.data['result'];
-    if (result is Map<String, dynamic>) return LuciResult(true, data: result['data']);
+    if (result is Map<String, dynamic>) {
+      return LuciResult(true, data: result['data']);
+    }
     return const LuciResult(true, data: null);
   }
 
