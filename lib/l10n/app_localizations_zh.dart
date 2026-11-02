@@ -75,6 +75,10 @@ class AppL10nZh extends AppL10n {
   String get discoverNone => '未发现其他设备——确认手机与路由器在同一网络。';
 
   @override
+  String get discoverFailed =>
+      '扫描失败——请确认手机连接的是路由器 Wi-Fi（不是访客网络），并暂时关闭 VPN，然后重试。';
+
+  @override
   String get addByAddress => '按地址添加…';
 
   @override

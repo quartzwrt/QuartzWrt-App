@@ -21,6 +21,7 @@
   "discoverTitle": "连接路由器",
   "discoverScanning": "正在扫描局域网（mDNS）…",
   "discoverNone": "未发现其他设备——确认手机与路由器在同一网络。",
+  "discoverFailed": "扫描失败——请确认手机连接的是路由器 Wi-Fi（不是访客网络），并暂时关闭 VPN，然后重试。",
   "addByAddress": "按地址添加…",
   "addByAddressTitle": "按地址添加路由器",
   "hostLabel": "地址",

@@ -20,6 +20,7 @@ class DiscoverPage extends ConsumerStatefulWidget {
 
 class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   var _scanning = true;
+  var _failed = false;
   List<DiscoveredRouter> _found = const [];
 
   @override
@@ -31,15 +32,21 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
   Future<void> _scan() async {
     setState(() => _scanning = true);
     List<DiscoveredRouter> found;
+    var failed = false;
     try {
       found = await ref.read(discoverProvider)();
-    } catch (_) {
+    } catch (e) {
+      // mDNS 启动/套接字错误（常见：未连 Wi-Fi、VPN 抢占组播）——
+      // 与「同网段但没有宣告」区分开，避免只显示「未发现」误导排障。
+      debugPrint('LAN discovery failed: $e');
       found = const [];
+      failed = true;
     }
     if (!mounted) return;
     setState(() {
       _found = found;
       _scanning = false;
+      _failed = failed;
     });
   }
 
@@ -261,22 +268,22 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              children: [
-                if (_scanning)
+          if (_scanning)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
                   const Padding(
                     padding: EdgeInsets.only(right: 8),
                     child: QzSpinner(size: 16, stroke: 2),
                   ),
-                Text(
-                  l10n.discoverScanning,
-                  style: QuartzType.caption.copyWith(color: t.faint),
-                ),
-              ],
+                  Text(
+                    l10n.discoverScanning,
+                    style: QuartzType.caption.copyWith(color: t.faint),
+                  ),
+                ],
+              ),
             ),
-          ),
           if (_found.isNotEmpty)
             QzListGroup(
               children: [
@@ -307,7 +314,8 @@ class _DiscoverPageState extends ConsumerState<DiscoverPage> {
                   ),
               ],
             ),
-          if (!_scanning && _found.isEmpty) QzEmpty(l10n.discoverNone),
+          if (!_scanning && _found.isEmpty)
+            QzEmpty(_failed ? l10n.discoverFailed : l10n.discoverNone),
           const SizedBox(height: 8),
           QzButton(
             label: l10n.addByAddress,

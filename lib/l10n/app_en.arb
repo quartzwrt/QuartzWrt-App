@@ -28,6 +28,7 @@
   "discoverTitle": "Connect a router",
   "discoverScanning": "Scanning local network (mDNS)…",
   "discoverNone": "No other devices found — make sure your phone is on the same network.",
+  "discoverFailed": "Scan failed — make sure the phone is on the router's Wi-Fi (not a guest network) and temporarily disable any VPN, then retry.",
   "addByAddress": "Add by address…",
   "addByAddressTitle": "Add router by address",
   "hostLabel": "Address",

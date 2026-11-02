@@ -1,7 +1,12 @@
 // 局域网发现（DESIGN §3）：mDNS 浏览 `_quartz-app._tcp.local`（umdns 宣告）。
 // TXT 段（WP-5 §6.3）：v/path/name/fp/rel——multicast_dns 将各段以换行拼接，
 // 逐行 `k=v` 解析即可（无歧义）。
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:multicast_dns/multicast_dns.dart';
+
+import 'multicast_lock.dart';
 
 const kQuartzService = '_quartz-app._tcp.local';
 
@@ -47,7 +52,18 @@ Future<List<DiscoveredRouter>> discoverRouters({
   final c = client ?? MDnsClient();
   final own = client == null;
   if (own) {
-    await c.start();
+    // Android 真机：未持有 MulticastLock 时 Wi-Fi 栈会丢弃 mDNS 组播包。
+    await MulticastLock.acquire();
+    try {
+      await c.start(
+        // 手机上排除 rmnet/tun 等非 LAN 接口，避免把查询发到蜂窝/VPN 面。
+        interfacesFactory: _isAndroid ? _lanInterfaces : null,
+        onError: (Object e) => debugPrint('mDNS stream error: $e'),
+      );
+    } catch (_) {
+      await MulticastLock.release();
+      rethrow;
+    }
   }
   final found = <DiscoveredRouter>[];
   final seen = <String>{};
@@ -106,7 +122,56 @@ Future<List<DiscoveredRouter>> discoverRouters({
       );
     }
   } finally {
-    if (own) c.stop();
+    if (own) {
+      try {
+        c.stop();
+      } catch (e) {
+        debugPrint('mDNS stop failed: $e');
+      }
+      await MulticastLock.release();
+    }
+  }
+  if (found.isEmpty) {
+    debugPrint('mDNS: no $kQuartzService responders within ${timeout.inSeconds}s');
   }
   return found;
+}
+
+bool get _isAndroid =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
+/// Android 上优先只用真实 LAN 接口。
+///
+/// multicast_dns 默认对 `NetworkInterface.list()` 的每个接口 joinMulticast；
+/// 某些设备在 rmnet/tun 等接口上 join 会抛错，导致整次发现直接失败。
+Future<Iterable<NetworkInterface>> _lanInterfaces(
+  InternetAddressType type,
+) async {
+  final all = await NetworkInterface.list(
+    includeLinkLocal: true,
+    type: type,
+    includeLoopback: false,
+  );
+  final lan = all.where((i) => !_isWanLikeInterface(i.name)).toList();
+  debugPrint(
+    'mDNS interfaces: '
+    '${lan.map((i) => '${i.name}[${i.addresses.map((a) => a.address).join(',')}]').join(' ')}',
+  );
+  return lan.isEmpty ? all : lan;
+}
+
+bool _isWanLikeInterface(String name) {
+  final n = name.toLowerCase();
+  const prefixes = [
+    'rmnet',
+    'dummy',
+    'tun',
+    'ppp',
+    'clat',
+    'v4-',
+    'ip6tnl',
+    'sit',
+    'gre',
+  ];
+  return prefixes.any((p) => n.startsWith(p));
 }

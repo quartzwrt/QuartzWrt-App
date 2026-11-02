@@ -223,6 +223,12 @@ abstract class AppL10n {
   /// **'No other devices found — make sure your phone is on the same network.'**
   String get discoverNone;
 
+  /// No description provided for @discoverFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan failed — make sure the phone is on the router\'s Wi-Fi (not a guest network) and temporarily disable any VPN, then retry.'**
+  String get discoverFailed;
+
   /// No description provided for @addByAddress.
   ///
   /// In en, this message translates to:

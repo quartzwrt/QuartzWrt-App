@@ -1,7 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.7.2 — 2026-11-02
 
+- **局域网扫描真机修复（2026-11-02）**：Android 真机此前只声明
+  `CHANGE_WIFI_MULTICAST_STATE` 权限、未持有 `WifiManager.MulticastLock`，Wi-Fi 栈会
+  丢弃 mDNS 组播包（模拟器/VM/有线环境不暴露）→ 扫描期间经 `quartz/multicast` 原生
+  通道持锁；Android 端仅对 LAN 接口 joinMulticast（排除 rmnet/tun 等，避免个别设备
+  join 抛错导致整次发现失败）；扫描异常与「同网段无宣告」分开提示；扫描结束后不再
+  一直显示「正在扫描」。
 - **QModem/蜂窝卡修正（2026-10-21，非 H5000M 验收项）**：累计流量按宿主视角归一
   （Quectel 上游 `get_stats` 为模组视角，修复上下行流量显示反转）；USB 拨号模式
   解析 `get_mode` 的对象形态（`{"qmi":"1",...}`）；新增 USB 链路速率/版本显示

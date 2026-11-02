@@ -76,6 +76,10 @@ class AppL10nEn extends AppL10n {
       'No other devices found — make sure your phone is on the same network.';
 
   @override
+  String get discoverFailed =>
+      'Scan failed — make sure the phone is on the router\'s Wi-Fi (not a guest network) and temporarily disable any VPN, then retry.';
+
+  @override
   String get addByAddress => 'Add by address…';
 
   @override
