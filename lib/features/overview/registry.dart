@@ -20,6 +20,12 @@ class CardSpec {
 /// 概览卡顺序即此列表（拍板 3 的卡片集合）。
 final List<CardSpec> overviewCards = [
   CardSpec(id: 'system', build: systemCard),
+  // 电池条件卡：pcat-mgr 提供 battery.available 才显示（无电池设备隐藏）
+  CardSpec(
+    id: 'battery',
+    visible: (s) => s.batteryAvailable,
+    build: batteryCard,
+  ),
   CardSpec(id: 'network', build: networkCard),
   CardSpec(id: 'cellular', build: cellularCard),
   CardSpec(id: 'clients', build: clientsCard),
@@ -42,6 +48,7 @@ const kConsumedSections = {
   'host',
   'system',
   'net',
+  'battery',
   'docker',
   'clients',
   'bandix',

@@ -262,6 +262,107 @@ String _ghz(num mhz) {
   return ghz >= 1 ? '${ghz.toStringAsFixed(1)} GHz' : '${mhz.round()} MHz';
 }
 
+/// 电池卡（契约 §3.10；Photonicat 一代 pcat-mgr/FUSE）。
+/// 条件卡：`battery.available == true` 才显示（registry 负责可见性）。
+Widget batteryCard(BuildContext context, Snapshot s) {
+  final l10n = AppL10n.of(context);
+  final t = QuartzTokens.of(context);
+  final b = s.battery ?? const <String, dynamic>{};
+  final capacity = ((b['capacity'] as num?) ?? 0).toInt();
+  final voltageMv = ((b['voltage_mv'] as num?) ?? 0).toInt();
+  final energyNow = ((b['energy_now_wh'] as num?) ?? 0).toDouble();
+  final energyFull = ((b['energy_full_wh'] as num?) ?? 0).toDouble();
+  final charger = b['charger_online'] == true;
+  final present = b['present'] != false;
+  final statusRaw = (b['status'] as String?) ?? '';
+  final status = _batteryStatus(l10n, statusRaw);
+  final healthy = charger || statusRaw == 'Full';
+  final meta = [
+    b['technology'] as String?,
+    b['manufacturer'] as String?,
+  ].whereType<String>().where((x) => x.isNotEmpty).join(' · ');
+
+  return QuartzCard(
+    title: l10n.batteryCardTitle,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            StatusDot(healthy ? DotKind.ok : DotKind.warn),
+            Text(status, style: QuartzType.bodyStrong.copyWith(color: t.text)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                charger ? l10n.batteryPluggedIn : l10n.batteryNotPluggedIn,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: QuartzType.caption.copyWith(color: t.muted),
+              ),
+            ),
+          ],
+        ),
+        if (meta.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 2, bottom: 2),
+            child: Text(
+              meta,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: QuartzType.caption.copyWith(color: t.muted),
+            ),
+          ),
+        KvRow(
+          l10n.batteryChargeLabel,
+          '$capacity%',
+          first: true,
+          pct: capacity.toDouble(),
+        ),
+        KvRow(
+          l10n.batteryVoltageLabel,
+          voltageMv > 0 ? '${(voltageMv / 1000).toStringAsFixed(2)} V' : '—',
+          valueColor: voltageMv > 0 ? null : t.faint,
+        ),
+        KvRow(
+          l10n.batteryEnergyLabel,
+          energyFull > 0
+              ? '${energyNow.toStringAsFixed(1)} / ${energyFull.toStringAsFixed(1)} Wh'
+              : '—',
+          valueColor: energyFull > 0 ? null : t.faint,
+        ),
+        if (!present)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Row(
+              children: [
+                StatusDot(DotKind.warn),
+                Expanded(
+                  child: Text(
+                    l10n.batteryNotPresent,
+                    style: QuartzType.caption.copyWith(color: t.warn),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+String _batteryStatus(AppL10n l10n, String status) {
+  switch (status) {
+    case 'Charging':
+      return l10n.batteryStatusCharging;
+    case 'Discharging':
+      return l10n.batteryStatusDischarging;
+    case 'Full':
+      return l10n.batteryStatusFull;
+    default:
+      return l10n.batteryStatusUnknown;
+  }
+}
+
 Widget networkCard(BuildContext context, Snapshot s) {
   final l10n = AppL10n.of(context);
   final t = QuartzTokens.of(context);

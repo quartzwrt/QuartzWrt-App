@@ -427,6 +427,72 @@ abstract class AppL10n {
   /// **'Unavailable (no sensor)'**
   String get tempUnavailable;
 
+  /// No description provided for @batteryCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get batteryCardTitle;
+
+  /// No description provided for @batteryChargeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Charge'**
+  String get batteryChargeLabel;
+
+  /// No description provided for @batteryVoltageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Voltage'**
+  String get batteryVoltageLabel;
+
+  /// No description provided for @batteryEnergyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get batteryEnergyLabel;
+
+  /// No description provided for @batteryPluggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugged in'**
+  String get batteryPluggedIn;
+
+  /// No description provided for @batteryNotPluggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Not plugged in'**
+  String get batteryNotPluggedIn;
+
+  /// No description provided for @batteryNotPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery not present'**
+  String get batteryNotPresent;
+
+  /// No description provided for @batteryStatusCharging.
+  ///
+  /// In en, this message translates to:
+  /// **'Charging'**
+  String get batteryStatusCharging;
+
+  /// No description provided for @batteryStatusDischarging.
+  ///
+  /// In en, this message translates to:
+  /// **'Discharging'**
+  String get batteryStatusDischarging;
+
+  /// No description provided for @batteryStatusFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get batteryStatusFull;
+
+  /// No description provided for @batteryStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get batteryStatusUnknown;
+
   /// No description provided for @networkCardTitle.
   ///
   /// In en, this message translates to:

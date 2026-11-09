@@ -204,6 +204,10 @@ class Snapshot {
   Map<String, dynamic> get net => _sec('net') ?? const {};
   Map<String, dynamic>? get docker => _sec('docker');
 
+  /// 电池节（契约 §3.10；无电池/pcat-mgr 未运行时为 null 或 available=false）。
+  Map<String, dynamic>? get battery => _sec('battery');
+  bool get batteryAvailable => battery?['available'] == true;
+
   /// 蜂窝节（契约 §3.9；未装 qmodem / 无模组时为 null 或 available=false）。
   Cellular? get cellular {
     final c = _sec('cellular');

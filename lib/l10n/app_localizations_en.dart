@@ -190,6 +190,39 @@ class AppL10nEn extends AppL10n {
   String get tempUnavailable => 'Unavailable (no sensor)';
 
   @override
+  String get batteryCardTitle => 'Battery';
+
+  @override
+  String get batteryChargeLabel => 'Charge';
+
+  @override
+  String get batteryVoltageLabel => 'Voltage';
+
+  @override
+  String get batteryEnergyLabel => 'Energy';
+
+  @override
+  String get batteryPluggedIn => 'Plugged in';
+
+  @override
+  String get batteryNotPluggedIn => 'Not plugged in';
+
+  @override
+  String get batteryNotPresent => 'Battery not present';
+
+  @override
+  String get batteryStatusCharging => 'Charging';
+
+  @override
+  String get batteryStatusDischarging => 'Discharging';
+
+  @override
+  String get batteryStatusFull => 'Full';
+
+  @override
+  String get batteryStatusUnknown => 'Unknown';
+
+  @override
   String get networkCardTitle => 'Network · WAN';
 
   @override

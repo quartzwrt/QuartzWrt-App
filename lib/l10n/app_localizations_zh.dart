@@ -186,6 +186,39 @@ class AppL10nZh extends AppL10n {
   String get tempUnavailable => '不可用（无传感器）';
 
   @override
+  String get batteryCardTitle => '电池';
+
+  @override
+  String get batteryChargeLabel => '电量';
+
+  @override
+  String get batteryVoltageLabel => '电压';
+
+  @override
+  String get batteryEnergyLabel => '能量';
+
+  @override
+  String get batteryPluggedIn => '充电器已连接';
+
+  @override
+  String get batteryNotPluggedIn => '充电器未连接';
+
+  @override
+  String get batteryNotPresent => '未检测到电池';
+
+  @override
+  String get batteryStatusCharging => '充电中';
+
+  @override
+  String get batteryStatusDischarging => '放电中';
+
+  @override
+  String get batteryStatusFull => '已充满';
+
+  @override
+  String get batteryStatusUnknown => '未知';
+
+  @override
   String get networkCardTitle => '网络 · WAN';
 
   @override
